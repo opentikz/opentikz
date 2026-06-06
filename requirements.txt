@@ -1,0 +1,3 @@
+# Python dependencies for the OpenTikZ tooling (tools/).
+# The .tex toolchain (latexmk, dvisvgm/pdf2svg) is a system dependency, not pip.
+jsonschema>=4.20,<5

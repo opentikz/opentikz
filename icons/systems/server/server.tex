@@ -1,0 +1,52 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in server.meta.json "requires") ---
+\usepackage{tikz}
+
+% --- palette --------------------------------------------------------------
+% Canonical definitions live in skills/color-palettes/; duplicated here so the
+% file compiles standalone. Values are the color-blind-friendly Okabe-Ito set.
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+% ==== parameters (edit these) ============================================
+\def\numunits{3}      % number of stacked rack units
+\def\unitwidth{2.4}   % unit width  (cm)
+\def\unitheight{0.7}  % unit height (cm)
+\def\unitgap{0.18}    % vertical gap between units (cm)
+% =========================================================================
+
+\begin{tikzpicture}[
+    server unit/.style={
+      draw=otblue!75!black,
+      line width=0.6pt,
+      fill=otblue!12,
+      rounded corners=1.2pt,
+      minimum width=\unitwidth cm,
+      minimum height=\unitheight cm,
+    },
+    led/.style={
+      circle, fill=otteal, inner sep=0pt, minimum size=0.14cm,
+    },
+    vent/.style={draw=otblue!55!black, line width=0.7pt},
+  ]
+
+  % Stack the rack units bottom-to-top with stable names unit1..unitN.
+  \foreach \i in {1,...,\numunits} {
+    \pgfmathsetmacro{\ypos}{(\i-1)*(\unitheight+\unitgap)}
+    \node[server unit, anchor=south west] (unit\i) at (0,\ypos) {};
+    % status LED near the left edge
+    \node[led] (led\i) at ([xshift=0.30cm]unit\i.west) {};
+    % three ventilation slits near the right edge
+    \foreach \j in {0,1,2} {
+      \pgfmathsetmacro{\vx}{-0.35-\j*0.18}
+      \draw[vent] ([xshift=\vx cm, yshift=-0.16cm]unit\i.east) -- ++(0,0.32cm);
+    }
+  }
+
+\end{tikzpicture}
+\end{document}

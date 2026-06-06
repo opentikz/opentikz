@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentikz.org/meta.schema.json",
+  "title": "OpenTikZ item metadata",
+  "description": "Schema for every <name>.meta.json sibling of an icon, template, or example. See docs/DESIGN_GUIDE.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "type",
+    "domain",
+    "tags",
+    "author",
+    "license",
+    "requires",
+    "preview"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Globally unique, stable identifier (kebab-case). Used by catalog.json and the website.",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable display name.",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "description": "Which content layer this item belongs to.",
+      "enum": ["icon", "template", "skill"]
+    },
+    "domain": {
+      "type": "array",
+      "description": "Browse-grouping categories (e.g. systems, ml, pipeline).",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "description": "Free-form search keywords.",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "venue": {
+      "type": "array",
+      "description": "Optional: conference/venue widths this item is tuned for (e.g. CVPR, NeurIPS, ACL).",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "author": {
+      "type": "string",
+      "description": "Contributor name or handle.",
+      "minLength": 1
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX identifier. Graphic content is CC0-1.0.",
+      "minLength": 1
+    },
+    "requires": {
+      "type": "array",
+      "description": "LaTeX packages / TikZ libraries the .tex needs in its preamble.",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "preview": {
+      "type": "string",
+      "description": "Relative path to the generated .svg preview.",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional one-line description of the item."
+    }
+  }
+}

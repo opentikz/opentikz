@@ -1,0 +1,42 @@
+# --- LaTeX build artifacts ---
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.dvi
+*.xdv
+*.figlist
+*.makefile
+*.figlist-*
+# Intermediate PDFs from the compile/preview pipeline (content ships as .tex + .svg)
+*.pdf
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# NOTE: generated previews (*.svg) and catalog.json are COMMITTED on purpose
+# (the website serves CI-rendered previews), so they are intentionally NOT
+# ignored here.
