@@ -22,5 +22,35 @@
       "hardware"
     ],
     "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "Parametric fully-connected feed-forward neural network. Layer count and neurons-per-layer are set by a single list at the top of the file.",
+    "domain": [
+      "ml"
+    ],
+    "id": "neural-net",
+    "license": "CC0-1.0",
+    "name": "Feed-forward neural network",
+    "path": "templates/neural-net",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "neural network",
+      "mlp",
+      "feedforward",
+      "fully connected",
+      "deep learning",
+      "architecture",
+      "layers"
+    ],
+    "type": "template",
+    "venue": [
+      "NeurIPS",
+      "ICML",
+      "CVPR"
+    ]
   }
 ]

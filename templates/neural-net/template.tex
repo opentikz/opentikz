@@ -1,0 +1,70 @@
+\documentclass[border=6pt]{standalone}
+
+% --- packages (mirror these in template.meta.json "requires") ---
+\usepackage{tikz}
+% Edges are drawn on a background layer so they sit behind the neurons.
+\pgfdeclarelayer{edges}
+\pgfsetlayers{edges,main}
+
+% --- palette (canonical source: skills/color-palettes/skill.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+% ==== parameters (edit these) ============================================
+% Neurons per layer, in order. The number of entries IS the number of layers.
+\def\layersizes{4,6,6,2}
+% One label per layer (keep this list the same length as \layersizes).
+\def\layerlabels{Input,Hidden,Hidden,Output}
+\def\layersep{2.4}    % horizontal distance between layers (cm)
+\def\neuronsep{1.1}   % vertical distance between neurons within a layer (cm)
+\def\neuronsize{0.8}  % neuron diameter (cm)
+% =========================================================================
+
+\begin{tikzpicture}[
+    neuron/.style={
+      circle, draw=otblue!75!black, line width=0.7pt,
+      fill=otblue!15, minimum size=\neuronsize cm, inner sep=0pt,
+    },
+    edge/.style={draw=otgray!45, line width=0.4pt},
+    layerlabel/.style={font=\sffamily\small, text=otgray, anchor=base},
+  ]
+
+  % y of the label row: just below the lowest neuron of the largest layer.
+  \pgfmathsetmacro{\maxsize}{0}
+  \foreach \s in \layersizes {%
+    \pgfmathsetmacro{\maxsize}{max(\maxsize,\s)}\global\let\maxsize\maxsize}
+  \pgfmathsetmacro{\labely}{-((\maxsize-1)/2)*\neuronsep-0.7}
+
+  % Place neurons layer by layer; names are L<layer>-<neuron>. Each layer is
+  % vertically centred on y=0. After a layer is placed, fully connect it to the
+  % previous one (edges go on the background layer).
+  \foreach \size [count=\layer, remember=\size as \prevsize (initially 0)] in \layersizes {
+    \pgfmathsetmacro{\x}{\layer*\layersep}
+    \foreach \n in {1,...,\size} {
+      \pgfmathsetmacro{\y}{(\n-(\size+1)/2)*\neuronsep}
+      \node[neuron] (L\layer-\n) at (\x,\y) {};
+    }
+    \ifnum\layer>1\relax
+      \pgfmathtruncatemacro{\prevlayer}{\layer-1}
+      \begin{pgfonlayer}{edges}
+        \foreach \p in {1,...,\prevsize} {
+          \foreach \q in {1,...,\size} {
+            \draw[edge] (L\prevlayer-\p) -- (L\layer-\q);
+          }
+        }
+      \end{pgfonlayer}
+    \fi
+  }
+
+  % Layer labels in an aligned row beneath the network.
+  \foreach \lab [count=\layer] in \layerlabels {
+    \pgfmathsetmacro{\x}{\layer*\layersep}
+    \node[layerlabel] at (\x,\labely) {\lab};
+  }
+
+\end{tikzpicture}
+\end{document}

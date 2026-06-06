@@ -1,0 +1,13 @@
+{
+  "id": "neural-net",
+  "name": "Feed-forward neural network",
+  "type": "template",
+  "domain": ["ml"],
+  "tags": ["neural network", "mlp", "feedforward", "fully connected", "deep learning", "architecture", "layers"],
+  "venue": ["NeurIPS", "ICML", "CVPR"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "preview.svg",
+  "description": "Parametric fully-connected feed-forward neural network. Layer count and neurons-per-layer are set by a single list at the top of the file."
+}
