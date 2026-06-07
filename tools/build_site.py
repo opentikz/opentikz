@@ -136,11 +136,23 @@ def head(title: str, css_href: str, *, description: str = TAGLINE) -> str:
 """
 
 
-def masthead(home_href: str, *, compact: bool = False) -> str:
-    cls = "masthead compact" if compact else "masthead"
-    return f"""<header class="{cls}">
-  <a class="wordmark" href="{home_href}">Open<span class="tik">TikZ</span><span class="caret">┃</span></a>
-  <p class="tagline">{html.escape(TAGLINE)}</p>
+REPO_URL = "https://github.com/opentikz/opentikz"
+
+
+def navbar(home_href: str, anchor_base: str) -> str:
+    """Sticky header. anchor_base='' on the index (in-page #icons), or
+    '../index.html' on item pages (return to index.html#icons)."""
+    return f"""<header class="navbar">
+  <div class="nav-inner">
+    <a class="wordmark" href="{home_href}">Open<span class="tik">TikZ</span><span class="caret">┃</span></a>
+    <nav class="nav-links">
+      <a href="{anchor_base}#icons" data-nav="icons">Icons</a>
+      <a href="{anchor_base}#templates" data-nav="templates">Templates</a>
+      <a href="{anchor_base}#examples" data-nav="examples">Examples</a>
+      <a href="{REPO_URL}#readme">Docs</a>
+      <a class="nav-gh" href="{REPO_URL}" target="_blank" rel="noopener">GitHub <span class="star">★</span></a>
+    </nav>
+  </div>
 </header>
 """
 
@@ -217,7 +229,7 @@ def item_page(item: dict, code: str, tex_name: str, skill_md: str | None, css_hr
 """
     return (
         head(f"{item['name']} — OpenTikZ", css_href, description=item.get("description", TAGLINE))
-        + masthead("../index.html", compact=True)
+        + navbar("../index.html", "../index.html")
         + f"""<main class="item">
   <a class="back" href="../index.html">← all resources</a>
   <div class="item-top">
@@ -284,7 +296,7 @@ def index_page(items: list[dict], css_href: str) -> str:
         for it in members:
             cards += card(it, f"previews/{it['id']}.svg", f"item/{it['id']}.html", idx)
             idx += 1
-        groups_html += f"""  <section class="group" data-group="{t}">
+        groups_html += f"""  <section class="group" id="{t}s" data-group="{t}">
     <div class="group-head">
       <h2>{section_titles[t]}</h2>
       <span class="group-count" data-count>{len(members)}</span>
@@ -317,19 +329,12 @@ def index_page(items: list[dict], css_href: str) -> str:
 
     return (
         head("OpenTikZ — TikZ for academic diagrams", css_href)
-        + masthead("index.html")
+        + navbar("index.html", "")
         + f"""<section class="hero">
+  <p class="eyebrow">{html.escape(TAGLINE)}</p>
   <p class="lede">{html.escape(LEDE)}</p>
-  <p class="stats">
-    <span><b>{counts.get('icon', 0)}</b> icons</span>
-    <span><b>{counts.get('template', 0)}</b> templates</span>
-    <span><b>{counts.get('example', 0)}</b> examples</span>
-  </p>
-</section>
-
-<section class="controls">
-  <div class="search-wrap">
-    <input id="search" type="search" placeholder="Search icons, templates, tags…" autocomplete="off" aria-label="Search resources">
+  <div class="hero-search">
+    <input id="search" type="search" placeholder="Search icons, templates, tags…    ( / )" autocomplete="off" aria-label="Search resources">
   </div>
   <div class="chips" id="chips">
       {chips_html}
@@ -422,51 +427,46 @@ a{color:inherit}
 code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   background:#F1EFE6; padding:.08em .35em; border-radius:3px; border:1px solid var(--line)}
 
-/* ---------- masthead ---------- */
-.masthead{max-width:1180px; margin:0 auto; padding:48px 28px 22px; border-bottom:1px solid var(--line)}
-.masthead.compact{padding:26px 28px 18px}
-.wordmark{
-  display:inline-block; text-decoration:none; font-family:"Fraunces",serif;
-  font-weight:900; font-size:clamp(34px,6vw,58px); letter-spacing:-.02em; line-height:1;
-}
-.masthead.compact .wordmark{font-size:30px}
+/* ---------- sticky nav bar ---------- */
+.navbar{position:sticky; top:0; z-index:50; background:rgba(251,250,246,.86);
+  backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1180px; margin:0 auto; padding:11px 28px;
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+.wordmark{display:inline-block; text-decoration:none; font-family:"Fraunces",serif;
+  font-weight:900; font-size:26px; letter-spacing:-.02em; line-height:1}
 .wordmark .tik{color:var(--otblue)}
 .wordmark .caret{color:var(--otorange); animation:blink 1.2s steps(1) infinite; margin-left:.04em}
 @keyframes blink{50%{opacity:0}}
-.tagline{margin:.5em 0 0; color:var(--muted); font-size:1.02rem}
-.masthead.compact .tagline{font-size:.9rem}
+.nav-links{display:flex; align-items:center; gap:4px; margin-left:auto; flex-wrap:wrap}
+.nav-links a{font-family:"IBM Plex Sans",sans-serif; font-size:.92rem; color:var(--muted);
+  text-decoration:none; padding:7px 11px; border-radius:7px; white-space:nowrap;
+  transition:color .15s, background .15s}
+.nav-links a:hover{color:var(--ink); background:#F1EFE6}
+.nav-links a.active{color:var(--otblue)}
+.nav-gh{color:var(--ink); font-weight:500}
+.nav-gh .star{color:var(--otorange)}
 
-/* ---------- hero ---------- */
-.hero{max-width:1180px; margin:0 auto; padding:30px 28px 8px}
-.hero .lede{font-size:clamp(1.05rem,2.2vw,1.4rem); max-width:54ch; margin:.2em 0 .8em;
+/* ---------- hero (elevated, centred search) ---------- */
+.hero{max-width:760px; margin:0 auto; padding:54px 28px 12px; text-align:center}
+.hero .eyebrow{margin:0 0 .4em; font-family:"IBM Plex Mono",monospace; font-size:.8rem;
+  letter-spacing:.03em; color:var(--muted)}
+.hero .lede{font-size:clamp(1.15rem,2.6vw,1.6rem); margin:0 auto .95em; max-width:30ch;
   font-family:"Fraunces",serif; font-weight:400; color:#34322b}
-.stats{display:flex; gap:26px; color:var(--muted); font-size:.95rem; margin:0}
-.stats b{font-variant-numeric:tabular-nums; color:var(--otblue); font-weight:600}
-
-/* ---------- controls ---------- */
-.controls{max-width:1180px; margin:0 auto; padding:18px 28px 6px;
-  position:sticky; top:0; background:linear-gradient(var(--paper) 78%,transparent);
-  z-index:5; backdrop-filter:blur(2px)}
-.search-wrap{position:relative}
-#search{
-  width:100%; padding:14px 16px 14px 42px; font:inherit; color:var(--ink);
-  background:#fff; border:1.5px solid var(--line-strong); border-radius:10px;
-  transition:border-color .15s, box-shadow .15s;
-}
+.hero-search{position:relative; max-width:640px; margin:0 auto}
+#search{width:100%; padding:16px 18px 16px 48px; font:inherit; font-size:1.05rem; color:var(--ink);
+  background:#fff; border:1.5px solid var(--line-strong); border-radius:13px; box-shadow:var(--shadow);
+  transition:border-color .15s, box-shadow .15s}
 #search::placeholder{color:#A6A294}
-#search:focus{outline:none; border-color:var(--otblue);
-  box-shadow:0 0 0 4px rgba(0,114,178,.12)}
-.search-wrap::before{content:"\\2315"; position:absolute; left:15px; top:50%;
-  transform:translateY(-50%) rotate(-12deg); color:#A6A294; font-size:1.1rem}
-.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
-.chip{
-  font:500 .85rem/1 "IBM Plex Mono",monospace; padding:7px 13px; cursor:pointer;
+#search:focus{outline:none; border-color:var(--otblue); box-shadow:0 0 0 4px rgba(0,114,178,.14)}
+.hero-search::before{content:"\2315"; position:absolute; left:17px; top:50%;
+  transform:translateY(-50%) rotate(-12deg); color:#A6A294; font-size:1.3rem; pointer-events:none}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0; justify-content:center}
+.chip{font:500 .85rem/1 "IBM Plex Mono",monospace; padding:7px 13px; cursor:pointer;
   background:#fff; color:var(--muted); border:1.5px solid var(--line-strong);
-  border-radius:999px; transition:.15s;
-}
+  border-radius:999px; transition:.15s}
 .chip:hover{border-color:var(--otblue); color:var(--ink)}
 .chip.active{background:var(--ink); color:var(--paper); border-color:var(--ink)}
-.result-count{color:var(--muted); font-size:.82rem; margin:12px 2px 0;
+.result-count{color:var(--muted); font-size:.82rem; margin:12px 0 0; text-align:center;
   font-family:"IBM Plex Mono",monospace}
 
 /* ---------- gallery ---------- */
@@ -558,7 +558,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .site-footer .fw{font-family:"Fraunces",serif; font-weight:600; color:var(--ink)}
 
 /* ---------- homepage sections (Icons / Templates / Examples) ---------- */
-.group{max-width:1180px; margin:10px auto 0; padding:0 28px}
+.group{max-width:1180px; margin:10px auto 0; padding:0 28px; scroll-margin-top:74px}
 .group[hidden]{display:none}
 .group-head{display:flex; align-items:baseline; gap:12px; padding:20px 0 10px;
   border-bottom:1px solid var(--line-strong)}
@@ -598,8 +598,11 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 
 @media(max-width:720px){
   .item-top{grid-template-columns:1fr; gap:22px}
-  .controls{position:static}
   .group{padding:0 18px}
+  .nav-inner{padding:10px 18px; gap:10px}
+  .nav-links{margin-left:0; width:100%; gap:2px; overflow-x:auto; -webkit-overflow-scrolling:touch}
+  .nav-links a{padding:6px 9px; font-size:.86rem}
+  .hero{padding:34px 20px 8px}
 }
 """
 
@@ -670,7 +673,39 @@ APP_JS = r"""(function () {
       });
     });
     apply();
+
+    // ---- active-section highlight in the nav ----
+    var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a[data-nav]'));
+    if (navLinks.length && 'IntersectionObserver' in window) {
+      var navMap = {};
+      navLinks.forEach(function (a) { navMap[a.getAttribute('data-nav')] = a; });
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting && navMap[en.target.id]) {
+            navLinks.forEach(function (a) { a.classList.remove('active'); });
+            navMap[en.target.id].classList.add('active');
+          }
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      groups.forEach(function (g) { obs.observe(g); });
+    }
   }
+
+  // ---- keyboard: '/' focuses search, Esc clears + blurs ----
+  document.addEventListener('keydown', function (e) {
+    var s = document.getElementById('search');
+    if (!s) return;
+    var t = e.target || {};
+    var typing = /^(input|textarea|select)$/i.test(t.tagName || '') || t.isContentEditable;
+    if (e.key === '/' && !typing) {
+      e.preventDefault();
+      s.focus();
+    } else if (e.key === 'Escape' && document.activeElement === s) {
+      s.value = '';
+      s.dispatchEvent(new Event('input'));
+      s.blur();
+    }
+  });
 
   // ---- copy-to-clipboard (item page) ----
   document.querySelectorAll('.copy').forEach(function (btn) {
