@@ -1,29 +1,29 @@
 [
   {
+    "dimension": "recolor",
+    "dimension_label": "Recolor (palette-correct)",
+    "template_id": "database",
+    "prompt": "recolor the database orange",
+    "before_svg": "db-before.svg",
+    "after_svg": "db-orange.svg",
+    "changed": "Every teal element switched to otorange — a palette name, never raw hex."
+  },
+  {
     "dimension": "add-layer",
     "dimension_label": "Add a part",
     "template_id": "neural-net",
     "prompt": "add a hidden layer",
     "before_svg": "nn-light.svg",
     "after_svg": "nn-add.svg",
-    "changed": "A fourth layer (4 neurons) inserted before the output; connections and labels updated automatically."
+    "changed": "A fourth layer inserted before the output; connections and labels update automatically."
   },
   {
-    "dimension": "recolor",
-    "dimension_label": "Recolor (palette-correct)",
-    "template_id": "neural-net",
-    "prompt": "recolor the network teal",
-    "before_svg": "nn-light.svg",
-    "after_svg": "nn-teal.svg",
-    "changed": "Every neuron switched from otblue to otteal — a palette name, never raw hex."
-  },
-  {
-    "dimension": "dark-palette",
-    "dimension_label": "Light → dark",
-    "template_id": "neural-net",
-    "prompt": "switch to the dark palette for slides",
-    "before_svg": "nn-light.svg",
-    "after_svg": "nn-dark.svg",
-    "changed": "Swapped the palette block + set a dark page — same colour names, no body edits."
+    "dimension": "structural",
+    "dimension_label": "Structural edit",
+    "template_id": "encoder-decoder",
+    "prompt": "add a cross-attention block and make it blue",
+    "before_svg": "encdec-before.svg",
+    "after_svg": "encdec-xattn.svg",
+    "changed": "A blue cross-attention block added — the decoder now attends to the encoder (a documented skill op)."
   }
 ]

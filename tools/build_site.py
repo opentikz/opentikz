@@ -142,21 +142,18 @@ def head(title: str, css_href: str, *, description: str = TAGLINE, browse_href: 
 
 
 def navbar(surface: str) -> str:
-    """Shared sticky header. surface in {home, browse, item}; sets correct
-    relative hrefs, the Browse active state, and the Home search affordance."""
+    """Shared sticky header — identical on every surface except active state and
+    relative hrefs. surface in {home, browse, item, skills}."""
     if surface == "home":
-        home, browse, sec = "index.html", "browse/", "browse/"
+        home, browse, sec, skills = "index.html", "browse/", "browse/", "skills/"
     elif surface == "browse":
-        home, browse, sec = "../index.html", "index.html", ""
+        home, browse, sec, skills = "../index.html", "index.html", "", "../skills/"
+    elif surface == "skills":
+        home, browse, sec, skills = "../index.html", "../browse/", "../browse/", "index.html"
     else:  # item
-        home, browse, sec = "../index.html", "../browse/", "../browse/"
+        home, browse, sec, skills = "../index.html", "../browse/", "../browse/", "../skills/"
     browse_active = " active" if surface in ("browse", "item") else ""
-    # On Home, the header offers a search affordance that routes into Browse.
-    search_affordance = (
-        f'      <a class="nav-search" href="browse/?focus=1" aria-label="Search the library">'
-        f'<span class="mag">⌕</span> Search</a>\n'
-        if surface == "home" else ""
-    )
+    skills_active = " active" if surface == "skills" else ""
     return f"""<header class="navbar">
   <div class="nav-inner">
     <a class="wordmark" href="{home}">Open<span class="tik">TikZ</span><span class="caret">┃</span></a>
@@ -165,8 +162,9 @@ def navbar(surface: str) -> str:
       <a href="{sec}#icons" data-nav="icons">Icons</a>
       <a href="{sec}#templates" data-nav="templates">Templates</a>
       <a href="{sec}#examples" data-nav="examples">Examples</a>
+      <a class="nav-skills{skills_active}" href="{skills}" data-nav="skills">Skills</a>
       <a href="{REPO_URL}#readme">Docs</a>
-{search_affordance}      <a class="nav-gh" href="{REPO_URL}" target="_blank" rel="noopener">GitHub <span class="star">★</span></a>
+      <a class="nav-gh" href="{REPO_URL}" target="_blank" rel="noopener">GitHub <span class="star">★</span></a>
     </nav>
   </div>
 </header>
@@ -305,8 +303,9 @@ def footer() -> str:
 SECTION_TITLES = {"icon": "Icons", "template": "Templates", "example": "Examples"}
 
 
-def demos_carousel(demos: list[dict], by_id: dict) -> str:
-    """Skills-in-action carousel; one slide per capability dimension. Empty -> ''."""
+def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
+    """Skills-in-action carousel; one slide per capability dimension. Empty -> ''.
+    ``prefix`` adjusts the demos/ path for the surface depth ('' Home, '../' skills)."""
     if not demos:
         return ""
     slides, dots = "", ""
@@ -321,9 +320,9 @@ def demos_carousel(demos: list[dict], by_id: dict) -> str:
         slides += f"""      <div class="demo-slide{active}" data-slide="{i}">
         <div class="demo-head"><span class="demo-dim">{dim}</span><span class="demo-tmpl">on {tname}</span></div>
         <div class="demo-trip">
-          <figure class="demo-fig"><img src="demos/{html.escape(g['before_svg'])}" alt="before" loading="lazy"><figcaption>before</figcaption></figure>
+          <figure class="demo-fig"><img src="{prefix}demos/{html.escape(g['before_svg'])}" alt="before" loading="lazy"><figcaption>before</figcaption></figure>
           <div class="demo-prompt"><span class="demo-prompt-label">prompt</span><code>&ldquo;{prompt}&rdquo;</code></div>
-          <figure class="demo-fig"><img src="demos/{html.escape(g['after_svg'])}" alt="after" loading="lazy"><figcaption>after</figcaption></figure>
+          <figure class="demo-fig"><img src="{prefix}demos/{html.escape(g['after_svg'])}" alt="after" loading="lazy"><figcaption>after</figcaption></figure>
         </div>
         {changed}
       </div>
@@ -420,9 +419,15 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     <div class="roadmap-cards">
       <article class="rm-card">
         <span class="rm-tag">in development · next release</span>
-        <h3>Prompt-to-diagram <span>workflow → TikZ</span></h3>
+        <h3>Prompt-to-diagram <span>natural language → TikZ</span></h3>
         <p>Describe the figure you want; get editable TikZ you can drop straight into
            the library — assembled from templates and skills.</p>
+      </article>
+      <article class="rm-card">
+        <span class="rm-tag">in development · next release</span>
+        <h3>Graph-to-diagram <span>graph / spec → TikZ</span></h3>
+        <p>Give a node–edge spec (JSON · DOT · adjacency); get a laid-out, editable
+           figure you can refine like any template.</p>
       </article>
     </div>
   </section>
@@ -510,6 +515,56 @@ def browse_page(items: list[dict], css_href: str) -> str:
     )
 
 
+def skills_page(template_skills: list[dict], demos: list[dict], by_id: dict, css_href: str) -> str:
+    """The Skills surface — explainer + the shared demo carousel + a catalog-driven
+    index of the per-template companion skills (deep-linking back to item pages)."""
+    carousel = demos_carousel(demos, by_id, prefix="../")
+    index_cards = ""
+    for t in template_skills:
+        index_cards += (
+            f'      <a class="skill-link" href="../item/{t["id"]}.html">\n'
+            f'        <h3>{html.escape(t["name"])} <span>&rarr;</span></h3>\n'
+            f'        <p>{html.escape(t.get("description", ""))}</p>\n'
+            f'      </a>\n'
+        )
+    return (
+        head("Skills — OpenTikZ", css_href,
+             description=("Companion skills let an AI edit OpenTikZ templates precisely — "
+                          "add parts, recolor, restructure, adapt to a venue."),
+             browse_href="")
+        + navbar("skills")
+        + f"""<main class="skills-page">
+  <section class="skills-intro">
+    <h1>Edit figures with AI</h1>
+    <p class="lede">Every template ships a companion <code>skill.md</code>: precise, structured
+      instructions that let an AI edit the figure correctly — add or remove a part, recolor from
+      the palette, change counts, restructure, adapt to a venue width — without hand-writing TikZ.</p>
+  </section>
+{carousel}
+  <section class="skills-index">
+    <h2>Companion skills</h2>
+    <p class="skills-index-sub">One per template — open a template to read its full skill.</p>
+    <div class="skill-links">
+{index_cards}    </div>
+  </section>
+
+  <section class="skills-libwide">
+    <h2>Library-wide skills</h2>
+    <div class="skill-links">
+      <a class="skill-link" href="{REPO_URL}/blob/main/skills/color-palettes/skill.md" target="_blank" rel="noopener">
+        <h3>Color palettes <span>&#8599;</span></h3>
+        <p>The shared, colour-blind-friendly palette every figure references (light + dark variants).</p>
+      </a>
+    </div>
+  </section>
+</main>
+"""
+        + footer()
+        + f'<script src="{css_href.replace("style.css", "app.js")}"></script>\n'
+        + "</body>\n</html>\n"
+    )
+
+
 # --------------------------------------------------------------------------- #
 def build(root: Path) -> int:
     catalog = json.loads((root / "catalog.json").read_text(encoding="utf-8"))
@@ -521,6 +576,7 @@ def build(root: Path) -> int:
         shutil.rmtree(site)
     (site / "item").mkdir(parents=True)
     (site / "browse").mkdir(parents=True)
+    (site / "skills").mkdir(parents=True)
     (site / "previews").mkdir(parents=True)
     (site / "assets").mkdir(parents=True)
 
@@ -529,6 +585,7 @@ def build(root: Path) -> int:
     (site / ".nojekyll").write_text("", encoding="utf-8")
 
     n_prev = 0
+    template_skills: list[dict] = []   # catalog-driven index for the Skills page
     for it in catalog:
         item_dir = root / it["path"]
         # copy preview
@@ -542,6 +599,9 @@ def build(root: Path) -> int:
         tex_name = tex.name if tex else ""
         skill_path = item_dir / "skill.md"
         skill_md = skill_path.read_text(encoding="utf-8") if skill_path.exists() else None
+        if it["type"] == "template" and skill_md:
+            template_skills.append(
+                {"id": it["id"], "name": it["name"], "description": it.get("description", "")})
         (site / "item" / f"{it['id']}.html").write_text(
             item_page(it, code, tex_name, skill_md, "../assets/style.css"), encoding="utf-8"
         )
@@ -576,8 +636,13 @@ def build(root: Path) -> int:
     (site / "index.html").write_text(
         home_page(featured, by_id, counts, demos, "assets/style.css"), encoding="utf-8")
 
+    # Skills surface.
+    (site / "skills" / "index.html").write_text(
+        skills_page(template_skills, demos, by_id, "../assets/style.css"), encoding="utf-8")
+
     print(f"built site/ — {len(catalog)} items, {n_prev} previews, "
-          f"{len(catalog)+2} pages (home + browse + items); featured={len(featured)}")
+          f"{len(catalog)+3} pages (home + browse + skills + items); "
+          f"featured={len(featured)}, demos={len(demos)}, template-skills={len(template_skills)}")
     return 0
 
 
@@ -788,12 +853,6 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .md pre.md-code code{background:none; border:none; padding:0; color:#e9e6f0;
   font-family:"IBM Plex Mono",monospace; font-size:.8rem; line-height:1.6; white-space:pre}
 
-/* ---------- nav search affordance (Home) ---------- */
-.nav-search{display:inline-flex; align-items:center; gap:5px; padding:6px 12px;
-  border:1.5px solid var(--line-strong); border-radius:999px; color:var(--muted)}
-.nav-search:hover{border-color:var(--otblue); color:var(--ink); background:#fff}
-.nav-search .mag{transform:rotate(-12deg); font-size:1.05em}
-
 /* ---------- Home / marketing surface ---------- */
 .home{max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter)}
 
@@ -910,6 +969,28 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .rm-card h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.2rem; margin:0 0 .3em}
 .rm-card h3 span{font-family:"IBM Plex Mono",monospace; font-weight:400; font-size:.8rem; color:var(--muted); margin-left:6px}
 .rm-card p{margin:0; color:#4a473f; font-size:.93rem}
+
+/* ---------- skills page ---------- */
+.skills-page{max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter)}
+.skills-intro{max-width:680px; margin:0 auto; padding:46px 0 8px; text-align:center}
+.skills-intro h1{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
+  font-size:clamp(2rem,4.5vw,2.8rem); margin:0 0 .25em}
+.skills-intro .lede{font-family:"Fraunces",serif; font-weight:400; color:#34322b;
+  font-size:clamp(1.02rem,1.8vw,1.2rem); margin:0 auto}
+.skills-intro .lede code{font-family:"IBM Plex Mono",monospace; font-size:.9em}
+.skills-index,.skills-libwide{padding:36px 0; border-top:1px solid var(--line)}
+.skills-index h2,.skills-libwide h2{font-family:"Fraunces",serif; font-weight:600;
+  font-size:1.5rem; margin:0 0 6px; letter-spacing:-.01em}
+.skills-index-sub{color:var(--muted); margin:0 0 20px; font-size:.92rem}
+.skill-links{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px}
+.skill-link{display:block; text-decoration:none; background:#fff; border:1px solid var(--line);
+  border-radius:12px; padding:18px 20px; box-shadow:var(--shadow);
+  transition:transform .16s, border-color .16s, box-shadow .16s}
+.skill-link:hover{transform:translateY(-3px); border-color:var(--line-strong)}
+.skill-link h3{margin:0 0 .3em; font-family:"Fraunces",serif; font-weight:600; font-size:1.12rem;
+  color:var(--ink); display:flex; justify-content:space-between; align-items:center; gap:8px}
+.skill-link h3 span{color:var(--otblue); font-family:"IBM Plex Sans",sans-serif; font-weight:600}
+.skill-link p{margin:0; color:#4a473f; font-size:.9rem}
 
 /* Browse tool-surface header */
 .hero-browse{padding-top:40px}
@@ -1035,14 +1116,9 @@ APP_JS = r"""(function () {
     var s = document.getElementById('search');
     var t = e.target || {};
     var typing = /^(input|textarea|select)$/i.test(t.tagName || '') || t.isContentEditable;
-    if (e.key === '/' && !typing) {
+    if (e.key === '/' && !typing && s) {
       e.preventDefault();
-      if (s) {
-        s.focus();
-      } else {
-        var b = document.body.getAttribute('data-browse');
-        if (b) location.href = b + '?focus=1';
-      }
+      s.focus();
     } else if (e.key === 'Escape' && s && document.activeElement === s) {
       s.value = '';
       s.dispatchEvent(new Event('input'));

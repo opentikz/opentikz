@@ -59,7 +59,11 @@ website 1–2 wk → launch. ~6–8 weeks to first public release, IF Step 0 pas
 
 ## Future (post-launch exploration)
 
-- **Prompt-to-diagram (workflow → TikZ)** — describe the figure you want and get
-  editable TikZ that drops into the library (uses templates + skills under the
-  hood). In development for a near-term release. NOTE: this is workflow/spec →
-  TikZ generation, **not** image/SVG → TikZ tracing (a declared non-goal).
+- **Prompt-to-diagram (natural language → TikZ)** — describe the figure you want
+  and get editable TikZ that drops into the library (uses templates + skills under
+  the hood). In development for a near-term release.
+- **Graph-to-diagram (graph/spec → TikZ)** — give a node–edge specification
+  (JSON / DOT / adjacency) and get a laid-out, editable figure. In development.
+
+  NOTE: both are spec/text → TikZ generation, **not** image/SVG → TikZ tracing
+  (a declared non-goal).

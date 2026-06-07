@@ -68,6 +68,20 @@ insert another running edge pair after the relevant part, e.g. between `\xeR` an
 new node, and add the extra `flow` arrow. Keep every part's vertical centre on
 `y=0`.
 
+**Add a cross-attention block** — to show the decoder attending to the encoder
+(seq2seq / transformer style), add a block above the bottleneck that the encoder
+feeds and that feeds the decoder. Place it with `positioning` relative to `(z)`
+and connect with `flow` arrows; recolour by giving it a palette name:
+```
+\node[rounded corners=3pt, draw=otblue!80!black, fill=otblue!18,
+      minimum width=2cm, minimum height=0.9cm, font=\sffamily\small,
+      above=0.9cm of z] (xattn) {Cross-attn};
+\draw[flow] (enc) to[out=70,in=180] (xattn);   % encoder features -> cross-attn
+\draw[flow] (xattn) to[out=0,in=110] (dec);    % cross-attn -> decoder
+```
+"make it blue" = the `otblue` fill/draw above; use another palette name to recolour.
+Keep the named nodes `(enc)`/`(z)`/`(dec)` intact — the new block hangs off them.
+
 **Show input/output as data** (image/sequence) — replace the `ioblock` node's
 body: give it `{\includegraphics...}` (needs `graphicx`) or stack small squares;
 keep the node name `input`/`output` so arrows still attach.
