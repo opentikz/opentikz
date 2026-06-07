@@ -87,7 +87,9 @@ jobs:
         run: |
           base="$BASE_SHA"
           # Item .tex/.meta.json files that changed, mapped to their directories.
-          git diff --name-only "$base" HEAD -- icons templates examples \
+          # Three-dot (merge-base) so only files changed *in this PR* are counted,
+          # not files that advanced on the base branch since the fork point.
+          git diff --name-only "$base"...HEAD -- icons templates examples \
             | grep -E '\.(tex|meta\.json)$' \
             | xargs -r -n1 dirname \
             | sort -u > changed_dirs.txt || true
