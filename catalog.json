@@ -32,6 +32,38 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "description": "Paper-grade deployment figure composing the cloud, server, gpu, and database icons: client requests flow over the internet through a load balancer to GPU-backed inference nodes that read from a feature store, with a dashed inference-cluster boundary.",
+    "domain": [
+      "systems",
+      "ml"
+    ],
+    "id": "inference-serving",
+    "license": "CC0-1.0",
+    "name": "Model inference serving",
+    "path": "examples/inference-serving",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "inference",
+      "serving",
+      "deployment",
+      "load balancer",
+      "gpu",
+      "cloud",
+      "feature store",
+      "system diagram"
+    ],
+    "type": "example",
+    "venue": [
+      "OSDI",
+      "NSDI",
+      "MLSys"
+    ]
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "Attention block with query/key/value inputs and an output.",
     "domain": [
       "ml"
