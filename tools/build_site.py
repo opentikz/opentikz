@@ -319,10 +319,14 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, css_href: str) ->
     decomp.append(f'<a class="decomp-chip decomp-skill" href="{skill_link}">✎ edited via skill.md →</a>')
     decomp_html = "\n        ".join(decomp)
 
-    show_cards = "".join(
-        card(it, f"previews/{it['id']}.svg", f"item/{it['id']}.html", i)
-        for i, it in enumerate(featured)
-    )
+    tiles = ""
+    for it in featured:
+        tiles += (
+            f'    <a class="tile" href="item/{it["id"]}.html">\n'
+            f'      <div class="tile-canvas"><img src="previews/{it["id"]}.svg" alt="{html.escape(it["name"])} preview" loading="lazy"></div>\n'
+            f'      <div class="tile-meta">{badge(it["type"])}<h3>{html.escape(it["name"])}</h3></div>\n'
+            f'    </a>\n'
+        )
 
     return (
         head("OpenTikZ — paper-grade TikZ figures from a copyable library", css_href,
@@ -332,28 +336,25 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, css_href: str) ->
         + navbar("home")
         + f"""<main class="home">
   <section class="showcase">
-    <div class="showcase-fig"><img src="previews/{fid}.svg" alt="{html.escape(flagship['name'])}"></div>
-    <div class="showcase-copy">
-      <h1>Paper-grade figures,<br>built from a library.</h1>
-      <p class="lede">Copyable icons, editable architecture templates, and AI-editable
-        <em>skills</em> — assemble conference-quality TikZ without drawing it from scratch.</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="browse/">Browse the library →</a>
-        <a class="btn btn-ghost" href="#how">See how it's built</a>
-      </div>
-      <div class="decomp">
-        <span class="decomp-label">This figure — {html.escape(flagship['name'])} — is built from</span>
-        <div class="decomp-chips">
+    <h1>Paper-grade figures from a library.</h1>
+    <p class="show-lede">Copyable icons, editable templates, and AI-editable <em>skills</em>.</p>
+    <figure class="show-fig"><img src="previews/{fid}.svg" alt="{html.escape(flagship['name'])}"></figure>
+    <div class="decomp">
+      <span class="decomp-label">{html.escape(flagship['name'])} is built from</span>
+      <div class="decomp-chips">
         {decomp_html}
-        </div>
       </div>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="browse/">Browse the library →</a>
+      <a class="btn btn-ghost" href="#how">See how it's built</a>
     </div>
   </section>
 
   <section class="showcase-gallery">
     <h2>Reproductions &amp; examples</h2>
-    <div class="grid">
-{show_cards}    </div>
+    <div class="gallery">
+{tiles}    </div>
   </section>
 
   <section class="how" id="how">
@@ -517,6 +518,7 @@ STYLE_CSS = r""":root{
   --otblue:#0072B2; --otorange:#E69F00; --otteal:#009E73; --otpurple:#A85C86; --otgray:#5A5A5A;
   --grid:rgba(0,114,178,.05);
   --shadow:0 1px 0 var(--line-strong), 0 18px 40px -28px rgba(27,26,22,.45);
+  --maxw:1180px; --gutter:28px;   /* single source of truth for the layout container */
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -541,7 +543,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 /* ---------- sticky nav bar ---------- */
 .navbar{position:sticky; top:0; z-index:50; background:rgba(251,250,246,.86);
   backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
-.nav-inner{max-width:1180px; margin:0 auto; padding:11px 28px;
+.nav-inner{max-width:var(--maxw); margin:0 auto; padding:11px var(--gutter);
   display:flex; align-items:center; gap:16px; flex-wrap:wrap}
 .wordmark{display:inline-block; text-decoration:none; font-family:"Fraunces",serif;
   font-weight:900; font-size:26px; letter-spacing:-.02em; line-height:1}
@@ -582,7 +584,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 
 /* ---------- gallery ---------- */
 .grid{
-  max-width:1180px; margin:6px auto 0; padding:14px 28px 60px;
+  max-width:var(--maxw); margin:6px auto 0; padding:14px var(--gutter) 60px;
   display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:20px;
 }
 .card{
@@ -619,7 +621,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .badge-skill{color:var(--otorange)}
 
 /* ---------- item page ---------- */
-.item{max-width:1000px; margin:0 auto; padding:8px 28px 70px}
+.item{max-width:var(--maxw); margin:0 auto; padding:8px var(--gutter) 70px}
 .back{display:inline-block; margin:6px 0 22px; color:var(--muted);
   font-family:"IBM Plex Mono",monospace; font-size:.85rem; text-decoration:none}
 .back:hover{color:var(--otblue)}
@@ -669,7 +671,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .site-footer .fw{font-family:"Fraunces",serif; font-weight:600; color:var(--ink)}
 
 /* ---------- homepage sections (Icons / Templates / Examples) ---------- */
-.group{max-width:1180px; margin:10px auto 0; padding:0 28px; scroll-margin-top:74px}
+.group{max-width:var(--maxw); margin:10px auto 0; padding:0 var(--gutter); scroll-margin-top:74px}
 .group[hidden]{display:none}
 .group-head{display:flex; align-items:baseline; gap:12px; padding:20px 0 10px;
   border-bottom:1px solid var(--line-strong)}
@@ -714,30 +716,23 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .nav-search .mag{transform:rotate(-12deg); font-size:1.05em}
 
 /* ---------- Home / marketing surface ---------- */
-.home{max-width:1120px; margin:0 auto; padding:0 28px}
-.showcase{display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:48px;
-  align-items:center; padding:52px 0 38px}
-.showcase-fig{background:
+.home{max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter)}
+
+/* figure-led, centred hero — the figure is the largest element */
+.showcase{max-width:880px; margin:0 auto; padding:50px 0 42px; text-align:center}
+.showcase h1{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.025em;
+  font-size:clamp(2rem,4.6vw,3rem); line-height:1.04; margin:0 0 .25em}
+.show-lede{font-family:"Fraunces",serif; font-weight:400; color:#34322b;
+  font-size:clamp(1.05rem,2vw,1.3rem); max-width:48ch; margin:0 auto 1.5em}
+.show-lede em{font-style:italic; color:var(--otblue)}
+.show-fig{margin:0 auto 1.3em; width:min(100%,820px); background:
     linear-gradient(rgba(0,0,0,.03) 1px,transparent 1px),
     linear-gradient(90deg,rgba(0,0,0,.03) 1px,transparent 1px) #fff;
-  background-size:24px 24px; border:1px solid var(--line); border-radius:16px;
-  padding:34px; display:grid; place-items:center; box-shadow:var(--shadow); min-height:300px}
-.showcase-fig img{max-width:100%; max-height:340px}
-.showcase-copy h1{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.025em;
-  font-size:clamp(2.1rem,4.6vw,3.4rem); line-height:1.02; margin:0 0 .25em}
-.showcase-copy .lede{font-family:"Fraunces",serif; font-weight:400; color:#34322b;
-  font-size:clamp(1.05rem,1.8vw,1.25rem); max-width:44ch; margin:.2em 0 1.3em}
-.showcase-copy .lede em{font-style:italic; color:var(--otblue)}
-.cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-bottom:1.5em}
-.btn{display:inline-block; text-decoration:none; font-weight:600; font-size:.98rem;
-  padding:12px 20px; border-radius:10px; transition:.15s; border:1.5px solid transparent}
-.btn-primary{background:var(--otblue); color:#fff; box-shadow:0 10px 24px -12px rgba(0,114,178,.7)}
-.btn-primary:hover{filter:brightness(1.06); transform:translateY(-1px)}
-.btn-ghost{border-color:var(--line-strong); color:var(--ink)}
-.btn-ghost:hover{border-color:var(--otblue); color:var(--otblue)}
-.decomp{border-top:1px dashed var(--line-strong); padding-top:15px}
+  background-size:24px 24px; border:1px solid var(--line); border-radius:14px; padding:30px 30px 24px}
+.show-fig img{display:block; width:100%; max-height:470px; object-fit:contain; margin:0 auto}
+.decomp{margin:0 auto 1.4em}
 .decomp-label{font-family:"IBM Plex Mono",monospace; font-size:.78rem; color:var(--muted)}
-.decomp-chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.decomp-chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; justify-content:center}
 .decomp-chip{display:inline-flex; align-items:center; gap:7px; text-decoration:none;
   font-size:.85rem; color:var(--ink); background:#fff; border:1px solid var(--line-strong);
   border-radius:999px; padding:6px 12px; transition:.15s}
@@ -745,11 +740,35 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .decomp-chip .dot{width:9px; height:9px; border-radius:50%; display:inline-block}
 .dot-icon{background:var(--otteal)} .dot-template{background:var(--otblue)} .dot-example{background:var(--otpurple)}
 .decomp-skill{color:var(--otorange); border-color:#F0DDB6; background:#FFF8EC; font-weight:600}
-.showcase-gallery,.how,.cta-band{padding:40px 0; border-top:1px solid var(--line)}
+.cta-row{display:flex; flex-wrap:wrap; gap:12px; justify-content:center}
+.btn{display:inline-block; text-decoration:none; font-weight:600; font-size:.98rem;
+  padding:12px 20px; border-radius:10px; transition:.15s; border:1.5px solid transparent}
+.btn-primary{background:var(--otblue); color:#fff; box-shadow:0 10px 24px -12px rgba(0,114,178,.7)}
+.btn-primary:hover{filter:brightness(1.06); transform:translateY(-1px)}
+.btn-ghost{border-color:var(--line-strong); color:var(--ink)}
+.btn-ghost:hover{border-color:var(--otblue); color:var(--otblue)}
+
+.showcase-gallery,.how,.cta-band{padding:42px 0; border-top:1px solid var(--line)}
 .showcase-gallery h2,.how h2{font-family:"Fraunces",serif; font-weight:600;
   font-size:1.7rem; margin:0 0 20px; letter-spacing:-.01em}
-.showcase-gallery .grid{max-width:none; margin:0; padding:0;
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:20px}
+
+/* gallery: larger, equal-height tiles, 3->2->1 grid (no carousel) */
+.gallery{display:grid; grid-template-columns:repeat(3,1fr); gap:22px}
+.tile{display:flex; flex-direction:column; text-decoration:none; background:#fff;
+  border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:var(--shadow);
+  transition:transform .18s cubic-bezier(.2,.7,.2,1), box-shadow .18s, border-color .18s}
+.tile:hover{transform:translateY(-4px); border-color:var(--line-strong);
+  box-shadow:0 1px 0 var(--line-strong),0 26px 50px -26px rgba(27,26,22,.55)}
+.tile-canvas{aspect-ratio:16/10; display:grid; place-items:center; padding:26px;
+  background:
+    linear-gradient(rgba(0,0,0,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,.028) 1px,transparent 1px) #fcfcfa;
+  background-size:20px 20px; border-bottom:1px solid var(--line)}
+.tile-canvas img{max-width:100%; max-height:100%; width:auto; height:auto}
+.tile-meta{padding:15px 18px 18px; display:flex; flex-direction:column; gap:8px}
+.tile-meta h3{margin:0; font-family:"Fraunces",serif; font-weight:600; font-size:1.18rem; letter-spacing:-.01em}
+
+/* how it works */
 .steps{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:24px}
 .steps li{background:#fff; border:1px solid var(--line); border-radius:14px;
   padding:24px 22px; box-shadow:var(--shadow)}
@@ -767,16 +786,19 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .browse-title{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
   font-size:clamp(1.7rem,4vw,2.4rem); margin:0 0 .5em}
 
+@media(max-width:980px){
+  .gallery{grid-template-columns:repeat(2,1fr)}
+}
 @media(max-width:720px){
+  :root{--gutter:18px}            /* one place sets the mobile gutter for every container */
   .item-top{grid-template-columns:1fr; gap:22px}
-  .group{padding:0 18px}
-  .nav-inner{padding:10px 18px; gap:10px}
+  .nav-inner{padding:10px var(--gutter); gap:10px}
   .nav-links{margin-left:0; width:100%; gap:2px; overflow-x:auto; -webkit-overflow-scrolling:touch}
   .nav-links a{padding:6px 9px; font-size:.86rem}
   .hero{padding:34px 20px 8px}
-  .home{padding:0 18px}
-  .showcase{grid-template-columns:1fr; gap:26px; padding:30px 0 24px}
+  .showcase{padding:32px 0 26px}
   .steps{grid-template-columns:1fr}
+  .gallery{grid-template-columns:1fr}
 }
 """
 
