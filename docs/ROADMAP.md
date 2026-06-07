@@ -56,3 +56,10 @@ website 1–2 wk → launch. ~6–8 weeks to first public release, IF Step 0 pas
 1. Self-hosted domain from day one? (recommended: yes, CNAME early)
 2. Exact CC0 vs CC-BY for content (leaning CC0)
 3. Browser live-preview (TikZJax) as a later enhancement? (not MVP)
+
+## Future (post-launch exploration)
+
+- **Prompt-to-diagram (workflow → TikZ)** — describe the figure you want and get
+  editable TikZ that drops into the library (uses templates + skills under the
+  hood). In development for a near-term release. NOTE: this is workflow/spec →
+  TikZ generation, **not** image/SVG → TikZ tracing (a declared non-goal).

@@ -1,0 +1,29 @@
+[
+  {
+    "dimension": "add-layer",
+    "dimension_label": "Add a part",
+    "template_id": "neural-net",
+    "prompt": "add a hidden layer",
+    "before_svg": "nn-light.svg",
+    "after_svg": "nn-add.svg",
+    "changed": "A fourth layer (4 neurons) inserted before the output; connections and labels updated automatically."
+  },
+  {
+    "dimension": "recolor",
+    "dimension_label": "Recolor (palette-correct)",
+    "template_id": "neural-net",
+    "prompt": "recolor the network teal",
+    "before_svg": "nn-light.svg",
+    "after_svg": "nn-teal.svg",
+    "changed": "Every neuron switched from otblue to otteal — a palette name, never raw hex."
+  },
+  {
+    "dimension": "dark-palette",
+    "dimension_label": "Light → dark",
+    "template_id": "neural-net",
+    "prompt": "switch to the dark palette for slides",
+    "before_svg": "nn-light.svg",
+    "after_svg": "nn-dark.svg",
+    "changed": "Swapped the palette block + set a dark page — same colour names, no body edits."
+  }
+]

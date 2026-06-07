@@ -258,6 +258,12 @@ def item_page(item: dict, code: str, tex_name: str, skill_md: str | None, css_hr
       {skill_note}
       {metadata_table(item)}
       <p class="tags">{tag_list(item.get('tags', []))}</p>
+      <div class="downloads">
+        <span class="dl-label">Download</span>
+        <a class="dl-btn" href="{preview}" download="{item['id']}.svg">SVG</a>
+        <button class="dl-btn" data-png="{preview}" data-name="{item['id']}.png">PNG</button>
+        <button class="dl-btn" data-tex="src" data-name="{html.escape(tex_name)}">.tex</button>
+      </div>
     </div>
   </div>
 
@@ -299,10 +305,50 @@ def footer() -> str:
 SECTION_TITLES = {"icon": "Icons", "template": "Templates", "example": "Examples"}
 
 
-def home_page(featured: list[dict], by_id: dict, counts: dict, css_href: str) -> str:
+def demos_carousel(demos: list[dict], by_id: dict) -> str:
+    """Skills-in-action carousel; one slide per capability dimension. Empty -> ''."""
+    if not demos:
+        return ""
+    slides, dots = "", ""
+    for i, g in enumerate(demos):
+        tmpl = by_id.get(g.get("template_id"), {})
+        tname = html.escape(tmpl.get("name", g.get("template_id", "")))
+        dim = html.escape(g.get("dimension_label", g.get("dimension", "")))
+        prompt = html.escape(g.get("prompt", ""))
+        active = " active" if i == 0 else ""
+        changed = (f'<p class="demo-changed">{html.escape(g["changed"])}</p>'
+                   if g.get("changed") else "")
+        slides += f"""      <div class="demo-slide{active}" data-slide="{i}">
+        <div class="demo-head"><span class="demo-dim">{dim}</span><span class="demo-tmpl">on {tname}</span></div>
+        <div class="demo-trip">
+          <figure class="demo-fig"><img src="demos/{html.escape(g['before_svg'])}" alt="before" loading="lazy"><figcaption>before</figcaption></figure>
+          <div class="demo-prompt"><span class="demo-prompt-label">prompt</span><code>&ldquo;{prompt}&rdquo;</code></div>
+          <figure class="demo-fig"><img src="demos/{html.escape(g['after_svg'])}" alt="after" loading="lazy"><figcaption>after</figcaption></figure>
+        </div>
+        {changed}
+      </div>
+"""
+        dots += f'<button class="demo-dot{active}" data-dot="{i}" aria-label="{dim}"><span>{dim}</span></button>'
+    return f"""
+  <section class="skills-demo">
+    <h2>Skills in action</h2>
+    <p class="skills-sub">One prompt, one precise edit — across different kinds of change.</p>
+    <div class="carousel" id="carousel">
+      <button class="car-nav car-prev" aria-label="Previous">←</button>
+      <div class="car-track">
+{slides}      </div>
+      <button class="car-nav car-next" aria-label="Next">→</button>
+    </div>
+    <div class="car-dots">{dots}</div>
+  </section>
+"""
+
+
+def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], css_href: str) -> str:
     """Marketing Home — no content grid, no search box (per spec)."""
     flagship = featured[0]
     fid = flagship["id"]
+    demos_section = demos_carousel(demos, by_id)
 
     decomp = []
     skill_link = "browse/#templates"
@@ -367,6 +413,18 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, css_href: str) ->
       <li><span class="step-n">3</span><h3>Tell your AI to edit it</h3>
         <p>Every template ships a companion <strong>skill.md</strong> so Claude can add a layer, recolor, or fit a column — reliably.</p></li>
     </ol>
+  </section>
+{demos_section}
+  <section class="roadmap">
+    <h2>On the roadmap</h2>
+    <div class="roadmap-cards">
+      <article class="rm-card">
+        <span class="rm-tag">in development · next release</span>
+        <h3>Prompt-to-diagram <span>workflow → TikZ</span></h3>
+        <p>Describe the figure you want; get editable TikZ you can drop straight into
+           the library — assembled from templates and skills.</p>
+      </article>
+    </div>
   </section>
 
   <section class="cta-band">
@@ -492,6 +550,19 @@ def build(root: Path) -> int:
     (site / "browse" / "index.html").write_text(
         browse_page(catalog, "../assets/style.css"), encoding="utf-8")
 
+    # Skills-in-action demos (optional, content-driven). Copy the committed
+    # before/after SVGs into site/demos/; the section auto-hides if none exist.
+    demos: list[dict] = []
+    demos_json = root / "skills-demos" / "skills-demos.json"
+    if demos_json.exists():
+        demos = json.loads(demos_json.read_text(encoding="utf-8"))
+        (site / "demos").mkdir(exist_ok=True)
+        for g in demos:
+            for key in ("before_svg", "after_svg"):
+                src = root / "skills-demos" / g[key]
+                if src.exists():
+                    shutil.copyfile(src, site / "demos" / g[key])
+
     # Home surface (marketing). Showcase = featured items, flagship first; fall
     # back to the examples so the page still builds before any flagship lands.
     by_id = {it["id"]: it for it in catalog}
@@ -503,7 +574,7 @@ def build(root: Path) -> int:
     if not featured:
         featured = [it for it in catalog if it["type"] == "example"]
     (site / "index.html").write_text(
-        home_page(featured, by_id, counts, "assets/style.css"), encoding="utf-8")
+        home_page(featured, by_id, counts, demos, "assets/style.css"), encoding="utf-8")
 
     print(f"built site/ — {len(catalog)} items, {n_prev} previews, "
           f"{len(catalog)+2} pages (home + browse + items); featured={len(featured)}")
@@ -647,6 +718,14 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .tag{font:.74rem/1 "IBM Plex Mono",monospace; color:var(--muted);
   background:#F1EFE6; border:1px solid var(--line); border-radius:999px; padding:5px 9px}
 
+/* ---------- downloads ---------- */
+.downloads{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:18px 0 0}
+.dl-label{font-family:"IBM Plex Mono",monospace; font-size:.78rem; color:var(--muted); margin-right:2px}
+.dl-btn{font:500 .82rem "IBM Plex Mono",monospace; cursor:pointer; text-decoration:none;
+  color:var(--ink); background:#fff; border:1.5px solid var(--line-strong);
+  border-radius:8px; padding:7px 13px; transition:.15s}
+.dl-btn:hover{border-color:var(--otblue); color:var(--otblue)}
+
 /* ---------- code block ---------- */
 .code-block{margin:34px 0 0; border:1px solid var(--line-strong); border-radius:12px;
   overflow:hidden; box-shadow:var(--shadow); background:#1c1b1f}
@@ -781,6 +860,57 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   font-size:clamp(1.6rem,3.4vw,2.4rem); margin:0 0 .6em}
 .cta-sub{color:var(--muted); font-size:.85rem; margin:1.1em 0 0; font-family:"IBM Plex Mono",monospace}
 
+/* skills-in-action carousel */
+.skills-demo{padding:42px 0; border-top:1px solid var(--line); text-align:center}
+.skills-demo h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .2em; letter-spacing:-.01em}
+.skills-sub{color:var(--muted); margin:0 auto 22px; font-size:.95rem}
+.carousel{display:flex; align-items:center; gap:10px}
+.car-track{flex:1; min-width:0}
+.demo-slide{display:none}
+.demo-slide.active{display:block; animation:fade .25s both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.demo-head{display:flex; align-items:baseline; justify-content:center; gap:10px; margin-bottom:14px}
+.demo-dim{font-family:"IBM Plex Mono",monospace; font-weight:500; font-size:.8rem; color:#fff;
+  background:var(--otblue); border-radius:999px; padding:4px 11px}
+.demo-tmpl{font-family:"IBM Plex Mono",monospace; font-size:.8rem; color:var(--muted)}
+.demo-trip{display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:center}
+.demo-fig{margin:0; border:1px solid var(--line); border-radius:12px; padding:18px; background:
+    linear-gradient(rgba(0,0,0,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,.028) 1px,transparent 1px) #fcfcfa; background-size:18px 18px}
+.demo-fig img{display:block; width:100%; max-height:220px; object-fit:contain; margin:0 auto}
+.demo-fig figcaption{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted);
+  margin-top:8px; text-transform:uppercase; letter-spacing:.06em}
+.demo-prompt{position:relative; max-width:200px; margin:0 auto}
+.demo-prompt-label{display:block; font-family:"IBM Plex Mono",monospace; font-size:.68rem; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px}
+.demo-prompt code{display:block; background:#FFF8EC; border:1px solid #F0DDB6; border-radius:8px;
+  padding:10px 12px; color:#5b5341; font-size:.84rem; line-height:1.4}
+.demo-prompt::before,.demo-prompt::after{content:"→"; position:absolute; top:50%;
+  transform:translateY(-50%); color:var(--otorange); font-size:1.1rem}
+.demo-prompt::before{left:-15px} .demo-prompt::after{right:-15px}
+.demo-changed{color:var(--muted); font-size:.85rem; margin:16px auto 0; max-width:62ch}
+.car-nav{flex:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.05rem;
+  background:#fff; border:1.5px solid var(--line-strong); color:var(--ink); transition:.15s}
+.car-nav:hover{border-color:var(--otblue); color:var(--otblue)}
+.car-dots{display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:20px}
+.demo-dot{cursor:pointer; font:500 .76rem "IBM Plex Mono",monospace; color:var(--muted);
+  background:#fff; border:1.5px solid var(--line-strong); border-radius:999px; padding:5px 11px; transition:.15s}
+.demo-dot:hover{border-color:var(--otblue)}
+.demo-dot.active{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+
+/* roadmap teaser */
+.roadmap{padding:42px 0; border-top:1px solid var(--line)}
+.roadmap h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.4rem; margin:0 0 16px;
+  letter-spacing:-.01em; color:var(--muted)}
+.roadmap-cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:18px}
+.rm-card{border:1.5px dashed var(--line-strong); border-radius:14px; padding:20px 22px; background:rgba(255,255,255,.5)}
+.rm-tag{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:.68rem; text-transform:uppercase;
+  letter-spacing:.06em; color:var(--otorange); background:#FFF8EC; border:1px solid #F0DDB6;
+  border-radius:999px; padding:4px 10px; margin-bottom:10px}
+.rm-card h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.2rem; margin:0 0 .3em}
+.rm-card h3 span{font-family:"IBM Plex Mono",monospace; font-weight:400; font-size:.8rem; color:var(--muted); margin-left:6px}
+.rm-card p{margin:0; color:#4a473f; font-size:.93rem}
+
 /* Browse tool-surface header */
 .hero-browse{padding-top:40px}
 .browse-title{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
@@ -799,6 +929,11 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   .showcase{padding:32px 0 26px}
   .steps{grid-template-columns:1fr}
   .gallery{grid-template-columns:1fr}
+  .demo-trip{grid-template-columns:1fr; gap:12px}
+  .demo-prompt{max-width:none}
+  .demo-prompt::before,.demo-prompt::after{display:none}
+  .carousel{gap:6px}
+  .car-nav{width:34px; height:34px}
 }
 """
 
@@ -928,6 +1063,67 @@ APP_JS = r"""(function () {
       });
     });
   });
+
+  // ---- downloads (item page): .tex from inlined source, PNG via canvas ----
+  function triggerDownload(href, name) {
+    var a = document.createElement('a');
+    a.href = href; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  document.querySelectorAll('[data-tex]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var el = document.getElementById(btn.getAttribute('data-tex'));
+      if (!el) return;
+      var url = URL.createObjectURL(new Blob([el.textContent], { type: 'application/x-tex' }));
+      triggerDownload(url, btn.getAttribute('data-name') || 'figure.tex');
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    });
+  });
+  document.querySelectorAll('[data-png]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var img = new Image();
+      img.onload = function () {
+        var scale = 3;
+        var w = img.naturalWidth || 600, h = img.naturalHeight || 400;
+        var c = document.createElement('canvas');
+        c.width = w * scale; c.height = h * scale;
+        var ctx = c.getContext('2d');
+        ctx.fillStyle = '#ffffff';                 // figures assume a white background
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        c.toBlob(function (blob) {
+          var url = URL.createObjectURL(blob);
+          triggerDownload(url, btn.getAttribute('data-name') || 'figure.png');
+          setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+        }, 'image/png');
+      };
+      img.src = btn.getAttribute('data-png');
+    });
+  });
+
+  // ---- skills-in-action carousel (Home) ----
+  var car = document.getElementById('carousel');
+  if (car) {
+    var demoSlides = Array.prototype.slice.call(car.querySelectorAll('.demo-slide'));
+    var demoDots = Array.prototype.slice.call(document.querySelectorAll('.demo-dot'));
+    var ci = 0;
+    function showDemo(n) {
+      ci = (n + demoSlides.length) % demoSlides.length;
+      demoSlides.forEach(function (s, i) { s.classList.toggle('active', i === ci); });
+      demoDots.forEach(function (d, i) { d.classList.toggle('active', i === ci); });
+    }
+    var prev = car.querySelector('.car-prev'), next = car.querySelector('.car-next');
+    if (prev) prev.addEventListener('click', function () { showDemo(ci - 1); });
+    if (next) next.addEventListener('click', function () { showDemo(ci + 1); });
+    demoDots.forEach(function (d, i) { d.addEventListener('click', function () { showDemo(i); }); });
+    document.addEventListener('keydown', function (e) {
+      var t = e.target || {};
+      if (/^(input|textarea|select)$/i.test(t.tagName || '')) return;
+      if (e.key === 'ArrowLeft') showDemo(ci - 1);
+      else if (e.key === 'ArrowRight') showDemo(ci + 1);
+    });
+    showDemo(0);
+  }
 })();
 """
 
