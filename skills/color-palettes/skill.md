@@ -40,17 +40,25 @@ read clearly. `otgray` is the neutral for outlines/arrows/labels.
 ## Dark palette block (for dark backgrounds — same names, swap the block)
 
 A figure switches to dark mode by replacing the light block with this one: the
-**names are identical**, so no body edits are needed. Pair it with a dark page
-background (e.g. `\definecolor{otpaper}{HTML}{1E1E1E}`) when exporting for slides.
+**names are identical**, so no body edits are needed. You **must** also set a dark
+page background — `\definecolor{otpaper}{HTML}{1E1E1E}` then `\pagecolor{otpaper}`.
+The dark colors are tuned for a dark canvas; rendered on a white page the tints
+look washed-out grey, which is the usual "the dark palette looks broken" mistake.
 
 ```latex
 % --- OpenTikZ palette (dark-tuned, same names) ---
+\definecolor{otpaper}{HTML}{1E1E1E}   % dark page background; \pagecolor{otpaper}
 \definecolor{otblue}{HTML}{56B4E9}
 \definecolor{otorange}{HTML}{E69F00}
 \definecolor{otteal}{HTML}{2EBE9B}
 \definecolor{otpurple}{HTML}{E08FBE}
 \definecolor{otgray}{HTML}{B3B3B3}
 ```
+
+> Open item (future, non-MVP): tint syntax like `otblue!15` mixes toward **white**,
+> so on `otpaper` the tints lift toward white rather than blending into the dark
+> background. A future enhancement could define dark-aware tints (e.g. mix toward
+> `otpaper`). For MVP, the full colors + `\pagecolor{otpaper}` read fine.
 
 ## How to apply
 

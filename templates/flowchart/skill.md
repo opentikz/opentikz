@@ -67,6 +67,9 @@ routing helps: `(error.north) |- (read.east)` (up then left) or
 
 **Switch to the dark palette** — replace the light `\definecolor` block with the
 dark block from `skills/color-palettes/skill.md` (same names, no body edits).
+The dark palette is for **dark backgrounds**: also set `\pagecolor{otpaper}`
+(`\definecolor{otpaper}{HTML}{1E1E1E}`, see the palette skill), otherwise the
+tints render washed-out grey on a white page.
 
 **Adapt to a venue / column width** — to match a *specific* width, wrap the whole
 `tikzpicture` in `\resizebox` (needs `\usepackage{graphicx}`):

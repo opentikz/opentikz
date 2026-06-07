@@ -63,8 +63,11 @@ which nodes are in its `fit=(...)` list. The label is a separate node anchored t
 `backend.north west`; move it by editing its `xshift`/`yshift`.
 
 **Switch to the dark palette** — replace the light `\definecolor` block with the
-dark block from `skills/color-palettes/skill.md` (same names, no body edits). On
-dark, also lighten the `group` `fill` (e.g. `fill=otgray!18`).
+dark block from `skills/color-palettes/skill.md` (same names, no body edits).
+The dark palette is for **dark backgrounds**: also set `\pagecolor{otpaper}`
+(`\definecolor{otpaper}{HTML}{1E1E1E}`, see the palette skill), otherwise the
+tints render washed-out grey on a white page. On dark, also lighten the `group`
+`fill` (e.g. `fill=otgray!18`).
 
 **Adapt to a venue / column width** — to match a *specific* width, wrap the whole
 `tikzpicture` in `\resizebox` (needs `\usepackage{graphicx}`):
