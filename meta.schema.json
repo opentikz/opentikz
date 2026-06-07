@@ -76,6 +76,15 @@
     "description": {
       "type": "string",
       "description": "Optional one-line description of the item."
+    },
+    "featured": {
+      "type": "boolean",
+      "description": "Optional: feature this item on the site's Home showcase."
+    },
+    "composed_of": {
+      "type": "array",
+      "description": "Optional: ids of the library pieces this item is composed of.",
+      "items": { "type": "string" }
     }
   }
 }
