@@ -1,0 +1,12 @@
+{
+  "id": "database",
+  "name": "Database",
+  "type": "icon",
+  "domain": ["systems"],
+  "tags": ["database", "db", "datastore", "storage", "sql", "persistence", "cylinder"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "database.svg",
+  "description": "Classic cylinder database / datastore icon with stripe bands."
+}

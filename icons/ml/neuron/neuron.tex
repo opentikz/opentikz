@@ -1,0 +1,25 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in neuron.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+% --- palette (canonical source: skills/color-palettes/skill.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+\begin{tikzpicture}[line width=0.9pt, >={Stealth[length=2.2mm]}]
+  % soma
+  \node[circle, draw=otblue!75!black, fill=otblue!18, minimum size=1.15cm, inner sep=0] (soma) at (0,0) {};
+  % weighted inputs (dendrites)
+  \foreach \y in {0.75, 0, -0.75}{
+    \draw[->, draw=otgray!75] (-1.7,\y) -- (soma);
+  }
+  % output (axon)
+  \draw[->, draw=otgray!75] (soma) -- (1.7,0);
+\end{tikzpicture}
+\end{document}

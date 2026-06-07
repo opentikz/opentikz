@@ -1,6 +1,201 @@
 [
   {
     "author": "OpenTikZ contributors",
+    "description": "Attention block with query/key/value inputs and an output.",
+    "domain": [
+      "ml"
+    ],
+    "id": "attention",
+    "license": "CC0-1.0",
+    "name": "Attention block",
+    "path": "icons/ml/attention",
+    "preview": "attention.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "attention",
+      "transformer",
+      "self-attention",
+      "qkv",
+      "query key value",
+      "block"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "Cloud icon for internet / cloud services.",
+    "domain": [
+      "systems"
+    ],
+    "id": "cloud",
+    "license": "CC0-1.0",
+    "name": "Cloud",
+    "path": "icons/systems/cloud",
+    "preview": "cloud.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "cloud",
+      "internet",
+      "saas",
+      "remote",
+      "hosting",
+      "infrastructure"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "CPU / processor chip icon with pins and a labelled core.",
+    "domain": [
+      "systems"
+    ],
+    "id": "cpu",
+    "license": "CC0-1.0",
+    "name": "CPU",
+    "path": "icons/systems/cpu",
+    "preview": "cpu.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "cpu",
+      "processor",
+      "chip",
+      "compute",
+      "hardware",
+      "core"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "Classic cylinder database / datastore icon with stripe bands.",
+    "domain": [
+      "systems"
+    ],
+    "id": "database",
+    "license": "CC0-1.0",
+    "name": "Database",
+    "path": "icons/systems/database",
+    "preview": "database.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "database",
+      "db",
+      "datastore",
+      "storage",
+      "sql",
+      "persistence",
+      "cylinder"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "Tabular dataset icon: a small table with a header row.",
+    "domain": [
+      "ml"
+    ],
+    "id": "dataset",
+    "license": "CC0-1.0",
+    "name": "Dataset / table",
+    "path": "icons/ml/dataset",
+    "preview": "dataset.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "dataset",
+      "data",
+      "table",
+      "samples",
+      "features",
+      "spreadsheet",
+      "tabular"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "GPU / graphics-card icon with a fan and gold edge connector.",
+    "domain": [
+      "systems"
+    ],
+    "id": "gpu",
+    "license": "CC0-1.0",
+    "name": "GPU",
+    "path": "icons/systems/gpu",
+    "preview": "gpu.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "gpu",
+      "graphics card",
+      "accelerator",
+      "compute",
+      "hardware",
+      "cuda"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "Stacked feature maps representing a network layer / tensor.",
+    "domain": [
+      "ml"
+    ],
+    "id": "layer",
+    "license": "CC0-1.0",
+    "name": "Layer / feature maps",
+    "path": "icons/ml/layer",
+    "preview": "layer.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "layer",
+      "feature map",
+      "tensor",
+      "conv",
+      "activation",
+      "stack",
+      "channels"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "Single artificial neuron / perceptron with weighted inputs and one output.",
+    "domain": [
+      "ml"
+    ],
+    "id": "neuron",
+    "license": "CC0-1.0",
+    "name": "Neuron",
+    "path": "icons/ml/neuron",
+    "preview": "neuron.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "neuron",
+      "perceptron",
+      "unit",
+      "node",
+      "neural network",
+      "activation"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "A rack-style server icon: stacked rack units with status LEDs and ventilation slits. Parametric unit count.",
     "domain": [
       "systems"

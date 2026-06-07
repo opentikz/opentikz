@@ -1,0 +1,12 @@
+{
+  "id": "cloud",
+  "name": "Cloud",
+  "type": "icon",
+  "domain": ["systems"],
+  "tags": ["cloud", "internet", "saas", "remote", "hosting", "infrastructure"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "cloud.svg",
+  "description": "Cloud icon for internet / cloud services."
+}

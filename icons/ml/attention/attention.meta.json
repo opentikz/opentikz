@@ -1,0 +1,12 @@
+{
+  "id": "attention",
+  "name": "Attention block",
+  "type": "icon",
+  "domain": ["ml"],
+  "tags": ["attention", "transformer", "self-attention", "qkv", "query key value", "block"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "attention.svg",
+  "description": "Attention block with query/key/value inputs and an output."
+}

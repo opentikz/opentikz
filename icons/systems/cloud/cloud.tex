@@ -1,0 +1,20 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in cloud.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{shapes.symbols}
+
+% --- palette (canonical source: skills/color-palettes/skill.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+\begin{tikzpicture}
+  \node[cloud, cloud puffs=11, cloud puff arc=110, aspect=2.2,
+        draw=otblue!75!black, fill=otblue!15, line width=0.9pt,
+        minimum width=3.2cm, minimum height=2cm] {};
+\end{tikzpicture}
+\end{document}

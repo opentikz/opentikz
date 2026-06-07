@@ -1,0 +1,28 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in dataset.meta.json "requires") ---
+\usepackage{tikz}
+
+% --- palette (canonical source: skills/color-palettes/skill.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+\begin{tikzpicture}[line width=0.7pt]
+  % a small table: 3 columns x (header + 3 rows), cell 0.72 x 0.5
+  % body + header fills
+  \fill[otteal!8] (0,0) rectangle (2.16,1.5);
+  \filldraw[draw=otteal!75!black, fill=otteal!22] (0,1.5) rectangle (2.16,2.0);
+  % internal grid lines
+  \draw[otteal!55] (0.72,0) -- (0.72,2.0);
+  \draw[otteal!55] (1.44,0) -- (1.44,2.0);
+  \draw[otteal!55] (0,0.5) -- (2.16,0.5);
+  \draw[otteal!55] (0,1.0) -- (2.16,1.0);
+  % header divider + outline
+  \draw[draw=otteal!75!black, line width=0.9pt] (0,1.5) -- (2.16,1.5);
+  \draw[draw=otteal!75!black, line width=0.9pt] (0,0) rectangle (2.16,2.0);
+\end{tikzpicture}
+\end{document}

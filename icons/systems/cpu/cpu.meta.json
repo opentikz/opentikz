@@ -1,0 +1,12 @@
+{
+  "id": "cpu",
+  "name": "CPU",
+  "type": "icon",
+  "domain": ["systems"],
+  "tags": ["cpu", "processor", "chip", "compute", "hardware", "core"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "cpu.svg",
+  "description": "CPU / processor chip icon with pins and a labelled core."
+}

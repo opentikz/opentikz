@@ -1,0 +1,12 @@
+{
+  "id": "layer",
+  "name": "Layer / feature maps",
+  "type": "icon",
+  "domain": ["ml"],
+  "tags": ["layer", "feature map", "tensor", "conv", "activation", "stack", "channels"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "layer.svg",
+  "description": "Stacked feature maps representing a network layer / tensor."
+}
