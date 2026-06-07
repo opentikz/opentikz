@@ -84,5 +84,38 @@
       "ICML",
       "CVPR"
     ]
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "Supervised training loop: forward path Dataset -> Model -> Loss (with labels feeding the loss), and a backward path Loss -> Optimizer -> Model for gradients and the weight update. Parametric spacing and labels.",
+    "domain": [
+      "ml"
+    ],
+    "id": "training-pipeline",
+    "license": "CC0-1.0",
+    "name": "Training pipeline (with loss/optimizer loop)",
+    "path": "templates/training-pipeline",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "training",
+      "pipeline",
+      "loss",
+      "optimizer",
+      "backprop",
+      "gradient descent",
+      "loop",
+      "supervised learning",
+      "architecture"
+    ],
+    "type": "template",
+    "venue": [
+      "NeurIPS",
+      "ICML",
+      "CVPR",
+      "ACL"
+    ]
   }
 ]

@@ -1,0 +1,13 @@
+{
+  "id": "training-pipeline",
+  "name": "Training pipeline (with loss/optimizer loop)",
+  "type": "template",
+  "domain": ["ml"],
+  "tags": ["training", "pipeline", "loss", "optimizer", "backprop", "gradient descent", "loop", "supervised learning", "architecture"],
+  "venue": ["NeurIPS", "ICML", "CVPR", "ACL"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "preview.svg",
+  "description": "Supervised training loop: forward path Dataset -> Model -> Loss (with labels feeding the loss), and a backward path Loss -> Optimizer -> Model for gradients and the weight update. Parametric spacing and labels."
+}
