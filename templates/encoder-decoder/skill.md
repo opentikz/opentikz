@@ -75,10 +75,20 @@ keep the node name `input`/`output` so arrows still attach.
 **Switch to the dark palette** — replace the light `\definecolor` block with the
 dark block from `skills/color-palettes/skill.md` (same names, no body edits).
 
-**Adapt to a venue / column width** — for a narrow single column, shrink
-`\trapW` (2.6→1.8), `\blockH` (3.0→2.2), and `\gap` (0.9→0.6); or wrap the whole
-`tikzpicture` in `\resizebox{\columnwidth}{!}{...}` (needs `graphicx` in the
-paper). For full-width, increase the same values.
+**Adapt to a venue / column width** — to match a *specific* width, wrap the whole
+`tikzpicture` in `\resizebox` (needs `\usepackage{graphicx}`):
+```
+\resizebox{\columnwidth}{!}{\begin{tikzpicture} ... \end{tikzpicture}}
+```
+In a paper use `\columnwidth` (one column) or `\textwidth` (full width); to test a
+target in this standalone file give an explicit width, e.g. `\resizebox{8.4cm}{!}{...}`.
+This scales the figure proportionally and reliably hits the width (verified: an
+8.4cm request renders 8.4cm wide). Common targets: CVPR/ICCV/ACL single column
+≈ 8.4cm (3.3in), full/double width ≈ 17.8cm (7in); NeurIPS/ICML text ≈ 13.9cm
+(5.5in). Caveat: `\resizebox` scales text too — if the figure is far wider than the
+column the labels shrink below body size, so first reduce content/spacing
+(`\trapW`/`\blockH`/`\gap`) and resize the rest. To change the intrinsic
+**aspect ratio** rather than just scale, adjust those same parameters.
 
 ## Constraints
 
