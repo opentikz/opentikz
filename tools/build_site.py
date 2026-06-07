@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import html
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -35,6 +36,83 @@ TYPE_LABEL = {"icon": "icon", "template": "template", "example": "example", "ski
 def find_tex(item_dir: Path) -> Path | None:
     texs = sorted(item_dir.glob("*.tex"))
     return texs[0] if texs else None
+
+
+def _inline_md(s: str) -> str:
+    """Inline markdown -> HTML on an already-plain string (escapes first)."""
+    s = html.escape(s)
+    s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
+    s = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", s)
+    s = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', s)
+    return s
+
+
+def md_to_html(md: str) -> str:
+    """Minimal Markdown -> HTML for skill.md (headings, code fences, lists,
+    blockquotes, bold, inline code, links). Not a general parser — covers the
+    constructs the skills actually use."""
+    lines = md.replace("\r\n", "\n").split("\n")
+    out: list[str] = []
+    list_type: str | None = None
+    i, n = 0, len(lines)
+
+    def close_list() -> None:
+        nonlocal list_type
+        if list_type:
+            out.append(f"</{list_type}>")
+            list_type = None
+
+    while i < n:
+        line = lines[i]
+        if line.startswith("```"):
+            close_list()
+            i += 1
+            buf = []
+            while i < n and not lines[i].startswith("```"):
+                buf.append(html.escape(lines[i]))
+                i += 1
+            i += 1
+            out.append('<pre class="md-code"><code>' + "\n".join(buf) + "</code></pre>")
+            continue
+        if not line.strip():
+            close_list()
+            i += 1
+            continue
+        m = re.match(r"^(#{1,6})\s+(.*)$", line)
+        if m:
+            close_list()
+            level = min(len(m.group(1)) + 1, 6)  # '#' -> h2 (page owns h1)
+            out.append(f"<h{level}>{_inline_md(m.group(2))}</h{level}>")
+            i += 1
+            continue
+        if line.startswith(">"):
+            close_list()
+            buf = []
+            while i < n and lines[i].startswith(">"):
+                buf.append(_inline_md(lines[i].lstrip(">").strip()))
+                i += 1
+            out.append("<blockquote>" + "<br>".join(buf) + "</blockquote>")
+            continue
+        ml = re.match(r"^\s*([-*]|\d+\.)\s+(.*)$", line)
+        if ml:
+            ltype = "ol" if ml.group(1)[0].isdigit() else "ul"
+            if list_type != ltype:
+                close_list()
+                out.append(f"<{ltype}>")
+                list_type = ltype
+            out.append("<li>" + _inline_md(ml.group(2)) + "</li>")
+            i += 1
+            continue
+        close_list()
+        buf = []
+        while (i < n and lines[i].strip() and not lines[i].startswith("```")
+               and not re.match(r"^#{1,6}\s", lines[i]) and not lines[i].startswith(">")
+               and not re.match(r"^\s*([-*]|\d+\.)\s", lines[i])):
+            buf.append(_inline_md(lines[i].strip()))
+            i += 1
+        out.append("<p>" + " ".join(buf) + "</p>")
+    close_list()
+    return "\n".join(out)
 
 
 # --------------------------------------------------------------------------- #
@@ -110,18 +188,33 @@ def metadata_table(item: dict) -> str:
     return "<table class=\"meta-table\">" + "".join(rows) + "</table>"
 
 
-def item_page(item: dict, code: str, tex_name: str, css_href: str) -> str:
+def item_page(item: dict, code: str, tex_name: str, skill_md: str | None, css_href: str) -> str:
     name = html.escape(item["name"])
     desc = html.escape(item.get("description", ""))
     preview = f"../previews/{item['id']}.svg"
     is_template = item["type"] == "template"
     skill_note = ""
-    if is_template:
+    skill_section = ""
+    if is_template and skill_md:
         skill_note = (
             '<p class="skill-note">This template ships a companion '
             '<strong>skill</strong> (<code>skill.md</code>) so an AI agent can edit it '
-            'reliably — add/remove parts, recolor, change counts, adapt to a column width.</p>'
+            'reliably — the full guide is below. Copy it together with the <code>.tex</code> '
+            'into your AI assistant.</p>'
         )
+        skill_section = f"""
+  <section class="skill">
+    <div class="skill-head">
+      <h2>Companion skill <span>— edit this template with AI</span></h2>
+      <button class="copy" data-target="skillsrc">Copy skill.md</button>
+    </div>
+    <details class="skill-body">
+      <summary>Show the skill — structure · edit operations · constraints</summary>
+      <div class="md">{md_to_html(skill_md)}</div>
+    </details>
+    <pre id="skillsrc" hidden>{html.escape(skill_md)}</pre>
+  </section>
+"""
     return (
         head(f"{item['name']} — OpenTikZ", css_href, description=item.get("description", TAGLINE))
         + masthead("../index.html", compact=True)
@@ -146,7 +239,7 @@ def item_page(item: dict, code: str, tex_name: str, css_href: str) -> str:
     </div>
     <pre><code id="src">{html.escape(code)}</code></pre>
   </section>
-
+{skill_section}
   <section class="usage">
     <h2>Use it</h2>
     <p>The file compiles on its own (<code>\\documentclass{{standalone}}</code>).
@@ -179,14 +272,32 @@ def index_page(items: list[dict], css_href: str) -> str:
     for it in items:
         counts[it["type"]] = counts.get(it["type"], 0) + 1
 
-    cards = "".join(
-        card(it, f"previews/{it['id']}.svg", f"item/{it['id']}.html", i)
-        for i, it in enumerate(items)
-    )
+    # One section per type: Icons / Templates / Examples.
+    section_titles = {"icon": "Icons", "template": "Templates", "example": "Examples"}
+    groups_html = ""
+    idx = 0
+    for t in ("icon", "template", "example"):
+        members = [it for it in items if it["type"] == t]
+        if not members:
+            continue
+        cards = ""
+        for it in members:
+            cards += card(it, f"previews/{it['id']}.svg", f"item/{it['id']}.html", idx)
+            idx += 1
+        groups_html += f"""  <section class="group" data-group="{t}">
+    <div class="group-head">
+      <h2>{section_titles[t]}</h2>
+      <span class="group-count" data-count>{len(members)}</span>
+    </div>
+    <div class="grid">
+{cards}    </div>
+  </section>
+"""
+
     chips = ['<button class="chip active" data-type="all">all</button>']
     for t in ("icon", "template", "example"):
         if counts.get(t):
-            chips.append(f'<button class="chip" data-type="{t}">{TYPE_LABEL[t]}s · {counts[t]}</button>')
+            chips.append(f'<button class="chip" data-type="{t}">{section_titles[t].lower()} · {counts[t]}</button>')
     chips_html = "\n      ".join(chips)
 
     search_index = json.dumps(
@@ -226,8 +337,8 @@ def index_page(items: list[dict], css_href: str) -> str:
   <p class="result-count" id="count"></p>
 </section>
 
-<main id="gallery" class="grid">
-{cards}</main>
+<main id="gallery">
+{groups_html}</main>
 <p class="empty" id="empty" hidden>No resources match — try a different term.</p>
 """
         + footer()
@@ -269,8 +380,10 @@ def build(root: Path) -> int:
         tex = find_tex(item_dir)
         code = tex.read_text(encoding="utf-8") if tex else "% (source not found)"
         tex_name = tex.name if tex else ""
+        skill_path = item_dir / "skill.md"
+        skill_md = skill_path.read_text(encoding="utf-8") if skill_path.exists() else None
         (site / "item" / f"{it['id']}.html").write_text(
-            item_page(it, code, tex_name, "../assets/style.css"), encoding="utf-8"
+            item_page(it, code, tex_name, skill_md, "../assets/style.css"), encoding="utf-8"
         )
 
     (site / "index.html").write_text(index_page(catalog, "assets/style.css"), encoding="utf-8")
@@ -444,9 +557,49 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   justify-content:space-between; color:var(--muted); font-size:.86rem}
 .site-footer .fw{font-family:"Fraunces",serif; font-weight:600; color:var(--ink)}
 
+/* ---------- homepage sections (Icons / Templates / Examples) ---------- */
+.group{max-width:1180px; margin:10px auto 0; padding:0 28px}
+.group[hidden]{display:none}
+.group-head{display:flex; align-items:baseline; gap:12px; padding:20px 0 10px;
+  border-bottom:1px solid var(--line-strong)}
+.group-head h2{margin:0; font-family:"Fraunces",serif; font-weight:600;
+  font-size:1.55rem; letter-spacing:-.01em}
+.group-count{font-family:"IBM Plex Mono",monospace; font-size:.82rem; color:var(--muted);
+  background:#F1EFE6; border:1px solid var(--line); border-radius:999px; padding:3px 9px}
+.group .grid{max-width:none; margin:0; padding:18px 0 6px}
+
+/* ---------- companion skill (template pages) ---------- */
+.skill{margin:36px 0 0}
+.skill-head{display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:12px}
+.skill-head h2{margin:0; font-family:"Fraunces",serif; font-weight:600; font-size:1.4rem}
+.skill-head h2 span{font-family:"IBM Plex Sans",sans-serif; font-weight:400;
+  font-size:.82rem; color:var(--muted)}
+.skill-body{background:#fff; border:1px solid var(--line-strong); border-radius:12px;
+  box-shadow:var(--shadow)}
+.skill-body>summary{cursor:pointer; padding:14px 16px; list-style:none;
+  font-family:"IBM Plex Mono",monospace; font-size:.86rem; color:var(--otblue)}
+.skill-body>summary::-webkit-details-marker{display:none}
+.skill-body>summary::before{content:"▸ "; color:var(--otorange)}
+.skill-body[open]>summary{border-bottom:1px solid var(--line)}
+.skill-body[open]>summary::before{content:"▾ "}
+.md{padding:8px 22px 22px; max-width:74ch}
+.md h2,.md h3,.md h4{font-family:"Fraunces",serif; font-weight:600; letter-spacing:-.01em;
+  margin:1.1em 0 .35em}
+.md h2{font-size:1.25rem} .md h3{font-size:1.08rem} .md h4{font-size:.98rem}
+.md p{margin:.5em 0}
+.md ul,.md ol{padding-left:1.3em; margin:.5em 0}
+.md li{margin:.2em 0}
+.md a{color:var(--otblue)}
+.md blockquote{border-left:3px solid var(--otorange); background:#FFF8EC;
+  margin:.8em 0; padding:9px 13px; border-radius:6px; color:#5b5341; font-size:.92rem}
+.md pre.md-code{background:#1c1b1f; border-radius:8px; padding:13px 14px; overflow:auto; margin:.7em 0}
+.md pre.md-code code{background:none; border:none; padding:0; color:#e9e6f0;
+  font-family:"IBM Plex Mono",monospace; font-size:.8rem; line-height:1.6; white-space:pre}
+
 @media(max-width:720px){
   .item-top{grid-template-columns:1fr; gap:22px}
   .controls{position:static}
+  .group{padding:0 18px}
 }
 """
 
@@ -457,6 +610,7 @@ APP_JS = r"""(function () {
   if (catalogEl && gallery) {
     var data = JSON.parse(catalogEl.textContent);
     var cards = Array.prototype.slice.call(gallery.querySelectorAll('.card'));
+    var groups = Array.prototype.slice.call(gallery.querySelectorAll('.group'));
     var byId = {};
     cards.forEach(function (c) { byId[c.getAttribute('data-id')] = c; });
     var searchEl = document.getElementById('search');
@@ -476,20 +630,31 @@ APP_JS = r"""(function () {
 
     function apply() {
       var q = (searchEl.value || '').trim();
-      var order = null;
+      var rank = {};
+      var matched = null;          // null = no query (show all)
       if (q && fuse) {
-        order = fuse.search(q).map(function (r) { return r.item.id; });
+        matched = {};
+        fuse.search(q).forEach(function (r, i) { matched[r.item.id] = true; rank[r.item.id] = i; });
       }
       var shown = 0;
-      cards.forEach(function (c) { c.style.display = 'none'; });
-      var list = order || data.map(function (d) { return d.id; });
-      list.forEach(function (id, i) {
-        var c = byId[id];
-        if (!c) return;
-        if (activeType !== 'all' && c.getAttribute('data-type') !== activeType) return;
-        c.style.display = '';
-        c.style.order = i;
-        shown++;
+      cards.forEach(function (c) {
+        var id = c.getAttribute('data-id');
+        var typeOk = activeType === 'all' || c.getAttribute('data-type') === activeType;
+        var searchOk = !matched || matched[id];
+        if (typeOk && searchOk) {
+          c.style.display = '';
+          c.style.order = (id in rank) ? rank[id] : 0;
+          shown++;
+        } else {
+          c.style.display = 'none';
+        }
+      });
+      // hide a section when it has no visible cards (or is filtered out by type)
+      groups.forEach(function (g) {
+        var vis = g.querySelectorAll('.card:not([style*="display: none"])').length;
+        g.hidden = vis === 0;
+        var cnt = g.querySelector('[data-count]');
+        if (cnt) cnt.textContent = vis;
       });
       if (countEl) countEl.textContent = shown + (shown === 1 ? ' resource' : ' resources');
       if (emptyEl) emptyEl.hidden = shown !== 0;
