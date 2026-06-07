@@ -31,7 +31,7 @@
     "type": {
       "type": "string",
       "description": "Which content layer this item belongs to.",
-      "enum": ["icon", "template", "skill"]
+      "enum": ["icon", "template", "example", "skill"]
     },
     "domain": {
       "type": "array",
