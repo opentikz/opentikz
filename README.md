@@ -45,6 +45,20 @@ python3 tools/render_preview.py <item>        # render a trimmed .svg preview
 SVG backend (`dvisvgm`, or `pdf2svg` + `pdfcrop`). Without LaTeX installed,
 `validate.py` still checks metadata and skips the compile step.
 
+## Website
+
+A static gallery (search + per-item pages with copyable `.tex`) is generated from
+`catalog.json` and the committed `.svg` previews — no LaTeX needed:
+
+```bash
+python3 tools/build_catalog.py     # ensure catalog.json is current
+python3 tools/build_site.py        # generates site/ (gitignored)
+python3 -m http.server -d site     # preview at http://localhost:8000
+```
+
+It deploys to GitHub Pages automatically via `.github/workflows/pages.yml` on
+push to `main`. Client-side search uses Fuse.js (CDN, pinned + SRI).
+
 ## Licensing
 
 - **Code** (scripts, build tooling): MIT — see [`LICENSE-CODE`](LICENSE-CODE).

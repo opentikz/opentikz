@@ -37,6 +37,9 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Generated static site (built by tools/build_site.py; deployed via Pages CI)
+site/
+
 # NOTE: generated previews (*.svg) and catalog.json are COMMITTED on purpose
 # (the website serves CI-rendered previews), so they are intentionally NOT
 # ignored here.
