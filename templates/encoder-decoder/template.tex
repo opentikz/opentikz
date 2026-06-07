@@ -1,0 +1,83 @@
+\documentclass[border=6pt]{standalone}
+
+% --- packages (mirror these in template.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+
+% --- palette (canonical source: skills/color-palettes/skill.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+% ==== parameters (edit these) ============================================
+\def\blockH{3.0}    % height of the input/output blocks (cm)
+\def\latentH{1.1}   % height of the bottleneck z (cm); also the trapezoids' inner edge
+\def\trapW{2.6}     % width of the encoder/decoder trapezoids (cm)
+\def\blockW{1.0}    % width of the input/output blocks (cm)
+\def\latentW{0.9}   % width of the bottleneck z (cm)
+\def\gap{0.9}       % horizontal gap between parts (cm)
+% labels
+\def\inputlabel{Input $x$}
+\def\encoderlabel{Encoder}
+\def\latentlabel{$z$}
+\def\decoderlabel{Decoder}
+\def\outputlabel{Output $\hat{x}$}
+% =========================================================================
+
+\begin{tikzpicture}[
+    >={Stealth[length=2.4mm]},
+    ioblock/.style={draw=otgray!60, line width=0.7pt, fill=otgray!12, rounded corners=2pt},
+    trap/.style={line width=0.8pt, rounded corners=1.5pt},
+    latentblk/.style={draw=otorange!80!black, line width=0.8pt, fill=otorange!22, rounded corners=2pt},
+    lbl/.style={font=\sffamily\small},
+    flow/.style={draw=otgray!70, line width=0.9pt, ->},
+  ]
+  \pgfmathsetmacro{\bh}{\blockH/2}
+  \pgfmathsetmacro{\lh}{\latentH/2}
+  % Running left/right x edges of each part, laid out left to right.
+  \pgfmathsetmacro{\xiL}{0}
+  \pgfmathsetmacro{\xiR}{\xiL+\blockW}
+  \pgfmathsetmacro{\xeL}{\xiR+\gap}
+  \pgfmathsetmacro{\xeR}{\xeL+\trapW}
+  \pgfmathsetmacro{\xzL}{\xeR+\gap}
+  \pgfmathsetmacro{\xzR}{\xzL+\latentW}
+  \pgfmathsetmacro{\xdL}{\xzR+\gap}
+  \pgfmathsetmacro{\xdR}{\xdL+\trapW}
+  \pgfmathsetmacro{\xoL}{\xdR+\gap}
+  \pgfmathsetmacro{\xoR}{\xoL+\blockW}
+  % Centres (for labels / trapezoid text).
+  \pgfmathsetmacro{\xiC}{(\xiL+\xiR)/2}
+  \pgfmathsetmacro{\xeC}{(\xeL+\xeR)/2}
+  \pgfmathsetmacro{\xzC}{(\xzL+\xzR)/2}
+  \pgfmathsetmacro{\xdC}{(\xdL+\xdR)/2}
+  \pgfmathsetmacro{\xoC}{(\xoL+\xoR)/2}
+
+  % --- encoder trapezoid: wide (left) -> narrow (right) ---
+  \filldraw[trap, fill=otblue!18, draw=otblue!75!black]
+    (\xeL,\bh) -- (\xeL,-\bh) -- (\xeR,-\lh) -- (\xeR,\lh) -- cycle;
+  \node[lbl] (enc) at (\xeC,0) {\encoderlabel};
+  % --- decoder trapezoid: narrow (left) -> wide (right) ---
+  \filldraw[trap, fill=otteal!18, draw=otteal!70!black]
+    (\xdL,\lh) -- (\xdL,-\lh) -- (\xdR,-\bh) -- (\xdR,\bh) -- cycle;
+  \node[lbl] (dec) at (\xdC,0) {\decoderlabel};
+
+  % --- input / output blocks ---
+  \node[ioblock, minimum width=\blockW cm, minimum height=\blockH cm] (input)  at (\xiC,0) {};
+  \node[ioblock, minimum width=\blockW cm, minimum height=\blockH cm] (output) at (\xoC,0) {};
+  \node[lbl, below=3pt of input]  {\inputlabel};
+  \node[lbl, below=3pt of output] {\outputlabel};
+
+  % --- latent bottleneck ---
+  \node[latentblk, minimum width=\latentW cm, minimum height=\latentH cm] (z) at (\xzC,0) {};
+  \node[lbl] at (\xzC,0) {\latentlabel};
+
+  % --- flow arrows along the centre line ---
+  \draw[flow] (\xiR,0) -- (\xeL,0);
+  \draw[flow] (\xeR,0) -- (\xzL,0);
+  \draw[flow] (\xzR,0) -- (\xdL,0);
+  \draw[flow] (\xdR,0) -- (\xoL,0);
+\end{tikzpicture}
+\end{document}

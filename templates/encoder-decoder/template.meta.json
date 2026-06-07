@@ -1,0 +1,13 @@
+{
+  "id": "encoder-decoder",
+  "name": "Encoder-decoder (bottleneck)",
+  "type": "template",
+  "domain": ["ml"],
+  "tags": ["encoder", "decoder", "autoencoder", "seq2seq", "bottleneck", "latent", "representation learning", "architecture"],
+  "venue": ["NeurIPS", "ICML", "CVPR", "ACL"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "preview.svg",
+  "description": "Block-level encoder-decoder 'hourglass': input block, encoder trapezoid narrowing to a latent bottleneck z, decoder trapezoid widening to an output block. Parametric sizes and labels."
+}

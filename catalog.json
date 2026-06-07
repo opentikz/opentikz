@@ -25,6 +25,38 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "description": "Block-level encoder-decoder 'hourglass': input block, encoder trapezoid narrowing to a latent bottleneck z, decoder trapezoid widening to an output block. Parametric sizes and labels.",
+    "domain": [
+      "ml"
+    ],
+    "id": "encoder-decoder",
+    "license": "CC0-1.0",
+    "name": "Encoder-decoder (bottleneck)",
+    "path": "templates/encoder-decoder",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "encoder",
+      "decoder",
+      "autoencoder",
+      "seq2seq",
+      "bottleneck",
+      "latent",
+      "representation learning",
+      "architecture"
+    ],
+    "type": "template",
+    "venue": [
+      "NeurIPS",
+      "ICML",
+      "CVPR",
+      "ACL"
+    ]
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "Parametric fully-connected feed-forward neural network. Layer count and neurons-per-layer are set by a single list at the top of the file.",
     "domain": [
       "ml"
