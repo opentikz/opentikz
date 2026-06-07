@@ -1,0 +1,15 @@
+{
+  "id": "lora",
+  "name": "LoRA (low-rank adaptation)",
+  "type": "example",
+  "domain": ["ml"],
+  "tags": ["lora", "low-rank adaptation", "fine-tuning", "peft", "frozen weights", "adapter", "transformer"],
+  "venue": ["NeurIPS", "ICLR", "ICML"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz", "amsmath"],
+  "preview": "preview.svg",
+  "featured": true,
+  "composed_of": ["layer", "encoder-decoder"],
+  "description": "Low-rank adaptation (LoRA): a frozen pretrained weight W0 with a parallel trainable low-rank update B·A. Homage after Hu et al., 2021. Built from the layer motif (W0) and the encoder-decoder bottleneck (A→r→B)."
+}

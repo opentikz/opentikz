@@ -1,11 +1,17 @@
 [
   {
     "author": "OpenTikZ contributors",
+    "composed_of": [
+      "dataset",
+      "gpu",
+      "server"
+    ],
     "description": "Paper-grade figure composing the dataset, gpu, and server icons: a training-data source shards batches to GPU workers that exchange gradients and weights with a parameter server.",
     "domain": [
       "ml",
       "systems"
     ],
+    "featured": true,
     "id": "distributed-training",
     "license": "CC0-1.0",
     "name": "Distributed data-parallel training",
@@ -32,11 +38,18 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "composed_of": [
+      "cloud",
+      "server",
+      "gpu",
+      "database"
+    ],
     "description": "Paper-grade deployment figure composing the cloud, server, gpu, and database icons: client requests flow over the internet through a load balancer to GPU-backed inference nodes that read from a feature store, with a dashed inference-cluster boundary.",
     "domain": [
       "systems",
       "ml"
     ],
+    "featured": true,
     "id": "inference-serving",
     "license": "CC0-1.0",
     "name": "Model inference serving",
@@ -60,6 +73,42 @@
       "OSDI",
       "NSDI",
       "MLSys"
+    ]
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "composed_of": [
+      "layer",
+      "encoder-decoder"
+    ],
+    "description": "Low-rank adaptation (LoRA): a frozen pretrained weight W0 with a parallel trainable low-rank update B·A. Homage after Hu et al., 2021. Built from the layer motif (W0) and the encoder-decoder bottleneck (A→r→B).",
+    "domain": [
+      "ml"
+    ],
+    "featured": true,
+    "id": "lora",
+    "license": "CC0-1.0",
+    "name": "LoRA (low-rank adaptation)",
+    "path": "examples/lora",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz",
+      "amsmath"
+    ],
+    "tags": [
+      "lora",
+      "low-rank adaptation",
+      "fine-tuning",
+      "peft",
+      "frozen weights",
+      "adapter",
+      "transformer"
+    ],
+    "type": "example",
+    "venue": [
+      "NeurIPS",
+      "ICLR",
+      "ICML"
     ]
   },
   {

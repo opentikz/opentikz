@@ -118,7 +118,12 @@ def md_to_html(md: str) -> str:
 # --------------------------------------------------------------------------- #
 #  HTML fragments
 # --------------------------------------------------------------------------- #
-def head(title: str, css_href: str, *, description: str = TAGLINE) -> str:
+REPO_URL = "https://github.com/opentikz/opentikz"
+
+
+def head(title: str, css_href: str, *, description: str = TAGLINE, browse_href: str = "") -> str:
+    """``browse_href`` lets the '/' shortcut jump to Browse from surfaces that
+    have no search input (Home, item pages); empty on Browse (focuses inline)."""
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -131,26 +136,37 @@ def head(title: str, css_href: str, *, description: str = TAGLINE) -> str:
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{css_href}">
 </head>
-<body>
+<body data-browse="{browse_href}">
 <div class="grid-bg" aria-hidden="true"></div>
 """
 
 
-REPO_URL = "https://github.com/opentikz/opentikz"
-
-
-def navbar(home_href: str, anchor_base: str) -> str:
-    """Sticky header. anchor_base='' on the index (in-page #icons), or
-    '../index.html' on item pages (return to index.html#icons)."""
+def navbar(surface: str) -> str:
+    """Shared sticky header. surface in {home, browse, item}; sets correct
+    relative hrefs, the Browse active state, and the Home search affordance."""
+    if surface == "home":
+        home, browse, sec = "index.html", "browse/", "browse/"
+    elif surface == "browse":
+        home, browse, sec = "../index.html", "index.html", ""
+    else:  # item
+        home, browse, sec = "../index.html", "../browse/", "../browse/"
+    browse_active = " active" if surface in ("browse", "item") else ""
+    # On Home, the header offers a search affordance that routes into Browse.
+    search_affordance = (
+        f'      <a class="nav-search" href="browse/?focus=1" aria-label="Search the library">'
+        f'<span class="mag">⌕</span> Search</a>\n'
+        if surface == "home" else ""
+    )
     return f"""<header class="navbar">
   <div class="nav-inner">
-    <a class="wordmark" href="{home_href}">Open<span class="tik">TikZ</span><span class="caret">┃</span></a>
+    <a class="wordmark" href="{home}">Open<span class="tik">TikZ</span><span class="caret">┃</span></a>
     <nav class="nav-links">
-      <a href="{anchor_base}#icons" data-nav="icons">Icons</a>
-      <a href="{anchor_base}#templates" data-nav="templates">Templates</a>
-      <a href="{anchor_base}#examples" data-nav="examples">Examples</a>
+      <a class="nav-browse{browse_active}" href="{browse}" data-nav="browse">Browse</a>
+      <a href="{sec}#icons" data-nav="icons">Icons</a>
+      <a href="{sec}#templates" data-nav="templates">Templates</a>
+      <a href="{sec}#examples" data-nav="examples">Examples</a>
       <a href="{REPO_URL}#readme">Docs</a>
-      <a class="nav-gh" href="{REPO_URL}" target="_blank" rel="noopener">GitHub <span class="star">★</span></a>
+{search_affordance}      <a class="nav-gh" href="{REPO_URL}" target="_blank" rel="noopener">GitHub <span class="star">★</span></a>
     </nav>
   </div>
 </header>
@@ -228,10 +244,11 @@ def item_page(item: dict, code: str, tex_name: str, skill_md: str | None, css_hr
   </section>
 """
     return (
-        head(f"{item['name']} — OpenTikZ", css_href, description=item.get("description", TAGLINE))
-        + navbar("../index.html", "../index.html")
+        head(f"{item['name']} — OpenTikZ", css_href,
+             description=item.get("description", TAGLINE), browse_href="../browse/")
+        + navbar("item")
         + f"""<main class="item">
-  <a class="back" href="../index.html">← all resources</a>
+  <a class="back" href="../browse/">← browse the library</a>
   <div class="item-top">
     <div class="item-canvas"><img src="{preview}" alt="{name} preview"></div>
     <div class="item-head">
@@ -279,13 +296,97 @@ def footer() -> str:
 """
 
 
-def index_page(items: list[dict], css_href: str) -> str:
+SECTION_TITLES = {"icon": "Icons", "template": "Templates", "example": "Examples"}
+
+
+def home_page(featured: list[dict], by_id: dict, counts: dict, css_href: str) -> str:
+    """Marketing Home — no content grid, no search box (per spec)."""
+    flagship = featured[0]
+    fid = flagship["id"]
+
+    decomp = []
+    skill_link = "browse/#templates"
+    for cid in flagship.get("composed_of", []):
+        comp = by_id.get(cid)
+        if not comp:
+            continue
+        decomp.append(
+            f'<a class="decomp-chip" href="item/{cid}.html">'
+            f'<span class="dot dot-{comp["type"]}"></span>{html.escape(comp["name"])}</a>'
+        )
+        if comp["type"] == "template":
+            skill_link = f"item/{cid}.html"
+    decomp.append(f'<a class="decomp-chip decomp-skill" href="{skill_link}">✎ edited via skill.md →</a>')
+    decomp_html = "\n        ".join(decomp)
+
+    show_cards = "".join(
+        card(it, f"previews/{it['id']}.svg", f"item/{it['id']}.html", i)
+        for i, it in enumerate(featured)
+    )
+
+    return (
+        head("OpenTikZ — paper-grade TikZ figures from a copyable library", css_href,
+             description=("Paper-grade conceptual TikZ figures, assembled from copyable icons "
+                          "and editable, AI-editable templates."),
+             browse_href="browse/")
+        + navbar("home")
+        + f"""<main class="home">
+  <section class="showcase">
+    <div class="showcase-fig"><img src="previews/{fid}.svg" alt="{html.escape(flagship['name'])}"></div>
+    <div class="showcase-copy">
+      <h1>Paper-grade figures,<br>built from a library.</h1>
+      <p class="lede">Copyable icons, editable architecture templates, and AI-editable
+        <em>skills</em> — assemble conference-quality TikZ without drawing it from scratch.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="browse/">Browse the library →</a>
+        <a class="btn btn-ghost" href="#how">See how it's built</a>
+      </div>
+      <div class="decomp">
+        <span class="decomp-label">This figure — {html.escape(flagship['name'])} — is built from</span>
+        <div class="decomp-chips">
+        {decomp_html}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="showcase-gallery">
+    <h2>Reproductions &amp; examples</h2>
+    <div class="grid">
+{show_cards}    </div>
+  </section>
+
+  <section class="how" id="how">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><span class="step-n">1</span><h3>Grab an icon</h3>
+        <p>Atomic, standalone TikZ pieces — copy the <code>.tex</code> and drop it in.</p></li>
+      <li><span class="step-n">2</span><h3>Start from a template</h3>
+        <p>Complete, parametric figures — neural nets, encoder-decoder, pipelines, flowcharts — ready to edit.</p></li>
+      <li><span class="step-n">3</span><h3>Tell your AI to edit it</h3>
+        <p>Every template ships a companion <strong>skill.md</strong> so Claude can add a layer, recolor, or fit a column — reliably.</p></li>
+    </ol>
+  </section>
+
+  <section class="cta-band">
+    <h2>Build your next figure faster.</h2>
+    <a class="btn btn-primary" href="browse/">Browse the library →</a>
+    <p class="cta-sub">{counts.get('icon', 0)} icons · {counts.get('template', 0)} templates · {counts.get('example', 0)} examples · content <code>CC0&nbsp;1.0</code></p>
+  </section>
+</main>
+"""
+        + footer()
+        + f'<script src="{css_href.replace("style.css", "app.js")}"></script>\n'
+        + "</body>\n</html>\n"
+    )
+
+
+def browse_page(items: list[dict], css_href: str) -> str:
+    """Tool surface under /browse/ — sectioned grid + Fuse search."""
     counts = {"icon": 0, "template": 0, "example": 0}
     for it in items:
         counts[it["type"]] = counts.get(it["type"], 0) + 1
 
-    # One section per type: Icons / Templates / Examples.
-    section_titles = {"icon": "Icons", "template": "Templates", "example": "Examples"}
     groups_html = ""
     idx = 0
     for t in ("icon", "template", "example"):
@@ -294,11 +395,11 @@ def index_page(items: list[dict], css_href: str) -> str:
             continue
         cards = ""
         for it in members:
-            cards += card(it, f"previews/{it['id']}.svg", f"item/{it['id']}.html", idx)
+            cards += card(it, f"../previews/{it['id']}.svg", f"../item/{it['id']}.html", idx)
             idx += 1
         groups_html += f"""  <section class="group" id="{t}s" data-group="{t}">
     <div class="group-head">
-      <h2>{section_titles[t]}</h2>
+      <h2>{SECTION_TITLES[t]}</h2>
       <span class="group-count" data-count>{len(members)}</span>
     </div>
     <div class="grid">
@@ -309,30 +410,24 @@ def index_page(items: list[dict], css_href: str) -> str:
     chips = ['<button class="chip active" data-type="all">all</button>']
     for t in ("icon", "template", "example"):
         if counts.get(t):
-            chips.append(f'<button class="chip" data-type="{t}">{section_titles[t].lower()} · {counts[t]}</button>')
+            chips.append(f'<button class="chip" data-type="{t}">{SECTION_TITLES[t].lower()} · {counts[t]}</button>')
     chips_html = "\n      ".join(chips)
 
     search_index = json.dumps(
         [
-            {
-                "id": it["id"],
-                "name": it["name"],
-                "type": it["type"],
-                "domain": it.get("domain", []),
-                "tags": it.get("tags", []),
-                "description": it.get("description", ""),
-            }
+            {"id": it["id"], "name": it["name"], "type": it["type"],
+             "domain": it.get("domain", []), "tags": it.get("tags", []),
+             "description": it.get("description", "")}
             for it in items
         ],
         ensure_ascii=False,
     )
 
     return (
-        head("OpenTikZ — TikZ for academic diagrams", css_href)
-        + navbar("index.html", "")
-        + f"""<section class="hero">
-  <p class="eyebrow">{html.escape(TAGLINE)}</p>
-  <p class="lede">{html.escape(LEDE)}</p>
+        head("Browse — OpenTikZ", css_href, browse_href="")
+        + navbar("browse")
+        + f"""<section class="hero hero-browse">
+  <h1 class="browse-title">Browse the library</h1>
   <div class="hero-search">
     <input id="search" type="search" placeholder="Search icons, templates, tags…    ( / )" autocomplete="off" aria-label="Search resources">
   </div>
@@ -366,6 +461,7 @@ def build(root: Path) -> int:
     if site.exists():
         shutil.rmtree(site)
     (site / "item").mkdir(parents=True)
+    (site / "browse").mkdir(parents=True)
     (site / "previews").mkdir(parents=True)
     (site / "assets").mkdir(parents=True)
 
@@ -391,10 +487,25 @@ def build(root: Path) -> int:
             item_page(it, code, tex_name, skill_md, "../assets/style.css"), encoding="utf-8"
         )
 
-    (site / "index.html").write_text(index_page(catalog, "assets/style.css"), encoding="utf-8")
+    # Browse surface (the tool) under /browse/.
+    (site / "browse" / "index.html").write_text(
+        browse_page(catalog, "../assets/style.css"), encoding="utf-8")
+
+    # Home surface (marketing). Showcase = featured items, flagship first; fall
+    # back to the examples so the page still builds before any flagship lands.
+    by_id = {it["id"]: it for it in catalog}
+    counts = {"icon": 0, "template": 0, "example": 0}
+    for it in catalog:
+        counts[it["type"]] = counts.get(it["type"], 0) + 1
+    featured = [it for it in catalog if it.get("featured")]
+    featured.sort(key=lambda it: (0 if "lora" in it["id"] else 1, it["name"].lower()))
+    if not featured:
+        featured = [it for it in catalog if it["type"] == "example"]
+    (site / "index.html").write_text(
+        home_page(featured, by_id, counts, "assets/style.css"), encoding="utf-8")
 
     print(f"built site/ — {len(catalog)} items, {n_prev} previews, "
-          f"{len(catalog)+1} pages")
+          f"{len(catalog)+2} pages (home + browse + items); featured={len(featured)}")
     return 0
 
 
@@ -596,6 +707,66 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .md pre.md-code code{background:none; border:none; padding:0; color:#e9e6f0;
   font-family:"IBM Plex Mono",monospace; font-size:.8rem; line-height:1.6; white-space:pre}
 
+/* ---------- nav search affordance (Home) ---------- */
+.nav-search{display:inline-flex; align-items:center; gap:5px; padding:6px 12px;
+  border:1.5px solid var(--line-strong); border-radius:999px; color:var(--muted)}
+.nav-search:hover{border-color:var(--otblue); color:var(--ink); background:#fff}
+.nav-search .mag{transform:rotate(-12deg); font-size:1.05em}
+
+/* ---------- Home / marketing surface ---------- */
+.home{max-width:1120px; margin:0 auto; padding:0 28px}
+.showcase{display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:48px;
+  align-items:center; padding:52px 0 38px}
+.showcase-fig{background:
+    linear-gradient(rgba(0,0,0,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,.03) 1px,transparent 1px) #fff;
+  background-size:24px 24px; border:1px solid var(--line); border-radius:16px;
+  padding:34px; display:grid; place-items:center; box-shadow:var(--shadow); min-height:300px}
+.showcase-fig img{max-width:100%; max-height:340px}
+.showcase-copy h1{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.025em;
+  font-size:clamp(2.1rem,4.6vw,3.4rem); line-height:1.02; margin:0 0 .25em}
+.showcase-copy .lede{font-family:"Fraunces",serif; font-weight:400; color:#34322b;
+  font-size:clamp(1.05rem,1.8vw,1.25rem); max-width:44ch; margin:.2em 0 1.3em}
+.showcase-copy .lede em{font-style:italic; color:var(--otblue)}
+.cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-bottom:1.5em}
+.btn{display:inline-block; text-decoration:none; font-weight:600; font-size:.98rem;
+  padding:12px 20px; border-radius:10px; transition:.15s; border:1.5px solid transparent}
+.btn-primary{background:var(--otblue); color:#fff; box-shadow:0 10px 24px -12px rgba(0,114,178,.7)}
+.btn-primary:hover{filter:brightness(1.06); transform:translateY(-1px)}
+.btn-ghost{border-color:var(--line-strong); color:var(--ink)}
+.btn-ghost:hover{border-color:var(--otblue); color:var(--otblue)}
+.decomp{border-top:1px dashed var(--line-strong); padding-top:15px}
+.decomp-label{font-family:"IBM Plex Mono",monospace; font-size:.78rem; color:var(--muted)}
+.decomp-chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.decomp-chip{display:inline-flex; align-items:center; gap:7px; text-decoration:none;
+  font-size:.85rem; color:var(--ink); background:#fff; border:1px solid var(--line-strong);
+  border-radius:999px; padding:6px 12px; transition:.15s}
+.decomp-chip:hover{border-color:var(--otblue); box-shadow:var(--shadow)}
+.decomp-chip .dot{width:9px; height:9px; border-radius:50%; display:inline-block}
+.dot-icon{background:var(--otteal)} .dot-template{background:var(--otblue)} .dot-example{background:var(--otpurple)}
+.decomp-skill{color:var(--otorange); border-color:#F0DDB6; background:#FFF8EC; font-weight:600}
+.showcase-gallery,.how,.cta-band{padding:40px 0; border-top:1px solid var(--line)}
+.showcase-gallery h2,.how h2{font-family:"Fraunces",serif; font-weight:600;
+  font-size:1.7rem; margin:0 0 20px; letter-spacing:-.01em}
+.showcase-gallery .grid{max-width:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:20px}
+.steps{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:24px}
+.steps li{background:#fff; border:1px solid var(--line); border-radius:14px;
+  padding:24px 22px; box-shadow:var(--shadow)}
+.step-n{display:grid; place-items:center; width:34px; height:34px; border-radius:50%;
+  background:var(--ink); color:var(--paper); font-family:"Fraunces",serif; font-weight:600; margin-bottom:12px}
+.steps h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.15rem; margin:0 0 .3em}
+.steps p{margin:0; color:#4a473f; font-size:.95rem}
+.cta-band{text-align:center; border-bottom:none}
+.cta-band h2{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
+  font-size:clamp(1.6rem,3.4vw,2.4rem); margin:0 0 .6em}
+.cta-sub{color:var(--muted); font-size:.85rem; margin:1.1em 0 0; font-family:"IBM Plex Mono",monospace}
+
+/* Browse tool-surface header */
+.hero-browse{padding-top:40px}
+.browse-title{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
+  font-size:clamp(1.7rem,4vw,2.4rem); margin:0 0 .5em}
+
 @media(max-width:720px){
   .item-top{grid-template-columns:1fr; gap:22px}
   .group{padding:0 18px}
@@ -603,6 +774,9 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   .nav-links{margin-left:0; width:100%; gap:2px; overflow-x:auto; -webkit-overflow-scrolling:touch}
   .nav-links a{padding:6px 9px; font-size:.86rem}
   .hero{padding:34px 20px 8px}
+  .home{padding:0 18px}
+  .showcase{grid-template-columns:1fr; gap:26px; padding:30px 0 24px}
+  .steps{grid-template-columns:1fr}
 }
 """
 
@@ -621,6 +795,11 @@ APP_JS = r"""(function () {
     var emptyEl = document.getElementById('empty');
     var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
     var activeType = 'all';
+
+    // support ?q= (prefill+run) and ?focus= from the Home search hand-off
+    var params = new URLSearchParams(location.search);
+    var q0 = params.get('q');
+    if (q0 && searchEl) searchEl.value = q0;
 
     var fuse = window.Fuse ? new window.Fuse(data, {
       includeScore: true, threshold: 0.38, ignoreLocation: true,
@@ -673,17 +852,20 @@ APP_JS = r"""(function () {
       });
     });
     apply();
+    if (searchEl && (q0 || params.get('focus'))) searchEl.focus();
 
-    // ---- active-section highlight in the nav ----
-    var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a[data-nav]'));
-    if (navLinks.length && 'IntersectionObserver' in window) {
-      var navMap = {};
-      navLinks.forEach(function (a) { navMap[a.getAttribute('data-nav')] = a; });
+    // ---- active-section highlight (only the section links; Browse stays active) ----
+    var sectionLinks = {};
+    ['icons', 'templates', 'examples'].forEach(function (k) {
+      var a = document.querySelector('.nav-links a[data-nav="' + k + '"]');
+      if (a) sectionLinks[k] = a;
+    });
+    if (Object.keys(sectionLinks).length && 'IntersectionObserver' in window) {
       var obs = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
-          if (en.isIntersecting && navMap[en.target.id]) {
-            navLinks.forEach(function (a) { a.classList.remove('active'); });
-            navMap[en.target.id].classList.add('active');
+          if (en.isIntersecting && sectionLinks[en.target.id]) {
+            Object.keys(sectionLinks).forEach(function (k) { sectionLinks[k].classList.remove('active'); });
+            sectionLinks[en.target.id].classList.add('active');
           }
         });
       }, { rootMargin: '-45% 0px -50% 0px' });
@@ -691,16 +873,20 @@ APP_JS = r"""(function () {
     }
   }
 
-  // ---- keyboard: '/' focuses search, Esc clears + blurs ----
+  // ---- keyboard: '/' focuses search (or jumps to Browse); Esc clears + blurs ----
   document.addEventListener('keydown', function (e) {
     var s = document.getElementById('search');
-    if (!s) return;
     var t = e.target || {};
     var typing = /^(input|textarea|select)$/i.test(t.tagName || '') || t.isContentEditable;
     if (e.key === '/' && !typing) {
       e.preventDefault();
-      s.focus();
-    } else if (e.key === 'Escape' && document.activeElement === s) {
+      if (s) {
+        s.focus();
+      } else {
+        var b = document.body.getAttribute('data-browse');
+        if (b) location.href = b + '?focus=1';
+      }
+    } else if (e.key === 'Escape' && s && document.activeElement === s) {
       s.value = '';
       s.dispatchEvent(new Event('input'));
       s.blur();

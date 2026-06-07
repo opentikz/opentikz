@@ -9,5 +9,7 @@
   "license": "CC0-1.0",
   "requires": ["tikz"],
   "preview": "preview.svg",
+  "featured": true,
+  "composed_of": ["cloud", "server", "gpu", "database"],
   "description": "Paper-grade deployment figure composing the cloud, server, gpu, and database icons: client requests flow over the internet through a load balancer to GPU-backed inference nodes that read from a feature store, with a dashed inference-cluster boundary."
 }

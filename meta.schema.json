@@ -76,6 +76,16 @@
     "description": {
       "type": "string",
       "description": "Optional one-line description of the item."
+    },
+    "featured": {
+      "type": "boolean",
+      "description": "Optional: include this item on the marketing Home showcase."
+    },
+    "composed_of": {
+      "type": "array",
+      "description": "Optional: ids of the library items this figure is composed of (powers the decomposable showcase / deep-links).",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
     }
   }
 }

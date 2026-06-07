@@ -104,20 +104,20 @@ fallback until the asset lands), but the Home isn't "done" until at least the fl
 exists.
 
 ## 7. Acceptance criteria
-- [ ] `python3 tools/build_site.py` builds Home, `/browse/`, all item pages; no broken
+- [x] `python3 tools/build_site.py` builds Home, `/browse/`, all item pages; no broken
       asset/preview/card/back links at any path depth (verify each surface).
-- [ ] Home has **no** content grid and **no** search input; Browse has both.
-- [ ] Header is shared, sticky, with correct active state (Home vs Browse) and working
+- [x] Home has **no** content grid and **no** search input; Browse has both.
+- [x] Header is shared, sticky, with correct active state (Home vs Browse) and working
       `Browse / Icons / Templates / Examples / Docs / GitHub` links.
-- [ ] Header search affordance + `/` from Home lands on `/browse/` with search focused;
+- [x] Header search affordance + `/` from Home lands on `/browse/` with search focused;
       `/` on Browse focuses the input.
-- [ ] Decomposable showcase chips deep-link to the right item pages.
-- [ ] Browse preserves section-aware search, empty-section collapse, chips, counts,
+- [x] Decomposable showcase chips deep-link to the right item pages.
+- [x] Browse preserves section-aware search, empty-section collapse, chips, counts,
       copy `.tex` + copy `skill.md`, skill rendering — all still green.
-- [ ] `featured`/`composed_of` added to `meta.schema.json` (optional); `validate.py
+- [x] `featured`/`composed_of` added to `meta.schema.json` (optional); `validate.py
       --strict` and `build_catalog.py --check` pass.
-- [ ] Mobile (390px): no horizontal overflow on either surface.
-- [ ] No new dependencies; stdlib-only; identity preserved; `site/` gitignored.
+- [x] Mobile (390px): no horizontal overflow on either surface.
+- [x] No new dependencies; stdlib-only; identity preserved; `site/` gitignored.
 
 ## 8. Test bar
 Real-browser pass (Chrome via puppeteer-core, as in prior reviews): both surfaces

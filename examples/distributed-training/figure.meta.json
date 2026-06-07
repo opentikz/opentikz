@@ -9,5 +9,7 @@
   "license": "CC0-1.0",
   "requires": ["tikz"],
   "preview": "preview.svg",
+  "featured": true,
+  "composed_of": ["dataset", "gpu", "server"],
   "description": "Paper-grade figure composing the dataset, gpu, and server icons: a training-data source shards batches to GPU workers that exchange gradients and weights with a parameter server."
 }
