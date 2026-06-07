@@ -87,6 +87,38 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "description": "General system architecture diagram: external client, process boxes (gateway/services), datastore cylinders (database/cache), branching connections, and a dashed subsystem group box. Multiple component types, parametric spacing.",
+    "domain": [
+      "systems"
+    ],
+    "id": "system-block-diagram",
+    "license": "CC0-1.0",
+    "name": "System block diagram",
+    "path": "templates/system-block-diagram",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "system",
+      "architecture",
+      "block diagram",
+      "microservices",
+      "components",
+      "database",
+      "cache",
+      "data flow"
+    ],
+    "type": "template",
+    "venue": [
+      "NSDI",
+      "OSDI",
+      "SOSP",
+      "SIGCOMM"
+    ]
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "Supervised training loop: forward path Dataset -> Model -> Loss (with labels feeding the loss), and a backward path Loss -> Optimizer -> Model for gradients and the weight update. Parametric spacing and labels.",
     "domain": [
       "ml"

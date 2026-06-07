@@ -1,0 +1,76 @@
+\documentclass[border=8pt]{standalone}
+
+% --- packages (mirror these in template.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, fit, backgrounds}
+
+% --- palette (canonical source: skills/color-palettes/skill.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+% ==== parameters (edit these) ============================================
+\def\rowsep{1.1}    % vertical gap between rows (cm)
+\def\colsep{1.5}    % horizontal gap between columns (cm)
+\def\boxminw{1.9}   % minimum process/external box width (cm)
+\def\boxminh{1.0}   % minimum box height (cm)
+% labels
+\def\clientlabel{Client}
+\def\gatewaylabel{API\\Gateway}
+\def\svconelabel{Service A}
+\def\svctwolabel{Service B}
+\def\dblabel{Database}
+\def\cachelabel{Cache}
+\def\grouplabel{Backend}
+% =========================================================================
+
+\begin{tikzpicture}[
+    node distance=\rowsep cm and \colsep cm,
+    >={Stealth[length=2.4mm]},
+    comp/.style={
+      rounded corners=3pt, line width=0.7pt, align=center,
+      minimum width=\boxminw cm, minimum height=\boxminh cm, font=\sffamily\small,
+    },
+    external/.style={comp, draw=otgray!60, fill=otgray!10, dashed},
+    process/.style={comp, draw=otblue!70!black, fill=otblue!16},
+    store/.style={
+      shape=cylinder, shape border rotate=90, aspect=0.25,
+      draw=otteal!70!black, fill=otteal!16, line width=0.7pt,
+      minimum width=1.7cm, minimum height=1.0cm, align=center,
+      font=\sffamily\small, inner sep=2pt,
+    },
+    cachestore/.style={store, draw=otorange!80!black, fill=otorange!22},
+    link/.style={draw=otgray!75, line width=0.9pt, ->},
+    group/.style={
+      draw=otgray!55, dashed, rounded corners=6pt, line width=0.8pt,
+      inner sep=11pt, fill=otgray!4,
+    },
+  ]
+
+  % --- components (left to right; services stacked) ---
+  \node[external] (client) {\clientlabel};
+  \node[process, right=of client] (gateway) {\gatewaylabel};
+  \node[process, above right=of gateway] (svc1) {\svconelabel};
+  \node[process, below right=of gateway] (svc2) {\svctwolabel};
+  \node[store,      right=of svc1] (db)    {\dblabel};
+  \node[cachestore, right=of svc2] (cache) {\cachelabel};
+
+  % --- connections ---
+  \draw[link] (client) -- (gateway);
+  \draw[link] (gateway) -- (svc1);
+  \draw[link] (gateway) -- (svc2);
+  \draw[link] (svc1) -- (db);
+  \draw[link] (svc2) -- (cache);
+
+  % --- subsystem boundary drawn behind the components ---
+  \begin{scope}[on background layer]
+    \node[group, fit=(svc1)(svc2)(db)(cache)] (backend) {};
+    \node[font=\sffamily\footnotesize, text=otgray, anchor=north west]
+      at ([xshift=4pt, yshift=-3pt]backend.north west) {\grouplabel};
+  \end{scope}
+
+\end{tikzpicture}
+\end{document}
