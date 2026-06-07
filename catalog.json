@@ -57,6 +57,33 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "description": "Standard flowchart: terminal pills (start/end), process rectangles, a decision diamond with Yes/No branches, and a retry loop. Parametric spacing and labels.",
+    "domain": [
+      "general"
+    ],
+    "id": "flowchart",
+    "license": "CC0-1.0",
+    "name": "Flowchart (decision + loop)",
+    "path": "templates/flowchart",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "flowchart",
+      "decision",
+      "diamond",
+      "process",
+      "control flow",
+      "algorithm",
+      "branch",
+      "loop"
+    ],
+    "type": "template",
+    "venue": []
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "Parametric fully-connected feed-forward neural network. Layer count and neurons-per-layer are set by a single list at the top of the file.",
     "domain": [
       "ml"

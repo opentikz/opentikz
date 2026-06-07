@@ -1,0 +1,67 @@
+\documentclass[border=8pt]{standalone}
+
+% --- packages (mirror these in template.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, shapes.misc}
+
+% --- palette (canonical source: skills/color-palettes/skill.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+% ==== parameters (edit these) ============================================
+\def\rowsep{0.95}   % vertical gap between steps (cm)
+\def\boxminw{2.4}   % minimum process/terminal width (cm)
+\def\boxminh{0.95}  % minimum box height (cm)
+% labels
+\def\startlabel{Start}
+\def\readlabel{Read input}
+\def\checklabel{Valid?}
+\def\proclabel{Process data}
+\def\endlabel{End}
+\def\errorlabel{Report error}
+\def\yeslabel{Yes}
+\def\nolabel{No}
+\def\looplabel{retry}
+% =========================================================================
+
+\begin{tikzpicture}[
+    node distance=\rowsep cm,
+    >={Stealth[length=2.4mm]},
+    base/.style={
+      line width=0.7pt, align=center, font=\sffamily\small,
+      minimum width=\boxminw cm, minimum height=\boxminh cm,
+    },
+    terminal/.style={base, shape=rounded rectangle, draw=otteal!70!black, fill=otteal!16},
+    process/.style={base, rounded corners=3pt, draw=otblue!70!black, fill=otblue!16},
+    decision/.style={base, shape=diamond, aspect=2.2, inner sep=1pt,
+      draw=otorange!80!black, fill=otorange!20, minimum width=2.6cm},
+    flow/.style={draw=otgray!75, line width=0.9pt, ->},
+    loop/.style={draw=otpurple!85!black, line width=1.0pt, ->},
+    elabel/.style={font=\sffamily\footnotesize, text=otgray},
+  ]
+
+  % --- main vertical spine ---
+  \node[terminal] (start) {\startlabel};
+  \node[process,  below=of start] (read)  {\readlabel};
+  \node[decision, below=of read]  (check) {\checklabel};
+  \node[process,  below=of check] (proc)  {\proclabel};
+  \node[terminal, below=of proc]  (end)   {\endlabel};
+  % --- error branch to the right of the decision ---
+  \node[process, right=1.7cm of check] (error) {\errorlabel};
+
+  % --- flow ---
+  \draw[flow] (start) -- (read);
+  \draw[flow] (read)  -- (check);
+  \draw[flow] (check) -- (proc) node[midway, right, elabel] {\yeslabel};
+  \draw[flow] (proc)  -- (end);
+  \draw[flow] (check) -- (error) node[midway, above, elabel] {\nolabel};
+  % --- retry loop: error back up to read ---
+  \draw[loop] (error.north) |- (read.east)
+    node[pos=0.75, above, font=\sffamily\footnotesize, text=otpurple!85!black] {\looplabel};
+
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,13 @@
+{
+  "id": "flowchart",
+  "name": "Flowchart (decision + loop)",
+  "type": "template",
+  "domain": ["general"],
+  "tags": ["flowchart", "decision", "diamond", "process", "control flow", "algorithm", "branch", "loop"],
+  "venue": [],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "preview.svg",
+  "description": "Standard flowchart: terminal pills (start/end), process rectangles, a decision diamond with Yes/No branches, and a retry loop. Parametric spacing and labels."
+}
