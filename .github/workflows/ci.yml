@@ -1,0 +1,173 @@
+name: CI
+
+# Runs on every pull request (validate + render changed previews + comment) and
+# on pushes to main (validate + catalog check). See tools/ for the scripts.
+#
+# NOTE: requires the repo to live on GitHub. The TeX toolchain mirrors local dev:
+# dvisvgm uses the DVI route (latexmk -dvi -> dvisvgm), which needs Ghostscript
+# for the embedded PostScript specials; SVG->PNG uses rsvg-convert.
+"on":
+  pull_request:
+    paths:
+      - "icons/**"
+      - "templates/**"
+      - "examples/**"
+      - "tools/**"
+      - "meta.schema.json"
+      - "requirements.txt"
+      - ".github/workflows/ci.yml"
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history for diffing)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Python deps
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Install system tools (Ghostscript + rsvg)
+        run: sudo apt-get update && sudo apt-get install -y ghostscript librsvg2-bin
+
+      - name: Set up TeX Live (cached)
+        uses: teatimeguest/setup-texlive-action@v3
+        with:
+          # Mirror the local toolchain. tlmgr resolves further dependencies.
+          packages: >-
+            scheme-basic
+            latex
+            latexmk
+            standalone
+            pgf
+            xcolor
+            preview
+            dvisvgm
+            geometry
+            varwidth
+            xkeyval
+
+      - name: Validate metadata + standalone compile (strict)
+        run: python3 tools/validate.py --strict
+
+      - name: Check catalog.json is up to date
+        run: |
+          if ! python3 tools/build_catalog.py --check; then
+            echo "::error::catalog.json is stale. Run 'python3 tools/build_catalog.py' and commit the result."
+            exit 1
+          fi
+
+      # ---- everything below is PR-only: render changed previews + comment ----
+
+      - name: Determine changed content items
+        if: github.event_name == 'pull_request'
+        id: changed
+        env:
+          # Passed via env (not interpolated into the script) per Actions security
+          # best practice. It is a commit SHA, but env-passing is the safe habit.
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          base="$BASE_SHA"
+          # Item .tex/.meta.json files that changed, mapped to their directories.
+          git diff --name-only "$base" HEAD -- icons templates examples \
+            | grep -E '\.(tex|meta\.json)$' \
+            | xargs -r -n1 dirname \
+            | sort -u > changed_dirs.txt || true
+          count=$(wc -l < changed_dirs.txt | tr -d ' ')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "Changed item dirs ($count):"
+          cat changed_dirs.txt || true
+
+      - name: Render previews for changed items
+        if: github.event_name == 'pull_request' && steps.changed.outputs.count != '0'
+        run: |
+          set -euo pipefail
+          mkdir -p _previews
+          : > preview_list.txt
+          while IFS= read -r d; do
+            [ -z "$d" ] && continue
+            # Skip dirs that no longer contain a .tex (e.g. deletions).
+            if ! ls "$d"/*.tex >/dev/null 2>&1; then continue; fi
+            name="$(echo "$d" | tr '/' '_')"
+            python3 tools/render_preview.py "$d" -o "_previews/${name}.svg"
+            rsvg-convert -o "_previews/${name}.png" "_previews/${name}.svg" || true
+            echo "$d|_previews/${name}.png" >> preview_list.txt
+          done < changed_dirs.txt
+          echo "Rendered previews:"; ls -la _previews || true
+
+      - name: Upload previews as artifact
+        if: github.event_name == 'pull_request' && steps.changed.outputs.count != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: previews
+          path: _previews/
+          if-no-files-found: ignore
+
+      - name: Comment on PR with results
+        # continue-on-error: GITHUB_TOKEN is read-only for fork PRs, so commenting
+        # may fail there; don't fail the whole build because of it.
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- opentikz-ci-preview -->';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            let items = [];
+            try {
+              items = fs.readFileSync('preview_list.txt', 'utf8')
+                .split('\n').map(l => l.trim()).filter(Boolean)
+                .map(l => l.split('|')[0]);
+            } catch (e) { /* no previews */ }
+
+            let body = `${marker}\n### OpenTikZ CI ✅\n\n` +
+              `Metadata + standalone compile validated, and \`catalog.json\` is up to date.\n\n`;
+
+            if (items.length) {
+              body += `**Rendered previews for ${items.length} changed item(s):**\n` +
+                items.map(i => `- \`${i}\``).join('\n') +
+                `\n\nDownload the rendered SVG/PNG previews from the ` +
+                `[**previews** artifact on this run](${runUrl}).\n\n` +
+                `<sub>Inline image embedding in the comment is a planned enhancement ` +
+                `(needs image hosting / a previews branch).</sub>`;
+            } else {
+              body += `_No content items changed in this PR (tooling/metadata only)._`;
+            }
+
+            // Sticky comment: update the existing CI comment if present, else create.
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                comment_id: existing.id, body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: context.issue.number, body,
+              });
+            }
