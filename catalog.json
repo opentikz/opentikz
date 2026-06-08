@@ -81,7 +81,7 @@
       "layer",
       "encoder-decoder"
     ],
-    "description": "Low-rank adaptation (LoRA): a frozen pretrained weight W0 with a parallel trainable low-rank update B·A. Homage after Hu et al., 2021. Built from the layer motif (W0) and the encoder-decoder bottleneck (A→r→B).",
+    "description": "Low-rank adaptation (LoRA), two-panel homage after Hu et al., 2021. During training: a frozen pretrained weight W feeds Wx in parallel with a trainable low-rank update B·A (rank-r bottleneck, A=N(0,sigma^2), B=0) feeding BAx, summed to h. After training: the adapter is folded into a single merged weight matrix W_merged, shown as a bar–square–bar stack. Center column gives h = Wx + BAx = (W + BA)x.",
     "domain": [
       "ml"
     ],
@@ -93,7 +93,8 @@
     "preview": "preview.svg",
     "requires": [
       "tikz",
-      "amsmath"
+      "amsmath",
+      "amssymb"
     ],
     "tags": [
       "lora",
@@ -102,7 +103,8 @@
       "peft",
       "frozen weights",
       "adapter",
-      "transformer"
+      "transformer",
+      "merged weights"
     ],
     "type": "example",
     "venue": [
