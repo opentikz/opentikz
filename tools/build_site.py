@@ -349,21 +349,6 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     fid = flagship["id"]
     demos_section = demos_carousel(demos, by_id)
 
-    decomp = []
-    skill_link = "browse/#templates"
-    for cid in flagship.get("composed_of", []):
-        comp = by_id.get(cid)
-        if not comp:
-            continue
-        decomp.append(
-            f'<a class="decomp-chip" href="item/{cid}.html">'
-            f'<span class="dot dot-{comp["type"]}"></span>{html.escape(comp["name"])}</a>'
-        )
-        if comp["type"] == "template":
-            skill_link = f"item/{cid}.html"
-    decomp.append(f'<a class="decomp-chip decomp-skill" href="{skill_link}">✎ edited via skill.md →</a>')
-    decomp_html = "\n        ".join(decomp)
-
     tiles = ""
     for it in featured:
         tiles += (
@@ -384,12 +369,6 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     <h1>Paper-grade figures from a library.</h1>
     <p class="show-lede">Copyable icons, editable templates, and AI-editable <em>skills</em>.</p>
     <figure class="show-fig"><img src="previews/{fid}.svg" alt="{html.escape(flagship['name'])}"></figure>
-    <div class="decomp">
-      <span class="decomp-label">{html.escape(flagship['name'])} is built from</span>
-      <div class="decomp-chips">
-        {decomp_html}
-      </div>
-    </div>
     <div class="cta-row">
       <a class="btn btn-primary" href="browse/">Browse the library →</a>
       <a class="btn btn-ghost" href="#how">See how it's built</a>
@@ -405,12 +384,12 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
   <section class="how" id="how">
     <h2>How it works</h2>
     <ol class="steps">
-      <li><span class="step-n">1</span><h3>Grab an icon</h3>
-        <p>Atomic, standalone TikZ pieces — copy the <code>.tex</code> and drop it in.</p></li>
-      <li><span class="step-n">2</span><h3>Start from a template</h3>
-        <p>Complete, parametric figures — neural nets, encoder-decoder, pipelines, flowcharts — ready to edit.</p></li>
-      <li><span class="step-n">3</span><h3>Tell your AI to edit it</h3>
-        <p>Every template ships a companion <strong>skill.md</strong> so Claude can add a layer, recolor, or fit a column — reliably.</p></li>
+      <li><span class="step-n">1</span><h3>Clone the repo</h3>
+        <p>Pull OpenTikZ into your project — the icons, templates, and companion <strong>skill.md</strong> files come with it.</p></li>
+      <li><span class="step-n">2</span><h3>Describe the diagram</h3>
+        <p>Tell your AI agent the figure you want — "a training pipeline with two GPUs feeding a transformer," in plain words.</p></li>
+      <li><span class="step-n">3</span><h3>The agent assembles it</h3>
+        <p>Guided by the skills, the agent reuses the existing icons, blocks, and templates to build editable TikZ — no hand-writing from scratch.</p></li>
     </ol>
   </section>
 {demos_section}
@@ -868,17 +847,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
     linear-gradient(90deg,rgba(0,0,0,.03) 1px,transparent 1px) #fff;
   background-size:24px 24px; border:1px solid var(--line); border-radius:14px; padding:30px 30px 24px}
 .show-fig img{display:block; width:100%; max-height:470px; object-fit:contain; margin:0 auto}
-.decomp{margin:0 auto 1.4em}
-.decomp-label{font-family:"IBM Plex Mono",monospace; font-size:.78rem; color:var(--muted)}
-.decomp-chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; justify-content:center}
-.decomp-chip{display:inline-flex; align-items:center; gap:7px; text-decoration:none;
-  font-size:.85rem; color:var(--ink); background:#fff; border:1px solid var(--line-strong);
-  border-radius:999px; padding:6px 12px; transition:.15s}
-.decomp-chip:hover{border-color:var(--otblue); box-shadow:var(--shadow)}
-.decomp-chip .dot{width:9px; height:9px; border-radius:50%; display:inline-block}
-.dot-icon{background:var(--otteal)} .dot-template{background:var(--otblue)} .dot-example{background:var(--otpurple)}
-.decomp-skill{color:var(--otorange); border-color:#F0DDB6; background:#FFF8EC; font-weight:600}
-.cta-row{display:flex; flex-wrap:wrap; gap:12px; justify-content:center}
+.cta-row{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:1.4em}
 .btn{display:inline-block; text-decoration:none; font-weight:600; font-size:.98rem;
   padding:12px 20px; border-radius:10px; transition:.15s; border:1.5px solid transparent}
 .btn-primary{background:var(--otblue); color:#fff; box-shadow:0 10px 24px -12px rgba(0,114,178,.7)}
