@@ -1,0 +1,12 @@
+{
+  "id": "model",
+  "name": "Model",
+  "type": "icon",
+  "domain": ["ml"],
+  "tags": ["model", "network", "ai", "checkpoint", "weights", "black-box"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "model.svg",
+  "description": "A generic model: a rounded box marked with an AI sparkle, for use as a black-box network."
+}

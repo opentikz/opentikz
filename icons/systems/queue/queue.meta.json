@@ -1,0 +1,12 @@
+{
+  "id": "queue",
+  "name": "Message queue",
+  "type": "icon",
+  "domain": ["systems"],
+  "tags": ["queue", "fifo", "buffer", "message", "kafka", "pipeline", "broker"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz", "arrows.meta"],
+  "preview": "queue.svg",
+  "description": "A FIFO message queue: buffered items with enqueue and dequeue arrows."
+}

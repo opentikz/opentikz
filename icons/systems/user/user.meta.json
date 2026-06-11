@@ -1,0 +1,12 @@
+{
+  "id": "user",
+  "name": "User",
+  "type": "icon",
+  "domain": ["systems"],
+  "tags": ["user", "client", "person", "actor", "human", "account"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "user.svg",
+  "description": "A user/client avatar: head and shoulders silhouette, for system actors and endpoints."
+}

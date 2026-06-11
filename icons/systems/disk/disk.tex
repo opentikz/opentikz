@@ -1,0 +1,25 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in disk.meta.json "requires") ---
+\usepackage{tikz}
+
+% --- palette (canonical source: skills/color-palettes/skill.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+\begin{tikzpicture}[line width=0.9pt]
+  % drive enclosure
+  \filldraw[draw=otgray!75, fill=otgray!10, rounded corners=3pt] (0,0) rectangle (2.6,2.2);
+  % platter
+  \filldraw[draw=otblue!70!black, fill=otblue!16] (1.15,1.1) circle[radius=0.85];
+  % spindle hub
+  \filldraw[draw=otblue!70!black, fill=otgray!22] (1.15,1.1) circle[radius=0.18];
+  % read/write arm
+  \draw[otorange!85!black, line width=1.6pt] (2.35,2.0) -- (1.5,0.95);
+  \filldraw[otorange!85!black] (1.5,0.95) circle[radius=0.07];
+\end{tikzpicture}
+\end{document}

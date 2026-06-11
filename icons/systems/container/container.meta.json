@@ -1,0 +1,12 @@
+{
+  "id": "container",
+  "name": "Container",
+  "type": "icon",
+  "domain": ["systems"],
+  "tags": ["container", "docker", "box", "deployment", "package", "microservice"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "container.svg",
+  "description": "A container drawn as an isometric slatted cube, for deployment and packaging diagrams."
+}

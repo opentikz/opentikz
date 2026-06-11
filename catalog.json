@@ -163,6 +163,56 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "description": "A container drawn as an isometric slatted cube, for deployment and packaging diagrams.",
+    "domain": [
+      "systems"
+    ],
+    "id": "container",
+    "license": "CC0-1.0",
+    "name": "Container",
+    "path": "icons/systems/container",
+    "preview": "container.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "container",
+      "docker",
+      "box",
+      "deployment",
+      "package",
+      "microservice"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "A convolution: a sliding kernel window over a feature-map grid producing an output cell.",
+    "domain": [
+      "ml"
+    ],
+    "id": "convolution",
+    "license": "CC0-1.0",
+    "name": "Convolution",
+    "path": "icons/ml/convolution",
+    "preview": "convolution.svg",
+    "requires": [
+      "tikz",
+      "arrows.meta"
+    ],
+    "tags": [
+      "convolution",
+      "cnn",
+      "kernel",
+      "filter",
+      "feature-map",
+      "stride",
+      "vision"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "CPU / processor chip icon with pins and a labelled core.",
     "domain": [
       "systems"
@@ -237,6 +287,54 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "description": "A hard disk drive: enclosure with a platter, spindle hub, and read/write arm.",
+    "domain": [
+      "systems"
+    ],
+    "id": "disk",
+    "license": "CC0-1.0",
+    "name": "Disk / storage",
+    "path": "icons/systems/disk",
+    "preview": "disk.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "disk",
+      "storage",
+      "hdd",
+      "drive",
+      "persistence",
+      "hardware"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "An embedding vector drawn as a bracketed column of weighted cells.",
+    "domain": [
+      "ml"
+    ],
+    "id": "embedding",
+    "license": "CC0-1.0",
+    "name": "Embedding vector",
+    "path": "icons/ml/embedding",
+    "preview": "embedding.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "embedding",
+      "vector",
+      "representation",
+      "latent",
+      "feature",
+      "encoding"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "GPU / graphics-card icon with a fan and gold edge connector.",
     "domain": [
       "systems"
@@ -286,6 +384,103 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "description": "A training-loss curve descending to a converged minimum on loss-vs-epoch axes.",
+    "domain": [
+      "ml"
+    ],
+    "id": "loss",
+    "license": "CC0-1.0",
+    "name": "Loss curve",
+    "path": "icons/ml/loss",
+    "preview": "loss.svg",
+    "requires": [
+      "tikz",
+      "arrows.meta"
+    ],
+    "tags": [
+      "loss",
+      "objective",
+      "training",
+      "convergence",
+      "optimization",
+      "curve"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "A handset representing a mobile or edge device, for client- and edge-side blocks.",
+    "domain": [
+      "systems"
+    ],
+    "id": "mobile",
+    "license": "CC0-1.0",
+    "name": "Mobile / edge device",
+    "path": "icons/systems/mobile",
+    "preview": "mobile.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "mobile",
+      "phone",
+      "edge",
+      "device",
+      "client",
+      "on-device"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "A generic model: a rounded box marked with an AI sparkle, for use as a black-box network.",
+    "domain": [
+      "ml"
+    ],
+    "id": "model",
+    "license": "CC0-1.0",
+    "name": "Model",
+    "path": "icons/ml/model",
+    "preview": "model.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "model",
+      "network",
+      "ai",
+      "checkpoint",
+      "weights",
+      "black-box"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "A small network topology: a central hub linked to four peer nodes.",
+    "domain": [
+      "systems"
+    ],
+    "id": "network",
+    "license": "CC0-1.0",
+    "name": "Network",
+    "path": "icons/systems/network",
+    "preview": "network.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "network",
+      "topology",
+      "nodes",
+      "hub",
+      "graph",
+      "connectivity"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "Single artificial neuron / perceptron with weighted inputs and one output.",
     "domain": [
       "ml"
@@ -310,6 +505,32 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "description": "A FIFO message queue: buffered items with enqueue and dequeue arrows.",
+    "domain": [
+      "systems"
+    ],
+    "id": "queue",
+    "license": "CC0-1.0",
+    "name": "Message queue",
+    "path": "icons/systems/queue",
+    "preview": "queue.svg",
+    "requires": [
+      "tikz",
+      "arrows.meta"
+    ],
+    "tags": [
+      "queue",
+      "fifo",
+      "buffer",
+      "message",
+      "kafka",
+      "pipeline",
+      "broker"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "A rack-style server icon: stacked rack units with status LEDs and ventilation slits. Parametric unit count.",
     "domain": [
       "systems"
@@ -329,6 +550,56 @@
       "infrastructure",
       "datacenter",
       "hardware"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "A transformer block: stacked multi-head-attention and feed-forward sub-layers with an x N repeat indicator.",
+    "domain": [
+      "ml"
+    ],
+    "id": "transformer",
+    "license": "CC0-1.0",
+    "name": "Transformer block",
+    "path": "icons/ml/transformer",
+    "preview": "transformer.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "transformer",
+      "attention",
+      "multi-head",
+      "feed-forward",
+      "encoder",
+      "decoder",
+      "block",
+      "nlp"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "A user/client avatar: head and shoulders silhouette, for system actors and endpoints.",
+    "domain": [
+      "systems"
+    ],
+    "id": "user",
+    "license": "CC0-1.0",
+    "name": "User",
+    "path": "icons/systems/user",
+    "preview": "user.svg",
+    "requires": [
+      "tikz"
+    ],
+    "tags": [
+      "user",
+      "client",
+      "person",
+      "actor",
+      "human",
+      "account"
     ],
     "type": "icon"
   },

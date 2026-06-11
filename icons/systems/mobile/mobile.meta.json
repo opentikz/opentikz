@@ -1,0 +1,12 @@
+{
+  "id": "mobile",
+  "name": "Mobile / edge device",
+  "type": "icon",
+  "domain": ["systems"],
+  "tags": ["mobile", "phone", "edge", "device", "client", "on-device"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "mobile.svg",
+  "description": "A handset representing a mobile or edge device, for client- and edge-side blocks."
+}

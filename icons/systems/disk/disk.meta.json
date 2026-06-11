@@ -1,0 +1,12 @@
+{
+  "id": "disk",
+  "name": "Disk / storage",
+  "type": "icon",
+  "domain": ["systems"],
+  "tags": ["disk", "storage", "hdd", "drive", "persistence", "hardware"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz"],
+  "preview": "disk.svg",
+  "description": "A hard disk drive: enclosure with a platter, spindle hub, and read/write arm."
+}

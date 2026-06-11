@@ -1,0 +1,26 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in model.meta.json "requires") ---
+\usepackage{tikz}
+
+% --- palette (canonical source: skills/color-palettes/skill.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+\begin{tikzpicture}[line width=0.9pt]
+  % generic model box
+  \filldraw[draw=otblue!75!black, fill=otblue!14, rounded corners=4pt] (0,0) rectangle (2.4,2.4);
+  % "AI" sparkle (four-point star)
+  \begin{scope}[shift={(1.2,1.2)}]
+    \filldraw[draw=otorange!80!black, fill=otorange!65]
+      (0,0.72) .. controls (0.14,0.14) and (0.14,0.14) .. (0.72,0)
+      .. controls (0.14,-0.14) and (0.14,-0.14) .. (0,-0.72)
+      .. controls (-0.14,-0.14) and (-0.14,-0.14) .. (-0.72,0)
+      .. controls (-0.14,0.14) and (-0.14,0.14) .. (0,0.72) -- cycle;
+  \end{scope}
+\end{tikzpicture}
+\end{document}

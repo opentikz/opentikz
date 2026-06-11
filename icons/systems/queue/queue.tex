@@ -1,0 +1,26 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in queue.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+% --- palette (canonical source: skills/color-palettes/skill.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+\begin{tikzpicture}[line width=0.9pt, >={Stealth[length=2.4mm]}]
+  % enqueue arrow
+  \draw[->, otgray!75] (-0.75,0.6) -- (0.05,0.6);
+  % buffered messages (FIFO)
+  \foreach \i in {0,1,2,3}{
+    \filldraw[draw=otorange!80!black, fill=otorange!22, rounded corners=2pt]
+      (0.15+\i*0.62,0.2) rectangle (0.7+\i*0.62,1.0);
+  }
+  % dequeue arrow
+  \draw[->, otgray!75] (2.68,0.6) -- (3.48,0.6);
+\end{tikzpicture}
+\end{document}
