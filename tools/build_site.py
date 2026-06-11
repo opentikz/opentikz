@@ -157,6 +157,10 @@ def navbar(surface: str) -> str:
     return f"""<header class="navbar">
   <div class="nav-inner">
     <a class="wordmark" href="{home}">Open<span class="tik">TikZ</span><span class="caret">┃</span></a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" hidden>
+    <label class="nav-burger" for="nav-toggle" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </label>
     <nav class="nav-links">
       <a class="nav-browse{browse_active}" href="{browse}" data-nav="browse">Browse</a>
       <a href="{sec}#icons" data-nav="icons">Icons</a>
@@ -332,7 +336,7 @@ def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
   <section class="skills-demo">
     <h2>Skills in action</h2>
     <p class="skills-sub">One prompt, one precise edit — across different kinds of change.</p>
-    <div class="carousel" id="carousel">
+    <div class="carousel skills-carousel" id="skills-carousel" tabindex="0" aria-roledescription="carousel" aria-label="Skills in action">
       <button class="car-nav car-prev" aria-label="Previous">←</button>
       <div class="car-track">
 {slides}      </div>
@@ -345,18 +349,43 @@ def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
 
 def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], css_href: str) -> str:
     """Marketing Home — no content grid, no search box (per spec)."""
-    flagship = featured[0]
-    fid = flagship["id"]
     demos_section = demos_carousel(demos, by_id)
 
-    tiles = ""
-    for it in featured:
-        tiles += (
-            f'    <a class="tile" href="item/{it["id"]}.html">\n'
-            f'      <div class="tile-canvas"><img src="previews/{it["id"]}.svg" alt="{html.escape(it["name"])} preview" loading="lazy"></div>\n'
-            f'      <div class="tile-meta">{badge(it["type"])}<h3>{html.escape(it["name"])}</h3></div>\n'
-            f'    </a>\n'
-        )
+    # Hero carousel: one featured figure per slide (flagship first). Each slide is a
+    # zoomable figure + caption (name deep-links to the item page). DISTINCT id and
+    # slide/dot classes (#hero-carousel / .hero-slide / .hero-dot) so it never shares
+    # state with the skills-in-action carousel (#skills-carousel / .demo-slide / .demo-dot).
+    hero_slides, hero_dots = "", ""
+    for i, it in enumerate(featured):
+        name = html.escape(it["name"])
+        active = " active" if i == 0 else ""
+        hero_slides += f"""        <div class="hero-slide{active}" data-slide="{i}" data-id="{html.escape(it['id'])}" data-name="{name}">
+          <figure class="hero-fig">
+            <button class="hero-zoom" type="button" data-zoom="{i}" aria-label="Enlarge {name}">
+              <img src="previews/{it['id']}.svg" alt="{name}" loading="lazy">
+              <span class="zoom-hint" aria-hidden="true">&#128269; click to enlarge</span>
+            </button>
+            <figcaption class="hero-cap">{badge(it['type'])}<a href="item/{it['id']}.html">{name}</a></figcaption>
+          </figure>
+        </div>
+"""
+        hero_dots += f'<button class="hero-dot{active}" data-dot="{i}" aria-label="Show {name}"></button>'
+
+    # Lightbox modal, emitted once. The figure is filled in by app.js from the
+    # featured slides (same ordered list as the hero carousel).
+    lightbox = """  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Figure viewer" aria-hidden="true" hidden>
+    <div class="lb-backdrop" data-lb-close></div>
+    <div class="lb-panel" role="document">
+      <button class="lb-nav lb-prev" type="button" aria-label="Previous figure">&larr;</button>
+      <figure class="lb-fig">
+        <img id="lb-img" src="" alt="">
+        <figcaption class="lb-cap"><span id="lb-badge"></span><a id="lb-link" href="#"></a></figcaption>
+      </figure>
+      <button class="lb-nav lb-next" type="button" aria-label="Next figure">&rarr;</button>
+      <button class="lb-close" type="button" aria-label="Close" data-lb-close>&times;</button>
+    </div>
+  </div>
+"""
 
     return (
         head("OpenTikZ — paper-grade TikZ figures from a copyable library", css_href,
@@ -368,19 +397,19 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
   <section class="showcase">
     <h1>Paper-grade figures from a library.</h1>
     <p class="show-lede">Copyable icons, editable templates, and AI-editable <em>skills</em>.</p>
-    <figure class="show-fig"><img src="previews/{fid}.svg" alt="{html.escape(flagship['name'])}"></figure>
+    <div class="carousel hero-carousel" id="hero-carousel" tabindex="0" aria-roledescription="carousel" aria-label="Featured figures">
+      <button class="car-nav car-prev" type="button" aria-label="Previous figure">&larr;</button>
+      <div class="car-track">
+{hero_slides}      </div>
+      <button class="car-nav car-next" type="button" aria-label="Next figure">&rarr;</button>
+    </div>
+    <div class="car-dots hero-dots">{hero_dots}</div>
     <div class="cta-row">
       <a class="btn btn-primary" href="browse/">Browse the library →</a>
       <a class="btn btn-ghost" href="#how">See how it's built</a>
     </div>
   </section>
-
-  <section class="showcase-gallery">
-    <h2>Reproductions &amp; examples</h2>
-    <div class="gallery">
-{tiles}    </div>
-  </section>
-
+{lightbox}
   <section class="how" id="how">
     <h2>How it works</h2>
     <ol class="steps">
@@ -529,10 +558,19 @@ def skills_page(template_skills: list[dict], demos: list[dict], by_id: dict, css
 
   <section class="skills-libwide">
     <h2>Library-wide skills</h2>
+    <p class="skills-index-sub">Cross-cutting skills any figure can apply — colour, annotation, and layout.</p>
     <div class="skill-links">
       <a class="skill-link" href="{REPO_URL}/blob/main/skills/color-palettes/skill.md" target="_blank" rel="noopener">
         <h3>Color palettes <span>&#8599;</span></h3>
         <p>The shared, colour-blind-friendly palette every figure references (light + dark variants).</p>
+      </a>
+      <a class="skill-link" href="{REPO_URL}/blob/main/skills/annotations/skill.md" target="_blank" rel="noopener">
+        <h3>Annotations <span>&#8599;</span></h3>
+        <p>Labels, callout leaders, grouping braces, highlight boxes, and step badges — added consistently from the palette.</p>
+      </a>
+      <a class="skill-link" href="{REPO_URL}/blob/main/skills/layout/skill.md" target="_blank" rel="noopener">
+        <h3>Layout <span>&#8599;</span></h3>
+        <p>Relative placement, alignment, even distribution, and fitting a figure to a paper column width.</p>
       </a>
     </div>
   </section>
@@ -673,6 +711,13 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .nav-links a.active{color:var(--otblue)}
 .nav-gh{color:var(--ink); font-weight:500}
 .nav-gh .star{color:var(--otorange)}
+/* hamburger toggle — hidden on desktop, shown at the mobile breakpoint */
+.nav-toggle{display:none}
+.nav-burger{display:none; width:42px; height:38px; flex:none; cursor:pointer; padding:0;
+  border:1px solid var(--line); border-radius:9px; background:transparent;
+  align-items:center; justify-content:center; flex-direction:column; gap:4px}
+.nav-burger span{display:block; width:18px; height:2px; border-radius:2px; background:var(--ink);
+  transition:transform .2s ease, opacity .2s ease}
 
 /* ---------- hero (elevated, centred search) ---------- */
 .hero{max-width:760px; margin:0 auto; padding:54px 28px 12px; text-align:center}
@@ -842,11 +887,6 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .show-lede{font-family:"Fraunces",serif; font-weight:400; color:#34322b;
   font-size:clamp(1.05rem,2vw,1.3rem); max-width:48ch; margin:0 auto 1.5em}
 .show-lede em{font-style:italic; color:var(--otblue)}
-.show-fig{margin:0 auto 1.3em; width:min(100%,820px); background:
-    linear-gradient(rgba(0,0,0,.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,0,0,.03) 1px,transparent 1px) #fff;
-  background-size:24px 24px; border:1px solid var(--line); border-radius:14px; padding:30px 30px 24px}
-.show-fig img{display:block; width:100%; max-height:470px; object-fit:contain; margin:0 auto}
 .cta-row{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:1.4em}
 .btn{display:inline-block; text-decoration:none; font-weight:600; font-size:.98rem;
   padding:12px 20px; border-radius:10px; transition:.15s; border:1.5px solid transparent}
@@ -855,25 +895,66 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .btn-ghost{border-color:var(--line-strong); color:var(--ink)}
 .btn-ghost:hover{border-color:var(--otblue); color:var(--otblue)}
 
-.showcase-gallery,.how,.cta-band{padding:42px 0; border-top:1px solid var(--line)}
-.showcase-gallery h2,.how h2{font-family:"Fraunces",serif; font-weight:600;
+.how,.cta-band{padding:42px 0; border-top:1px solid var(--line)}
+.how h2{font-family:"Fraunces",serif; font-weight:600;
   font-size:1.7rem; margin:0 0 20px; letter-spacing:-.01em}
 
-/* gallery: larger, equal-height tiles, 3->2->1 grid (no carousel) */
-.gallery{display:grid; grid-template-columns:repeat(3,1fr); gap:22px}
-.tile{display:flex; flex-direction:column; text-decoration:none; background:#fff;
-  border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:var(--shadow);
-  transition:transform .18s cubic-bezier(.2,.7,.2,1), box-shadow .18s, border-color .18s}
-.tile:hover{transform:translateY(-4px); border-color:var(--line-strong);
-  box-shadow:0 1px 0 var(--line-strong),0 26px 50px -26px rgba(27,26,22,.55)}
-.tile-canvas{aspect-ratio:16/10; display:grid; place-items:center; padding:26px;
-  background:
-    linear-gradient(rgba(0,0,0,.028) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,0,0,.028) 1px,transparent 1px) #fcfcfa;
-  background-size:20px 20px; border-bottom:1px solid var(--line)}
-.tile-canvas img{max-width:100%; max-height:100%; width:auto; height:auto}
-.tile-meta{padding:15px 18px 18px; display:flex; flex-direction:column; gap:8px}
-.tile-meta h3{margin:0; font-family:"Fraunces",serif; font-weight:600; font-size:1.18rem; letter-spacing:-.01em}
+/* hero figure carousel (Home) — one featured figure per slide, click to zoom */
+.hero-carousel{margin:0 auto 1.1em; width:min(100%,860px); outline:none}
+.hero-carousel:focus-visible{box-shadow:0 0 0 3px rgba(0,114,178,.22); border-radius:16px}
+.hero-slide{display:none}
+.hero-slide.active{display:block; animation:fade .25s both}
+.hero-fig{margin:0}
+.hero-zoom{display:block; width:100%; cursor:zoom-in; position:relative; padding:30px 30px 24px;
+  border:1px solid var(--line); border-radius:14px; background:
+    linear-gradient(rgba(0,0,0,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,.03) 1px,transparent 1px) #fff;
+  background-size:24px 24px; transition:border-color .15s, box-shadow .15s}
+.hero-zoom:hover{border-color:var(--line-strong); box-shadow:var(--shadow)}
+.hero-zoom:focus-visible{outline:2px solid var(--otblue); outline-offset:2px}
+.hero-zoom img{display:block; width:100%; height:360px; object-fit:contain; margin:0 auto}
+.zoom-hint{position:absolute; top:12px; right:12px; font:500 .72rem "IBM Plex Mono",monospace;
+  color:var(--ink); background:rgba(255,255,255,.92); border:1px solid var(--line-strong);
+  border-radius:999px; padding:5px 11px; box-shadow:var(--shadow); transition:opacity .15s}
+.hero-cap{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:14px}
+.hero-cap a{font-family:"Fraunces",serif; font-weight:600; font-size:1.12rem; letter-spacing:-.01em;
+  color:var(--ink); text-decoration:none}
+.hero-cap a:hover{color:var(--otblue); text-decoration:underline}
+.hero-dots{margin-top:14px}
+.hero-dot{width:10px; height:10px; padding:0; cursor:pointer; border-radius:50%;
+  background:#fff; border:1.5px solid var(--line-strong); transition:.15s}
+.hero-dot:hover{border-color:var(--otblue)}
+.hero-dot.active{background:var(--ink); border-color:var(--ink)}
+
+/* lightbox modal */
+.lightbox{position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:4vh 4vw}
+.lightbox[hidden]{display:none}
+.lb-backdrop{position:absolute; inset:0; background:rgba(20,19,15,.72);
+  backdrop-filter:blur(4px); animation:lbfade .2s both}
+.lb-panel{position:relative; z-index:1; display:flex; align-items:center; gap:14px;
+  width:min(96vw,1200px); max-height:92vh; animation:lbpop .22s cubic-bezier(.2,.7,.2,1) both}
+.lb-fig{flex:1; min-width:0; margin:0; background:#fff; border-radius:16px;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.8); padding:24px 24px 16px; display:flex;
+  flex-direction:column; max-height:92vh}
+.lb-fig img{display:block; width:100%; height:auto; max-height:78vh; object-fit:contain; margin:0 auto}
+.lb-cap{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:12px}
+.lb-cap a{font-family:"Fraunces",serif; font-weight:600; font-size:1.1rem; color:var(--ink);
+  text-decoration:none}
+.lb-cap a:hover{color:var(--otblue); text-decoration:underline}
+.lb-nav{flex:none; width:46px; height:46px; border-radius:50%; cursor:pointer; font-size:1.2rem;
+  background:rgba(255,255,255,.94); border:1.5px solid var(--line-strong); color:var(--ink); transition:.15s}
+.lb-nav:hover{border-color:var(--otblue); color:var(--otblue)}
+.lb-close{position:absolute; top:-6px; right:-6px; width:40px; height:40px; border-radius:50%;
+  cursor:pointer; font-size:1.4rem; line-height:1; background:#fff; border:1.5px solid var(--line-strong);
+  color:var(--ink); box-shadow:var(--shadow); transition:.15s}
+.lb-close:hover{border-color:var(--otorange); color:var(--otorange)}
+@keyframes lbfade{from{opacity:0}to{opacity:1}}
+@keyframes lbpop{from{opacity:0; transform:scale(.97)}to{opacity:1; transform:none}}
+.lightbox.no-anim .lb-backdrop,.lightbox.no-anim .lb-panel{animation:none}
+body.lb-open{overflow:hidden}
+@media(prefers-reduced-motion: reduce){
+  .lb-backdrop,.lb-panel,.hero-slide.active{animation:none}
+}
 
 /* how it works */
 .steps{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:24px}
@@ -967,18 +1048,38 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   font-size:clamp(1.7rem,4vw,2.4rem); margin:0 0 .5em}
 
 @media(max-width:980px){
-  .gallery{grid-template-columns:repeat(2,1fr)}
+  .lb-panel{flex-wrap:wrap; justify-content:center}
+  .lb-nav{order:2}
 }
 @media(max-width:720px){
   :root{--gutter:18px}            /* one place sets the mobile gutter for every container */
   .item-top{grid-template-columns:1fr; gap:22px}
-  .nav-inner{padding:10px var(--gutter); gap:10px}
-  .nav-links{margin-left:0; width:100%; gap:2px; overflow-x:auto; -webkit-overflow-scrolling:touch}
-  .nav-links a{padding:6px 9px; font-size:.86rem}
+  /* navbar collapses to a hamburger; links become an overlay dropdown */
+  .nav-inner{padding:10px var(--gutter); gap:10px; flex-wrap:nowrap; position:relative}
+  .nav-burger{display:flex; position:absolute; right:var(--gutter); top:50%;
+    transform:translateY(-50%)}
+  .nav-links{position:absolute; top:calc(100% + 1px); left:0; right:0; margin:0;
+    flex-direction:column; flex-wrap:nowrap; align-items:stretch; gap:0;
+    background:rgba(251,250,246,.98); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line); box-shadow:0 14px 30px rgba(27,26,22,.09);
+    max-height:0; overflow-y:hidden; transition:max-height .26s ease; padding:0 var(--gutter)}
+  .nav-toggle:checked ~ .nav-links{max-height:80vh; overflow-y:auto; padding:4px var(--gutter) 10px}
+  .nav-links a{padding:13px 6px; font-size:1rem; border-radius:0;
+    border-bottom:1px solid var(--line)}
+  .nav-links a:last-child{border-bottom:0}
+  /* burger → X when open */
+  .nav-toggle:checked ~ .nav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .nav-toggle:checked ~ .nav-burger span:nth-child(2){opacity:0}
+  .nav-toggle:checked ~ .nav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
   .hero{padding:34px 20px 8px}
   .showcase{padding:32px 0 26px}
   .steps{grid-template-columns:1fr}
-  .gallery{grid-template-columns:1fr}
+  .hero-zoom{padding:18px}
+  .hero-zoom img{height:240px}
+  .zoom-hint{font-size:.66rem; padding:4px 8px}
+  .lightbox{padding:2vh 3vw}
+  .lb-fig{padding:14px}
+  .lb-nav{width:40px; height:40px}
   .demo-trip{grid-template-columns:1fr; gap:12px}
   .demo-prompt{max-width:none}
   .demo-prompt::before,.demo-prompt::after{display:none}
@@ -1095,6 +1196,17 @@ APP_JS = r"""(function () {
     }
   });
 
+  // ---- mobile nav: close the hamburger menu on link tap / Esc ----
+  var navToggle = document.getElementById('nav-toggle');
+  if (navToggle) {
+    document.querySelectorAll('.nav-links a').forEach(function (a) {
+      a.addEventListener('click', function () { navToggle.checked = false; });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && navToggle.checked) navToggle.checked = false;
+    });
+  }
+
   // ---- copy-to-clipboard (item page) ----
   document.querySelectorAll('.copy').forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -1146,28 +1258,124 @@ APP_JS = r"""(function () {
     });
   });
 
-  // ---- skills-in-action carousel (Home) ----
-  var car = document.getElementById('carousel');
-  if (car) {
-    var demoSlides = Array.prototype.slice.call(car.querySelectorAll('.demo-slide'));
-    var demoDots = Array.prototype.slice.call(document.querySelectorAll('.demo-dot'));
-    var ci = 0;
-    function showDemo(n) {
-      ci = (n + demoSlides.length) % demoSlides.length;
-      demoSlides.forEach(function (s, i) { s.classList.toggle('active', i === ci); });
-      demoDots.forEach(function (d, i) { d.classList.toggle('active', i === ci); });
+  // ---- per-instance carousels (supports multiple on one page) ----
+  // Each .carousel keeps its OWN active index; all inner queries are scoped to the
+  // element so the hero (#hero-carousel/.hero-slide/.hero-dot) and the skills demo
+  // (#skills-carousel/.demo-slide/.demo-dot) never share state.
+  var carousels = Array.prototype.slice.call(document.querySelectorAll('.carousel'));
+  carousels.forEach(function (car) {
+    var slides = Array.prototype.slice.call(
+      car.querySelectorAll('.hero-slide, .demo-slide'));
+    if (!slides.length) return;
+    // dots live in a sibling .car-dots (or any node with [data-dots-for=id])
+    var dotWrap = car.parentNode
+      ? car.parentNode.querySelector('.car-dots')
+      : null;
+    var dots = dotWrap
+      ? Array.prototype.slice.call(dotWrap.querySelectorAll('.hero-dot, .demo-dot'))
+      : [];
+    var idx = 0;
+    function show(n) {
+      idx = (n + slides.length) % slides.length;
+      slides.forEach(function (s, i) { s.classList.toggle('active', i === idx); });
+      dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
     }
+    car._show = show;
+    Object.defineProperty(car, '_index', { get: function () { return idx; } });
     var prev = car.querySelector('.car-prev'), next = car.querySelector('.car-next');
-    if (prev) prev.addEventListener('click', function () { showDemo(ci - 1); });
-    if (next) next.addEventListener('click', function () { showDemo(ci + 1); });
-    demoDots.forEach(function (d, i) { d.addEventListener('click', function () { showDemo(i); }); });
-    document.addEventListener('keydown', function (e) {
+    if (prev) prev.addEventListener('click', function () { show(idx - 1); });
+    if (next) next.addEventListener('click', function () { show(idx + 1); });
+    dots.forEach(function (d, i) { d.addEventListener('click', function () { show(i); }); });
+    // keyboard only when THIS carousel (or something inside it) has focus
+    car.addEventListener('keydown', function (e) {
       var t = e.target || {};
       if (/^(input|textarea|select)$/i.test(t.tagName || '')) return;
-      if (e.key === 'ArrowLeft') showDemo(ci - 1);
-      else if (e.key === 'ArrowRight') showDemo(ci + 1);
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(idx - 1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); show(idx + 1); }
     });
-    showDemo(0);
+    show(0);
+  });
+
+  // ---- click-to-zoom lightbox (Home hero) ----
+  var lb = document.getElementById('lightbox');
+  var hero = document.getElementById('hero-carousel');
+  if (lb && hero) {
+    var figs = Array.prototype.slice.call(hero.querySelectorAll('.hero-slide'));
+    var lbImg = document.getElementById('lb-img');
+    var lbLink = document.getElementById('lb-link');
+    var lbBadge = document.getElementById('lb-badge');
+    var lbPrev = lb.querySelector('.lb-prev');
+    var lbNext = lb.querySelector('.lb-next');
+    var lbIdx = 0;
+    var lastFocus = null;
+    var reduceMotion = window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function focusable() {
+      return Array.prototype.slice.call(lb.querySelectorAll(
+        'button, [href], img[tabindex], [tabindex]:not([tabindex="-1"])'))
+        .filter(function (el) { return el.offsetParent !== null || el === document.activeElement; });
+    }
+
+    function render(n) {
+      lbIdx = (n + figs.length) % figs.length;
+      var slide = figs[lbIdx];
+      var img = slide.querySelector('img');
+      lbImg.src = img.getAttribute('src');
+      lbImg.alt = slide.getAttribute('data-name') || '';
+      var link = slide.querySelector('.hero-cap a');
+      var badgeEl = slide.querySelector('.hero-cap .badge');
+      lbLink.textContent = slide.getAttribute('data-name') || '';
+      lbLink.setAttribute('href', link ? link.getAttribute('href') : '#');
+      lbBadge.innerHTML = badgeEl ? badgeEl.outerHTML : '';
+    }
+
+    function openLb(n, trigger) {
+      lastFocus = trigger || document.activeElement;
+      render(n);
+      lb.hidden = false;
+      lb.setAttribute('aria-hidden', 'false');
+      if (reduceMotion) lb.classList.add('no-anim');
+      document.body.classList.add('lb-open');   // lock scroll
+      var close = lb.querySelector('.lb-close');
+      if (close) close.focus();
+    }
+
+    function closeLb() {
+      lb.hidden = true;
+      lb.setAttribute('aria-hidden', 'true');
+      lb.classList.remove('no-anim');
+      document.body.classList.remove('lb-open');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    // open via the per-slide zoom button
+    Array.prototype.slice.call(hero.querySelectorAll('.hero-zoom')).forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        openLb(parseInt(btn.getAttribute('data-zoom'), 10) || 0, btn);
+      });
+    });
+    if (lbPrev) lbPrev.addEventListener('click', function () { render(lbIdx - 1); });
+    if (lbNext) lbNext.addEventListener('click', function () { render(lbIdx + 1); });
+    Array.prototype.slice.call(lb.querySelectorAll('[data-lb-close]')).forEach(function (el) {
+      el.addEventListener('click', closeLb);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); closeLb(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); render(lbIdx - 1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); render(lbIdx + 1); }
+      else if (e.key === 'Tab') {
+        // focus trap
+        var f = focusable();
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
   }
 })();
 """
