@@ -38,6 +38,25 @@ def find_tex(item_dir: Path) -> Path | None:
     return texs[0] if texs else None
 
 
+def json_for_script(obj) -> str:
+    """Serialize JSON safe to embed inside an inline <script> element.
+
+    Neutralizes ``<``, ``>``, ``&`` (so contributor-supplied name/description/tags
+    containing ``</script>`` or ``<!--`` cannot break out of the element — a
+    stored-XSS vector) and the U+2028/U+2029 line separators that are valid in
+    JSON but not in JS string literals. The result is still valid JSON for
+    ``JSON.parse``.
+    """
+    return (
+        json.dumps(obj, ensure_ascii=False)
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+        .replace("&", "\\u0026")
+        .replace(" ", "\\u2028")
+        .replace(" ", "\\u2029")
+    )
+
+
 def _inline_md(s: str) -> str:
     """Inline markdown -> HTML on an already-plain string (escapes first)."""
     s = html.escape(s)
@@ -485,14 +504,15 @@ def browse_page(items: list[dict], css_href: str) -> str:
             chips.append(f'<button class="chip" data-type="{t}">{SECTION_TITLES[t].lower()} · {counts[t]}</button>')
     chips_html = "\n      ".join(chips)
 
-    search_index = json.dumps(
+    # Embedded in an inline <script> below — must be HTML-script-safe so a
+    # contributor's name/description/tags can't break out of the element.
+    search_index = json_for_script(
         [
             {"id": it["id"], "name": it["name"], "type": it["type"],
              "domain": it.get("domain", []), "tags": it.get("tags", []),
              "description": it.get("description", "")}
             for it in items
-        ],
-        ensure_ascii=False,
+        ]
     )
 
     return (
