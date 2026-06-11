@@ -10,8 +10,13 @@ name: Deploy site
       - "icons/**"
       - "templates/**"
       - "examples/**"
+      - "skills-demos/**"
       - "tools/build_site.py"
+      - "tools/_common.py"
       - ".github/workflows/pages.yml"
+      # NOTE: skills/**/*.md is intentionally absent — the site only links those
+      # out to GitHub (skills_page hard-codes the cards), it never bundles their
+      # text, so a skills/ edit produces an identical site/ and no redeploy.
   workflow_dispatch:
 
 permissions:

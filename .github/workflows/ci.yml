@@ -13,6 +13,7 @@ name: CI
       - "templates/**"
       - "examples/**"
       - "tools/**"
+      - "catalog.json"
       - "meta.schema.json"
       - "requirements.txt"
       - ".github/workflows/ci.yml"
@@ -97,6 +98,36 @@ jobs:
           echo "count=$count" >> "$GITHUB_OUTPUT"
           echo "Changed item dirs ($count):"
           cat changed_dirs.txt || true
+
+      - name: Check previews are regenerated for changed sources
+        # Enforces the "preview == source" promise: if a content .tex changed in
+        # this PR, its sibling .svg must have been regenerated in the same PR.
+        # This is the deterministic guard against a stale preview being merged.
+        # (A render-and-byte-compare against the committed .svg was considered but
+        # rejected: dvisvgm output is not stable across toolchain versions, so it
+        # would produce flaky failures for correctly-regenerated previews.)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          base="$BASE_SHA"
+          changed="$(git diff --name-only "$base"...HEAD -- icons templates examples)"
+          stale=0
+          while IFS= read -r f; do
+            case "$f" in *.tex) ;; *) continue ;; esac
+            # Skip deletions — the source is gone, no preview expected.
+            [ -f "$f" ] || continue
+            d="$(dirname "$f")"
+            if ! printf '%s\n' "$changed" | grep -qE "^${d}/[^/]*\.svg$"; then
+              echo "::error file=$f::$f changed but its .svg preview was not regenerated in this PR. Run 'python3 tools/render_preview.py $d' and commit the updated .svg."
+              stale=1
+            fi
+          done <<< "$changed"
+          if [ "$stale" -ne 0 ]; then
+            exit 1
+          fi
+          echo "All changed .tex sources have a regenerated .svg preview."
 
       - name: Render previews for changed items
         if: github.event_name == 'pull_request' && steps.changed.outputs.count != '0'
