@@ -1,6 +1,12 @@
 # OpenTikZ — Roadmap (MVP)
 
-## Step 0 — Demand validation (do FIRST, ~1 weekend, zero code)
+> **Progress (as of 2026-06):** Steps 0–4 ✅ complete — repo skeleton + CI,
+> cold-start content (28 catalog items: icons, 5 templates, 3 examples), the
+> per-template skills layer, and the live static website are all shipped.
+> Currently on **Step 5 — launch + community** 🚧. Post-launch explorations are
+> listed under "Future".
+
+## Step 0 ✅ — Demand validation (do FIRST, ~1 weekend, zero code)
 
 Build a landing page: 3–4 high-quality architecture-diagram screenshots, a
 one-line positioning, and a Star/email-signup CTA. Post to r/LaTeX and TeX
@@ -9,7 +15,7 @@ before writing real code. Proceed only if response is positive.
 
 Track real signals, not vanity: copy-button clicks > stars > pageviews.
 
-## Step 1 — Repo skeleton + automation (~1 week)
+## Step 1 ✅ — Repo skeleton + automation (~1 week)
 
 - Create GitHub org `opentikz`
 - Set licenses (MIT code / CC0 content)
@@ -18,7 +24,7 @@ Track real signals, not vanity: copy-button clicks > stars > pageviews.
 - CI: on PR, compile .tex + render SVG preview + post preview back as comment
 - `tools/build_catalog.py`, `tools/render_preview.py`, `tools/validate.py`
 
-## Step 2 — Cold-start content (~2–3 weeks)
+## Step 2 ✅ — Cold-start content (~2–3 weeks)
 
 - 30–50 icons (ML/systems-focused, broadest audience)
 - 5 templates (neural net, encoder-decoder, training pipeline, system block
@@ -27,20 +33,20 @@ Track real signals, not vanity: copy-button clicks > stars > pageviews.
 
 Quality decides everything; an empty repo attracts no one.
 
-## Step 3 — Skills layer (~1–2 weeks, parallel with templates)
+## Step 3 ✅ — Skills layer (~1–2 weeks, parallel with templates)
 
 Write a companion skill for each of the 5 templates. Test in Claude Code:
 issue "add a layer / recolor / change node count / adapt to CVPR" commands and
 verify the AI edits correctly. This is the soul of the product — polish until
 smooth.
 
-## Step 4 — Website (~1–2 weeks)
+## Step 4 ✅ — Website (~1–2 weeks)
 
 GitHub Pages (`opentikz.github.io`, CNAME to a real domain early). Static site +
 client-side search (Fuse.js reading catalog.json) + per-item copyable code +
 per-item indexable pages (SEO). Show CI-rendered previews.
 
-## Step 5 — Launch + community (ongoing)
+## Step 5 🚧 — Launch + community (ongoing)
 
 Strong README (big gallery + 3-line quick start) and CONTRIBUTING.md. Register
 in awesome-tikz. Post to Reddit/TeX SE/Twitter. Provide BibTeX citation. Then

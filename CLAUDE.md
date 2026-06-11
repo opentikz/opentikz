@@ -62,7 +62,7 @@ pipeline/flow diagrams, but don't want to hand-write TikZ. We call them the
 - Graphic content (.tex figures): CC0 (maximize academic reuse, zero friction)
 - State this clearly; never mix them up.
 
-## Repo structure (target)
+## Repo structure
 
 ```
 opentikz/
@@ -76,7 +76,7 @@ opentikz/
 ├── docs/
 │   ├── DESIGN_GUIDE.md       # line width, colors, node naming
 │   ├── PRODUCT_SPEC.md       # full product spec
-│   └── ROADMAP.md            # MVP steps
+│   └── ROADMAP.md            # MVP steps (with progress markers)
 ├── icons/<domain>/<name>/
 │   ├── <name>.tex
 │   ├── <name>.meta.json
@@ -86,15 +86,21 @@ opentikz/
 │   ├── template.meta.json
 │   ├── skill.md              # companion skill for AI editing
 │   └── preview.svg           # AUTO-GENERATED
-├── skills/
+├── skills/                   # cross-cutting skills (NOT in catalog.json)
 │   ├── color-palettes/
 │   ├── annotations/
 │   └── layout/
 ├── examples/<name>/          # full paper-grade figures combining the above
+├── skills-demos/             # before/after SVGs for the "skills in action" site section
+├── .github/workflows/
+│   ├── ci.yml                # PR: validate + standalone-compile + preview freshness
+│   └── pages.yml             # push to main: build_site.py -> GitHub Pages
 └── tools/
+    ├── _common.py            # shared stdlib helpers (repo_root, meta walking)
     ├── build_catalog.py      # scans tree -> catalog.json
-    ├── render_preview.py     # latexmk + pdf2svg -> .svg
-    └── validate.py           # schema + standalone-compile checks
+    ├── render_preview.py     # compile + dvisvgm (DVI route) -> .svg
+    ├── build_site.py         # catalog.json + previews -> static site/ (stdlib only)
+    └── validate.py           # schema + structural rules + standalone compile
 ```
 
 ## How you (Claude Code) should work on this
@@ -106,8 +112,16 @@ opentikz/
   common edit operations, and constraints.
 - Keep `.tex` parametric and clearly named — both humans and AI must be able to
   edit it safely.
+- Mirror every `\usepackage{tikz}` / `\usetikzlibrary{...}` the `.tex` uses into
+  the item's `requires` — `validate.py` now fails the build if they drift.
+- After editing a `.tex`, regenerate its `.svg` preview (`render_preview.py`);
+  CI rejects a PR whose source changed without a regenerated preview.
 - Prefer many small, well-named files over large monolithic ones.
 
 ## Current status
 
-Bootstrapping. See `docs/ROADMAP.md` for the MVP step we're on.
+Live. MVP Roadmap Steps 1–4 are complete: repo skeleton + CI, the cold-start
+content (28 catalog items — icons, 5 templates, 3 examples), the per-template
+skills layer, and the static website (built by `tools/build_site.py`, deployed to
+GitHub Pages). See `docs/ROADMAP.md` for per-step status and what remains
+(Step 5: launch + community).
