@@ -6,7 +6,7 @@
   "tags": ["attention", "transformer", "self-attention", "qkv", "query key value", "block"],
   "author": "OpenTikZ contributors",
   "license": "CC0-1.0",
-  "requires": ["tikz"],
+  "requires": ["tikz", "arrows.meta", "positioning"],
   "preview": "attention.svg",
   "description": "Attention block with query/key/value inputs and an output."
 }

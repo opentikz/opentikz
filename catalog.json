@@ -18,7 +18,9 @@
     "path": "examples/distributed-training",
     "preview": "preview.svg",
     "requires": [
-      "tikz"
+      "tikz",
+      "arrows.meta",
+      "positioning"
     ],
     "tags": [
       "distributed training",
@@ -56,7 +58,12 @@
     "path": "examples/inference-serving",
     "preview": "preview.svg",
     "requires": [
-      "tikz"
+      "tikz",
+      "arrows.meta",
+      "backgrounds",
+      "fit",
+      "positioning",
+      "shapes.symbols"
     ],
     "tags": [
       "inference",
@@ -89,6 +96,10 @@
     "preview": "preview.svg",
     "requires": [
       "tikz",
+      "arrows.meta",
+      "calc",
+      "decorations.pathreplacing",
+      "positioning",
       "amsmath",
       "amssymb"
     ],
@@ -121,7 +132,9 @@
     "path": "icons/ml/attention",
     "preview": "attention.svg",
     "requires": [
-      "tikz"
+      "tikz",
+      "arrows.meta",
+      "positioning"
     ],
     "tags": [
       "attention",
@@ -145,7 +158,8 @@
     "path": "icons/systems/cloud",
     "preview": "cloud.svg",
     "requires": [
-      "tikz"
+      "tikz",
+      "shapes.symbols"
     ],
     "tags": [
       "cloud",
@@ -487,7 +501,8 @@
     "path": "icons/ml/neuron",
     "preview": "neuron.svg",
     "requires": [
-      "tikz"
+      "tikz",
+      "arrows.meta"
     ],
     "tags": [
       "neuron",
@@ -611,7 +626,9 @@
     "path": "templates/encoder-decoder",
     "preview": "preview.svg",
     "requires": [
-      "tikz"
+      "tikz",
+      "arrows.meta",
+      "positioning"
     ],
     "tags": [
       "encoder",
@@ -643,7 +660,11 @@
     "path": "templates/flowchart",
     "preview": "preview.svg",
     "requires": [
-      "tikz"
+      "tikz",
+      "arrows.meta",
+      "positioning",
+      "shapes.geometric",
+      "shapes.misc"
     ],
     "tags": [
       "flowchart",
@@ -700,7 +721,12 @@
     "path": "templates/system-block-diagram",
     "preview": "preview.svg",
     "requires": [
-      "tikz"
+      "tikz",
+      "arrows.meta",
+      "backgrounds",
+      "fit",
+      "positioning",
+      "shapes.geometric"
     ],
     "tags": [
       "system",
@@ -732,7 +758,9 @@
     "path": "templates/training-pipeline",
     "preview": "preview.svg",
     "requires": [
-      "tikz"
+      "tikz",
+      "arrows.meta",
+      "positioning"
     ],
     "tags": [
       "training",

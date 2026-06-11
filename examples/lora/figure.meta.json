@@ -7,7 +7,7 @@
   "venue": ["NeurIPS", "ICLR", "ICML"],
   "author": "OpenTikZ contributors",
   "license": "CC0-1.0",
-  "requires": ["tikz", "amsmath", "amssymb"],
+  "requires": ["tikz", "arrows.meta", "calc", "decorations.pathreplacing", "positioning", "amsmath", "amssymb"],
   "preview": "preview.svg",
   "featured": true,
   "description": "Low-rank adaptation (LoRA), two-panel homage after Hu et al., 2021. During training: a frozen pretrained weight W feeds Wx in parallel with a trainable low-rank update B·A (rank-r bottleneck, A=N(0,sigma^2), B=0) feeding BAx, summed to h. After training: the adapter is folded into a single merged weight matrix W_merged, shown as a bar–square–bar stack. Center column gives h = Wx + BAx = (W + BA)x."

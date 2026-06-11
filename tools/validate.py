@@ -2,18 +2,26 @@
 """Validate OpenTikZ content items.
 
 For every ``*.meta.json`` under icons/, templates/, examples/:
-  1. validate it against meta.schema.json (using the ``jsonschema`` library), and
-  2. confirm a sibling ``.tex`` exists and compiles standalone via ``latexmk``.
+  1. validate it against meta.schema.json (using the ``jsonschema`` library);
+  2. enforce the project's structural rules statically (no LaTeX needed):
+       - the sibling ``.tex`` exists and uses ``\\documentclass{standalone}``;
+       - ``id`` is globally unique across the library;
+       - every id in ``composed_of`` resolves to a real library item;
+       - every ``\\usetikzlibrary`` (and ``tikz`` itself) used by the ``.tex`` is
+         declared in ``requires`` (so the metadata never drifts from the source);
+  3. confirm the ``.tex`` compiles standalone via ``latexmk``.
 
-The compile step is SKIPped (non-fatal) when no LaTeX engine is installed, so the
-script still runs locally without a TeX distribution. Use ``--strict`` in CI,
-where the compile is required and a SKIP becomes a failure.
+The static checks (1, 2) always run. The compile step (3) is SKIPped (non-fatal)
+when no LaTeX engine is installed, so the script still runs locally without a TeX
+distribution. Use ``--strict`` in CI, where the compile is required and a SKIP
+becomes a failure.
 
 Exit code is non-zero if any item FAILs.
 """
 from __future__ import annotations
 
 import argparse
+import re
 import shutil
 import subprocess
 import sys
@@ -23,6 +31,84 @@ from pathlib import Path
 from _common import iter_meta_files, load_json, rel, repo_root, tex_sibling
 
 SCHEMA_NAME = "meta.schema.json"
+
+# --- .tex static analysis ------------------------------------------------- #
+_DOCCLASS_RE = re.compile(r"\\documentclass\s*(?:\[[^\]]*\])?\s*\{([^}]*)\}")
+_TIKZLIB_RE = re.compile(r"\\usetikzlibrary\s*\{([^}]*)\}")
+_USEPKG_RE = re.compile(r"\\usepackage\s*(?:\[[^\]]*\])?\s*\{([^}]*)\}")
+
+
+def _strip_tex_comments(text: str) -> str:
+    """Drop TeX line comments (an unescaped ``%`` to end of line)."""
+    out: list[str] = []
+    for line in text.splitlines():
+        buf: list[str] = []
+        i = 0
+        while i < len(line):
+            ch = line[i]
+            if ch == "\\" and i + 1 < len(line):  # escaped char (incl. \%)
+                buf.append(line[i : i + 2])
+                i += 2
+                continue
+            if ch == "%":
+                break
+            buf.append(ch)
+            i += 1
+        out.append("".join(buf))
+    return "\n".join(out)
+
+
+def _scan_tex(tex: Path) -> tuple[str | None, set[str], set[str]]:
+    """Return (documentclass, tikz libraries, \\usepackage names) used by a .tex."""
+    text = _strip_tex_comments(tex.read_text(encoding="utf-8"))
+    m = _DOCCLASS_RE.search(text)
+    docclass = m.group(1).strip() if m else None
+
+    def _items(groups: list[str]) -> set[str]:
+        names: set[str] = set()
+        for grp in groups:
+            for name in grp.split(","):
+                name = name.strip()
+                if name:
+                    names.add(name)
+        return names
+
+    libs = _items(_TIKZLIB_RE.findall(text))
+    pkgs = _items(_USEPKG_RE.findall(text))
+    return docclass, libs, pkgs
+
+
+def _structural_problems(
+    meta: dict, tex: Path, known_ids: set[str]
+) -> list[str]:
+    """Project-rule checks on a (schema-valid) item. Returns a list of problems."""
+    problems: list[str] = []
+    docclass, libs, pkgs = _scan_tex(tex)
+
+    if docclass != "standalone":
+        problems.append(
+            f"document class must be 'standalone' (found {docclass!r}); "
+            "every content .tex must compile standalone"
+        )
+
+    requires = set(meta.get("requires", []))
+    missing_libs = sorted(libs - requires)
+    if missing_libs:
+        problems.append(
+            "requires is missing TikZ libraries used by the .tex: "
+            + ", ".join(missing_libs)
+            + " (mirror every \\usetikzlibrary into requires)"
+        )
+    if (libs or "tikz" in pkgs) and "tikz" not in requires:
+        problems.append("requires must list 'tikz' (the .tex draws with TikZ)")
+
+    for cid in meta.get("composed_of", []):
+        if cid not in known_ids:
+            problems.append(
+                f"composed_of references unknown library id '{cid}'"
+            )
+
+    return problems
 
 
 def _load_validator(root: Path):
@@ -89,9 +175,13 @@ def main(argv: list[str] | None = None) -> int:
     n_pass = n_fail = n_skip = 0
     failures: list[str] = []
 
+    # --- pass 1: load + schema-validate everything, then build the global id set.
+    # composed_of references and id-uniqueness are cross-item, so they need the
+    # whole library in hand before any per-item structural check runs.
+    schema_ok: list[tuple[Path, dict]] = []  # items that passed schema validation
+    id_paths: dict[str, list[str]] = {}      # id -> items declaring it (dup detect)
     for meta_path in iter_meta_files(root):
         item = rel(meta_path, root)
-        # --- metadata ---
         try:
             meta = load_json(meta_path)
         except ValueError as exc:
@@ -108,11 +198,36 @@ def main(argv: list[str] | None = None) -> int:
             n_fail += 1
             failures.append(item)
             continue
+        schema_ok.append((meta_path, meta))
+        id_paths.setdefault(meta["id"], []).append(item)
+
+    known_ids = set(id_paths)
+    duplicate_ids = {i: paths for i, paths in id_paths.items() if len(paths) > 1}
+
+    # --- pass 2: structural rules + compile, on schema-valid items only.
+    for meta_path, meta in schema_ok:
+        item = rel(meta_path, root)
 
         # --- .tex sibling ---
         tex = tex_sibling(meta_path)
         if not tex.exists():
             print(f"FAIL  {item}: missing sibling .tex ({rel(tex, root)})")
+            n_fail += 1
+            failures.append(item)
+            continue
+
+        # --- project structural rules (standalone, requires, composed_of) ---
+        problems = _structural_problems(meta, tex, known_ids)
+        if meta["id"] in duplicate_ids:
+            others = [p for p in duplicate_ids[meta["id"]] if p != item]
+            problems.append(
+                f"id '{meta['id']}' is not unique; also declared by: "
+                + ", ".join(others)
+            )
+        if problems:
+            print(f"FAIL  {item}: structural rules")
+            for p in problems:
+                print(f"        - {p}")
             n_fail += 1
             failures.append(item)
             continue

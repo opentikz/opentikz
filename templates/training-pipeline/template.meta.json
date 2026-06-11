@@ -7,7 +7,7 @@
   "venue": ["NeurIPS", "ICML", "CVPR", "ACL"],
   "author": "OpenTikZ contributors",
   "license": "CC0-1.0",
-  "requires": ["tikz"],
+  "requires": ["tikz", "arrows.meta", "positioning"],
   "preview": "preview.svg",
   "description": "Supervised training loop: forward path Dataset -> Model -> Loss (with labels feeding the loss), and a backward path Loss -> Optimizer -> Model for gradients and the weight update. Parametric spacing and labels."
 }

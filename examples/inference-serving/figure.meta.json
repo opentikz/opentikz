@@ -7,7 +7,7 @@
   "venue": ["OSDI", "NSDI", "MLSys"],
   "author": "OpenTikZ contributors",
   "license": "CC0-1.0",
-  "requires": ["tikz"],
+  "requires": ["tikz", "arrows.meta", "backgrounds", "fit", "positioning", "shapes.symbols"],
   "preview": "preview.svg",
   "featured": true,
   "composed_of": ["cloud", "server", "gpu", "database"],

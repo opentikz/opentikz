@@ -7,7 +7,7 @@
   "venue": [],
   "author": "OpenTikZ contributors",
   "license": "CC0-1.0",
-  "requires": ["tikz"],
+  "requires": ["tikz", "arrows.meta", "positioning", "shapes.geometric", "shapes.misc"],
   "preview": "preview.svg",
   "description": "Standard flowchart: terminal pills (start/end), process rectangles, a decision diamond with Yes/No branches, and a retry loop. Parametric spacing and labels."
 }

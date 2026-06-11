@@ -7,7 +7,7 @@
   "venue": ["NSDI", "OSDI", "SOSP", "SIGCOMM"],
   "author": "OpenTikZ contributors",
   "license": "CC0-1.0",
-  "requires": ["tikz"],
+  "requires": ["tikz", "arrows.meta", "backgrounds", "fit", "positioning", "shapes.geometric"],
   "preview": "preview.svg",
   "description": "General system architecture diagram: external client, process boxes (gateway/services), datastore cylinders (database/cache), branching connections, and a dashed subsystem group box. Multiple component types, parametric spacing."
 }

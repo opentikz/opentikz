@@ -6,7 +6,7 @@
   "tags": ["neuron", "perceptron", "unit", "node", "neural network", "activation"],
   "author": "OpenTikZ contributors",
   "license": "CC0-1.0",
-  "requires": ["tikz"],
+  "requires": ["tikz", "arrows.meta"],
   "preview": "neuron.svg",
   "description": "Single artificial neuron / perceptron with weighted inputs and one output."
 }

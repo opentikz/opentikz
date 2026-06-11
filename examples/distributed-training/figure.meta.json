@@ -7,7 +7,7 @@
   "venue": ["NeurIPS", "MLSys", "OSDI"],
   "author": "OpenTikZ contributors",
   "license": "CC0-1.0",
-  "requires": ["tikz"],
+  "requires": ["tikz", "arrows.meta", "positioning"],
   "preview": "preview.svg",
   "featured": true,
   "composed_of": ["dataset", "gpu", "server"],
