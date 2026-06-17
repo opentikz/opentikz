@@ -9,5 +9,34 @@
   "license": "CC0-1.0",
   "requires": ["tikz", "arrows.meta", "positioning"],
   "preview": "preview.svg",
-  "description": "Block-level encoder-decoder 'hourglass': input block, encoder trapezoid narrowing to a latent bottleneck z, decoder trapezoid widening to an output block. Parametric sizes and labels."
+  "description": "Block-level encoder-decoder 'hourglass': input block, encoder trapezoid narrowing to a latent bottleneck z, decoder trapezoid widening to an output block. Parametric sizes and labels.",
+  "edit_contract": {
+    "parameters": [
+      {"name": "\\blockH", "type": "length-cm", "meaning": "height of the input/output blocks; also each trapezoid's wide (outer) edge", "default": "3.0"},
+      {"name": "\\latentH", "type": "length-cm", "meaning": "height of the bottleneck z; also each trapezoid's narrow (inner) edge, so shapes meet z flush", "default": "1.1"},
+      {"name": "\\trapW", "type": "length-cm", "meaning": "width of the encoder/decoder trapezoids", "default": "2.6"},
+      {"name": "\\blockW", "type": "length-cm", "meaning": "width of the input/output blocks", "default": "1.0"},
+      {"name": "\\latentW", "type": "length-cm", "meaning": "width of the bottleneck z", "default": "0.9"},
+      {"name": "\\gap", "type": "length-cm", "meaning": "horizontal gap between parts (also the arrow length)", "default": "0.9"},
+      {"name": "\\inputlabel", "type": "text", "meaning": "input block label (math allowed)"},
+      {"name": "\\encoderlabel", "type": "text", "meaning": "encoder trapezoid label"},
+      {"name": "\\latentlabel", "type": "text", "meaning": "bottleneck label drawn inside z (keep short, e.g. $z$)"},
+      {"name": "\\decoderlabel", "type": "text", "meaning": "decoder trapezoid label"},
+      {"name": "\\outputlabel", "type": "text", "meaning": "output block label (math allowed)"}
+    ],
+    "node_naming": "fixed semantic node names: (input) (enc) (z) (dec) (output); (enc)/(dec) are the centre text nodes, not the trapezoid paths",
+    "styles": ["ioblock", "trap", "latentblk", "lbl", "flow"],
+    "operations": [
+      {"id": "rename-part", "summary": "edit the matching label macro; no layout change needed"},
+      {"id": "recolor", "summary": "change the palette name in the encoder/decoder \\filldraw or the latentblk style; never a hex/stock color"},
+      {"id": "resize", "summary": "\\blockH/\\blockW for I/O blocks, \\trapW for trapezoid length, \\latentH/\\latentW for the bottleneck, \\gap for spacing"},
+      {"id": "add-cross-attention", "summary": "place a palette-colored block with positioning above (z) that (enc) feeds and that feeds (dec); connect with flow arrows; keep (enc)/(z)/(dec) intact"},
+      {"id": "add-stage", "summary": "insert another running edge pair after the relevant part, push later edges along by its width + \\gap, draw the node and an extra flow arrow; keep every part centred on y=0"}
+    ],
+    "invariants": [
+      "preserve the node names (input) (enc) (z) (dec) (output)",
+      "keep each trapezoid's inner-edge height equal to \\latentH so encoder/decoder stay flush with z",
+      "colors only via the five palette names (tints/shades allowed); never inline hex or stock colors"
+    ]
+  }
 }

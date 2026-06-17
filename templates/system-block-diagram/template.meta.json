@@ -9,5 +9,35 @@
   "license": "CC0-1.0",
   "requires": ["tikz", "arrows.meta", "backgrounds", "fit", "positioning", "shapes.geometric"],
   "preview": "preview.svg",
-  "description": "General system architecture diagram: external client, process boxes (gateway/services), datastore cylinders (database/cache), branching connections, and a dashed subsystem group box. Multiple component types, parametric spacing."
+  "description": "General system architecture diagram: external client, process boxes (gateway/services), datastore cylinders (database/cache), branching connections, and a dashed subsystem group box. Multiple component types, parametric spacing.",
+  "edit_contract": {
+    "parameters": [
+      {"name": "\\rowsep", "type": "length-cm", "meaning": "vertical node distance between components", "default": "1.1"},
+      {"name": "\\colsep", "type": "length-cm", "meaning": "horizontal node distance between components", "default": "1.5"},
+      {"name": "\\boxminw", "type": "length-cm", "meaning": "minimum process/external box width", "default": "1.9"},
+      {"name": "\\boxminh", "type": "length-cm", "meaning": "minimum box height", "default": "1.0"},
+      {"name": "\\clientlabel", "type": "text", "meaning": "external client label"},
+      {"name": "\\gatewaylabel", "type": "text", "meaning": "gateway label (use \\\\ for two lines)"},
+      {"name": "\\svconelabel", "type": "text", "meaning": "first service label"},
+      {"name": "\\svctwolabel", "type": "text", "meaning": "second service label"},
+      {"name": "\\dblabel", "type": "text", "meaning": "database cylinder label"},
+      {"name": "\\cachelabel", "type": "text", "meaning": "cache cylinder label"},
+      {"name": "\\grouplabel", "type": "text", "meaning": "subsystem group box label"}
+    ],
+    "node_naming": "fixed semantic node names: (client) (gateway) (svc1) (svc2) (db) (cache) (backend); give new components clear role-based names",
+    "styles": ["comp", "external", "process", "store", "cachestore", "link", "group"],
+    "operations": [
+      {"id": "rename-component", "summary": "edit the matching label macro"},
+      {"id": "add-component", "summary": "declare a node with its role style, positioned relative to an existing node, then connect with link; add it to the group fit list if it belongs to the subsystem"},
+      {"id": "change-type", "summary": "swap a node's style to change its role: process<->store<->external"},
+      {"id": "add-connection", "summary": "add \\draw[link] (a) -- (b); use <-> for two-way, -|/|- for orthogonal routing"},
+      {"id": "resize-subsystem", "summary": "adjust the group inner sep (padding) or change which nodes are in its fit=(...) list"},
+      {"id": "recolor", "summary": "change the palette name in the relevant style; keep distinct roles in distinct colors; never a hex/stock color"}
+    ],
+    "invariants": [
+      "the group node must come after the nodes it fits, inside the on-background-layer scope, so it sits behind them",
+      "preserve semantic node names; give new components clear role-based names",
+      "colors only via the five palette names (tints/shades allowed); never inline hex or stock colors"
+    ]
+  }
 }

@@ -1,8 +1,8 @@
 # OpenTikZ
 
 > A TikZ resource library for academic conceptual diagrams — copyable icons,
-> editable architecture templates, and AI-consumable skills that let Claude Code
-> modify those templates, so researchers produce paper figures fast without
+> editable architecture templates, and one AI-consumable skill that lets Claude
+> Code modify those templates, so researchers produce paper figures fast without
 > writing TikZ from scratch.
 
 OpenTikZ is the "Flaticon for academic TikZ", focused on conceptual/overview
@@ -15,8 +15,8 @@ flowcharts. **Data plots are out of scope** (use pgfplots/matplotlib).
 2. Copy its `.tex` into your project — every file compiles standalone with
    `pdflatex`, `lualatex`, or `xelatex`, no extra setup.
 3. Want changes? Tell Claude Code *"add a hidden layer / recolor this blue / fit
-   it to a CVPR column"* — each template ships a `skill.md` that guides the AI to
-   edit it correctly.
+   it to a CVPR column"* — the `using-opentikz` skill plus each template's
+   `edit_contract` guide the AI to edit it correctly.
 
 ## Gallery
 
@@ -34,7 +34,7 @@ is generated from this repo — see [Website](#website).
 </tr>
 </table>
 
-### Templates — editable, AI-modifiable (each ships a `skill.md`)
+### Templates — editable, AI-modifiable (each ships an `edit_contract`)
 
 <table>
 <tr>
@@ -89,18 +89,22 @@ is generated from this repo — see [Website](#website).
 
 - **`icons/`** — atomic, single-concept TikZ elements, each compiles standalone
   and is independently copyable.
-- **`templates/`** — complete, editable conceptual figures (the core value).
-- **`skills/`** — structured instructions that let an AI agent reliably modify a
-  template (add/remove a node, recolor, change counts, adapt to a column width).
+- **`templates/`** — complete, editable conceptual figures (the core value); each
+  carries an `edit_contract` in its `meta.json` describing how to edit it safely.
+- **`skills/using-opentikz/`** — the one repo-wide skill that lets an AI agent go
+  from a request to a finished figure (discover, edit, verify), backed by the
+  per-template `edit_contract`s and the `reference/` material below.
 
 ## Repository layout
 
 ```
 icons/<domain>/<name>/      <name>.tex + <name>.meta.json + <name>.svg
-templates/<name>/           template.tex + template.meta.json + skill.md + preview.svg
-skills/                     color-palettes/, annotations/, layout/
+templates/<name>/           template.tex + template.meta.json (+ edit_contract) + preview.svg
+skills/using-opentikz/      the one repo-wide skill (SKILL.md)
+reference/                  color-palettes/, annotations/, layout/
 examples/<name>/            paper-grade figures combining icons + templates
-tools/                      build_catalog.py, render_preview.py, validate.py
+skills-demos/               before/after SVGs for the website's "skills in action"
+tools/                      build_catalog.py, render_preview.py, build_site.py, validate.py
 meta.schema.json            JSON Schema for every .meta.json
 catalog.json                AUTO-GENERATED — do not hand-edit
 ```

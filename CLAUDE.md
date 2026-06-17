@@ -11,9 +11,9 @@ and flowcharts. It is the "Flaticon for academic TikZ", focused specifically on
 conceptual/overview figures (NOT data plots).
 
 **One-line positioning:** A TikZ resource library for paper diagrams — copyable
-icons, editable architecture templates, and skills that let Claude Code modify
-those templates so researchers can produce figures fast without writing TikZ
-from scratch.
+icons, editable architecture templates, and one repo-wide skill that lets Claude
+Code modify those templates so researchers can produce figures fast without
+writing TikZ from scratch.
 
 ## Target user
 
@@ -38,22 +38,29 @@ pipeline/flow diagrams, but don't want to hand-write TikZ. We call them the
    net, encoder-decoder, training pipeline, federated learning, system block
    diagram, flowchart). This is the core value.
 
-3. **Skills** (`skills/`) — THE KEY DIFFERENTIATOR. Structured instructions that
-   let an AI agent (you) reliably modify a template: how to add/remove a node,
-   recolor, change node count, adapt to a conference column width. Each template
-   ships with a companion skill so a user can say "add a cross-attention layer
-   to this transformer template and make it blue" and you can do it correctly
-   without guessing.
+3. **Skill** (`skills/using-opentikz/`) — THE KEY DIFFERENTIATOR. One repo-wide
+   skill that takes an AI agent (you) from a request to a finished figure:
+   discover content via `catalog.json`, edit the chosen item, verify it compiles —
+   while communicating precisely (ask on material ambiguity, assume-and-state on
+   safe defaults). Per-template knowledge lives in each template's `edit_contract`
+   (inside its `meta.json`), which the skill reads at edit time; cross-cutting
+   reference knowledge (palette, annotations, layout) lives under `reference/`.
+   So a user can say "add a cross-attention layer to this template and make it
+   blue" and you do it correctly without guessing. There is no per-template
+   `skill.md` — that knowledge is now the structured `edit_contract`.
 
 ## Hard rules for all content
 
 - Every `.tex` file MUST compile standalone (`\documentclass{standalone}`).
 - Every content item has a sibling `.meta.json` validated against
   `meta.schema.json`.
-- Colors come from a shared palette (see `skills/color-palettes/`), never
+- Colors come from a shared palette (see `reference/color-palettes/`), never
   hard-coded hex inline.
-- Node names follow the convention in `docs/DESIGN_GUIDE.md` so skills can
+- Node names follow the convention in `docs/DESIGN_GUIDE.md` so the skill can
   target parts reliably.
+- Every template carries an `edit_contract` in its `meta.json` (parameters,
+  node-naming, styles, operations, invariants); `validate.py` checks its
+  parameters/styles exist in the `.tex`.
 - Provide light + dark friendly palettes where feasible.
 
 ## Licensing
@@ -83,10 +90,11 @@ opentikz/
 │   └── <name>.svg            # AUTO-GENERATED preview
 ├── templates/<name>/
 │   ├── template.tex
-│   ├── template.meta.json
-│   ├── skill.md              # companion skill for AI editing
+│   ├── template.meta.json    # includes the edit_contract for AI editing
 │   └── preview.svg           # AUTO-GENERATED
-├── skills/                   # cross-cutting skills (NOT in catalog.json)
+├── skills/
+│   └── using-opentikz/       # THE one repo-wide skill (SKILL.md)
+├── reference/                # cross-cutting reference knowledge (NOT in catalog.json)
 │   ├── color-palettes/
 │   ├── annotations/
 │   └── layout/
@@ -108,8 +116,10 @@ opentikz/
 - When adding an icon/template: create the `.tex`, write the `.meta.json`,
   then run `tools/validate.py` and `tools/render_preview.py` on it.
 - Never hand-edit `catalog.json`; regenerate it via `tools/build_catalog.py`.
-- When writing a template, also write its `skill.md` describing structure,
-  common edit operations, and constraints.
+- When writing a template, add an `edit_contract` to its `meta.json` (parameters,
+  node_naming, styles, operations, invariants) instead of a `skill.md`. The one
+  skill in `skills/using-opentikz/` reads it; `validate.py` checks its
+  parameters/styles exist in the `.tex`.
 - Keep `.tex` parametric and clearly named — both humans and AI must be able to
   edit it safely.
 - Mirror every `\usepackage{tikz}` / `\usetikzlibrary{...}` the `.tex` uses into
@@ -121,7 +131,8 @@ opentikz/
 ## Current status
 
 Live. MVP Roadmap Steps 1–4 are complete: repo skeleton + CI, the cold-start
-content (28 catalog items — icons, 5 templates, 3 examples), the per-template
-skills layer, and the static website (built by `tools/build_site.py`, deployed to
+content (28 catalog items — icons, 5 templates, 3 examples), the skills layer (one
+repo-wide `using-opentikz` skill + per-template `edit_contract`s + `reference/`
+material), and the static website (built by `tools/build_site.py`, deployed to
 GitHub Pages). See `docs/ROADMAP.md` for per-step status and what remains
 (Step 5: launch + community).

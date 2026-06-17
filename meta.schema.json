@@ -86,6 +86,64 @@
       "description": "Optional: ids of the library items this figure is composed of (powers the decomposable showcase / deep-links).",
       "items": { "type": "string", "minLength": 1 },
       "uniqueItems": true
+    },
+    "edit_contract": {
+      "type": "object",
+      "description": "Optional (templates only): the machine-readable edit contract the using-opentikz skill consumes. validate.py cross-checks that every parameters[].name and styles[] entry actually appears in the sibling .tex.",
+      "additionalProperties": false,
+      "required": ["parameters", "node_naming", "styles", "operations", "invariants"],
+      "properties": {
+        "parameters": {
+          "type": "array",
+          "description": "The \\def macros at the top of the .tex that drive the figure.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "meaning"],
+            "properties": {
+              "name": { "type": "string", "description": "The macro, including backslash, e.g. \\layersizes.", "minLength": 1 },
+              "type": { "type": "string", "description": "Informal value type, e.g. list<int>, length-cm, text.", "minLength": 1 },
+              "meaning": { "type": "string", "description": "What the parameter controls.", "minLength": 1 },
+              "default": { "type": "string", "description": "The value shipped in the template.", "minLength": 1 },
+              "invariant": { "type": "string", "description": "A constraint the value must satisfy.", "minLength": 1 }
+            }
+          },
+          "minItems": 1
+        },
+        "node_naming": {
+          "type": "string",
+          "description": "The node-naming scheme skills target, e.g. 'L<layer>-<neuron>, 1-based'.",
+          "minLength": 1
+        },
+        "styles": {
+          "type": "array",
+          "description": "The tikz style names (each appears as <style>/.style= in the .tex).",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "operations": {
+          "type": "array",
+          "description": "Safe, contract-sanctioned edit operations (prose; not machine-checked).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "summary"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "minLength": 1 },
+              "summary": { "type": "string", "minLength": 1 }
+            }
+          },
+          "minItems": 1
+        },
+        "invariants": {
+          "type": "array",
+          "description": "Rules an edit must never break (prose; not machine-checked).",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
     }
   }
 }
