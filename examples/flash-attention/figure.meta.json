@@ -1,0 +1,14 @@
+{
+  "id": "flash-attention",
+  "name": "FlashAttention (IO-aware attention)",
+  "type": "example",
+  "domain": ["ml", "systems"],
+  "tags": ["flash attention", "attention", "transformer", "gpu", "memory hierarchy", "sram", "hbm", "dram", "tiling", "kernel fusion", "io-aware", "kqv"],
+  "venue": ["NeurIPS", "ICLR", "ICML"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz", "arrows.meta", "calc", "decorations.pathreplacing", "positioning", "amsmath"],
+  "preview": "preview.svg",
+  "featured": true,
+  "description": "FlashAttention, three-panel homage after Dao et al., 2022. Left: the GPU memory hierarchy as a banded triangle (SRAM 19 TB/s / HBM 1.5 TB/s / DRAM 12.8 GB/s) showing the bandwidth-vs-size trade-off. Center: the IO-aware dataflow — Q, K^T and V tiles streamed from HBM, copied block-by-block into SRAM (outer loop over K/V, inner loop over Q), where the QK^T block and softmax are fused before sm(QK^T)V is written back to HBM. Right: the GPT-2 attention runtime, a stacked PyTorch bar (Matmul/Mask/Softmax/Dropout/Matmul) versus FlashAttention's single fused kernel."
+}
