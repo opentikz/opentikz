@@ -549,20 +549,20 @@ def skills_page(demos: list[dict], by_id: dict, css_href: str) -> str:
   </section>
 
   <section class="skills-libwide">
-    <h2>Reference</h2>
-    <p class="skills-index-sub">Cross-cutting knowledge the skill applies to any figure — colour, annotation, and layout.</p>
+    <h2>The shared conventions it draws on</h2>
+    <p class="skills-index-sub">Beyond each template&rsquo;s contract, the skill applies the library&rsquo;s common conventions — so colour, annotations, and layout stay consistent across every figure it touches, not just the one you asked about. These are the references it works from:</p>
     <div class="skill-links">
       <a class="skill-link" href="{REPO_URL}/blob/main/reference/color-palettes/color-palettes.md" target="_blank" rel="noopener">
         <h3>Color palettes <span>&#8599;</span></h3>
-        <p>The shared, colour-blind-friendly palette every figure references (light + dark variants).</p>
+        <p>The shared, colour-blind-friendly palette it recolors from (light + dark variants) — so a tweak never introduces an off-palette hex.</p>
       </a>
       <a class="skill-link" href="{REPO_URL}/blob/main/reference/annotations/annotations.md" target="_blank" rel="noopener">
         <h3>Annotations <span>&#8599;</span></h3>
-        <p>Labels, callout leaders, grouping braces, highlight boxes, and step badges — added consistently from the palette.</p>
+        <p>The patterns it follows when adding labels, callout leaders, grouping braces, highlight boxes, and step badges — drawn consistently from the palette.</p>
       </a>
       <a class="skill-link" href="{REPO_URL}/blob/main/reference/layout/layout.md" target="_blank" rel="noopener">
         <h3>Layout <span>&#8599;</span></h3>
-        <p>Relative placement, alignment, even distribution, and fitting a figure to a paper column width.</p>
+        <p>The placement rules it keeps to — relative positioning, alignment, even distribution, and fitting a figure to a paper column width.</p>
       </a>
     </div>
   </section>
