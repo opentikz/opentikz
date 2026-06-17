@@ -142,7 +142,8 @@ push to `main`. Client-side search uses Fuse.js (CDN, pinned + SRI).
 ## Citing OpenTikZ
 
 Content is CC0, so a citation is never required — but if OpenTikZ saved you time,
-it is appreciated:
+it is appreciated. Use the **"Cite this repository"** button on GitHub (powered by
+[`CITATION.cff`](CITATION.cff)), or the BibTeX below:
 
 ```bibtex
 @misc{opentikz,

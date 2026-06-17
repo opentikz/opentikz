@@ -1,0 +1,27 @@
+# GitHub reads this file and shows a "Cite this repository" button that
+# generates APA/BibTeX automatically. Keep it in sync with the BibTeX block
+# in README.md ("Citing OpenTikZ"). Schema: https://citation-file-format.github.io
+cff-version: 1.2.0
+message: >-
+  Content is CC0, so citation is never required — but if OpenTikZ saved you
+  time, citing it is appreciated.
+title: "OpenTikZ: a TikZ resource library for academic conceptual diagrams"
+abstract: >-
+  A community library of TikZ resources for academic conceptual diagrams —
+  copyable icons, editable architecture templates, and one repo-wide skill that
+  lets an AI agent modify those templates so researchers produce paper figures
+  fast without writing TikZ from scratch.
+type: software
+authors:
+  - name: "OpenTikZ contributors"
+url: "https://github.com/opentikz/opentikz"
+repository-code: "https://github.com/opentikz/opentikz"
+license: CC0-1.0
+keywords:
+  - tikz
+  - latex
+  - academic-figures
+  - diagrams
+  - neural-network
+  - system-architecture
+year: 2026
