@@ -493,23 +493,16 @@ def browse_page(items: list[dict], css_href: str) -> str:
     )
 
 
-def skills_page(template_skills: list[dict], demos: list[dict], by_id: dict, css_href: str) -> str:
-    """The Skills surface — explainer of the one repo-wide skill + the shared demo
-    carousel + a catalog-driven index of the editable templates (each with an
-    edit_contract) + the cross-cutting reference material."""
+def skills_page(demos: list[dict], by_id: dict, css_href: str) -> str:
+    """The Skills surface — explains how to use the one repo-wide skill and why it
+    edits each figure accurately (the edit_contract), with the shared demo
+    carousel and the cross-cutting reference material. It does NOT enumerate the
+    editable templates — those are discovered by the agent in the catalog."""
     carousel = demos_carousel(demos, by_id, prefix="../")
-    index_cards = ""
-    for t in template_skills:
-        index_cards += (
-            f'      <a class="skill-link" href="../item/{t["id"]}.html">\n'
-            f'        <h3>{html.escape(t["name"])} <span>&rarr;</span></h3>\n'
-            f'        <p>{html.escape(t.get("description", ""))}</p>\n'
-            f'      </a>\n'
-        )
     return (
         head("Skills — OpenTikZ", css_href,
              description=("One repo-wide skill lets an AI edit OpenTikZ figures precisely — "
-                          "discover, edit via each template's edit_contract, and verify."),
+                          "ask in plain language, it edits via each template's edit_contract and verifies."),
              browse_href="")
         + navbar("skills")
         + f"""<main class="skills-page">
@@ -517,16 +510,42 @@ def skills_page(template_skills: list[dict], demos: list[dict], by_id: dict, css
     <h1>Edit figures with AI</h1>
     <p class="lede">OpenTikZ ships <strong>one</strong> skill,
       <a href="{REPO_URL}/blob/main/skills/using-opentikz/SKILL.md" target="_blank" rel="noopener"><code>using-opentikz</code></a>:
-      it takes an AI agent from a request to a finished figure — discover content in the catalog,
-      edit the chosen template via its structured <code>edit_contract</code>, and verify it compiles —
-      while confirming the ambiguous details with you instead of guessing.</p>
+      it takes an AI agent from a plain-language request to a finished, compiling figure —
+      and confirms the ambiguous details with you instead of guessing.</p>
   </section>
 {carousel}
-  <section class="skills-index">
-    <h2>Editable templates</h2>
-    <p class="skills-index-sub">Each template carries an <code>edit_contract</code> — open one to see its parameters and safe edit operations.</p>
+  <section class="skills-how">
+    <h2>How to use it</h2>
+    <p class="skills-index-sub">Point any agent that can read this repo (Claude Code, or an assistant with the files) at the skill, then just describe the change you want.</p>
+    <ol class="skills-steps">
+      <li><strong>Ask in plain language.</strong> &ldquo;Add a cross-attention layer to the encoder-decoder and make it blue&rdquo;, &ldquo;recolor the database orange&rdquo;, &ldquo;give the net one more hidden layer&rdquo;. No TikZ required.</li>
+      <li><strong>The agent finds the figure.</strong> It matches your request against <code>catalog.json</code> and confirms which icon, template, or example to start from.</li>
+      <li><strong>It edits, then verifies.</strong> It applies the change, keeps the figure parametric and palette-correct, and compiles the standalone <code>.tex</code> before handing it back — never an uncompiled guess.</li>
+      <li><strong>You stay in control.</strong> On anything material it asks first; on safe defaults (palette, width) it proceeds and tells you what it assumed in one line.</li>
+    </ol>
+  </section>
+
+  <section class="skills-why">
+    <h2>Why it edits each figure accurately</h2>
+    <p class="skills-index-sub">The skill doesn&rsquo;t hand-parse TikZ and hope. Every template ships a structured <code>edit_contract</code> in its <code>meta.json</code> that tells the agent exactly how that figure is built — so edits land on the right parts.</p>
     <div class="skill-links">
-{index_cards}    </div>
+      <div class="skill-link">
+        <h3>Named parameters</h3>
+        <p>Counts, sizes, spacing, and labels are driven by a <code>\\def</code> block the contract enumerates — so &ldquo;one more layer&rdquo; is a parameter change, not a redraw.</p>
+      </div>
+      <div class="skill-link">
+        <h3>Stable node names</h3>
+        <p>A documented naming scheme (e.g. <code>L2-3</code>, <code>(enc)</code>) lets the agent target a specific part and attach new arrows without breaking the layout.</p>
+      </div>
+      <div class="skill-link">
+        <h3>Safe operations &amp; invariants</h3>
+        <p>The contract lists the edits that are known-safe (recolor, add/remove a part, resize) and the rules an edit must never break — guardrails against plausible-but-wrong changes.</p>
+      </div>
+      <div class="skill-link">
+        <h3>One shared palette</h3>
+        <p>Colors are five named palette entries, never inline hex — so a recolor stays consistent and colour-blind-friendly across the whole figure.</p>
+      </div>
+    </div>
   </section>
 
   <section class="skills-libwide">
@@ -575,7 +594,6 @@ def build(root: Path) -> int:
     (site / ".nojekyll").write_text("", encoding="utf-8")
 
     n_prev = 0
-    template_skills: list[dict] = []   # catalog-driven index for the Skills page
     for it in catalog:
         item_dir = root / it["path"]
         # copy preview
@@ -587,9 +605,6 @@ def build(root: Path) -> int:
         tex = find_tex(item_dir)
         code = tex.read_text(encoding="utf-8") if tex else "% (source not found)"
         tex_name = tex.name if tex else ""
-        if it["type"] == "template" and it.get("edit_contract"):
-            template_skills.append(
-                {"id": it["id"], "name": it["name"], "description": it.get("description", "")})
         (site / "item" / f"{it['id']}.html").write_text(
             item_page(it, code, tex_name, "../assets/style.css"), encoding="utf-8"
         )
@@ -628,11 +643,11 @@ def build(root: Path) -> int:
 
     # Skills surface.
     (site / "skills" / "index.html").write_text(
-        skills_page(template_skills, demos, by_id, "../assets/style.css"), encoding="utf-8")
+        skills_page(demos, by_id, "../assets/style.css"), encoding="utf-8")
 
     print(f"built site/ — {len(catalog)} items, {n_prev} previews, "
           f"{len(catalog)+3} pages (home + browse + skills + items); "
-          f"featured={len(featured)}, demos={len(demos)}, template-skills={len(template_skills)}")
+          f"featured={len(featured)}, demos={len(demos)}")
     return 0
 
 
@@ -1008,10 +1023,19 @@ body.lb-open{overflow:hidden}
 .skills-intro .lede{font-family:"Fraunces",serif; font-weight:400; color:#34322b;
   font-size:clamp(1.02rem,1.8vw,1.2rem); margin:0 auto}
 .skills-intro .lede code{font-family:"IBM Plex Mono",monospace; font-size:.9em}
-.skills-index,.skills-libwide{padding:36px 0; border-top:1px solid var(--line)}
-.skills-index h2,.skills-libwide h2{font-family:"Fraunces",serif; font-weight:600;
+.skills-libwide,.skills-how,.skills-why{padding:36px 0; border-top:1px solid var(--line)}
+.skills-libwide h2,.skills-how h2,.skills-why h2{font-family:"Fraunces",serif; font-weight:600;
   font-size:1.5rem; margin:0 0 6px; letter-spacing:-.01em}
-.skills-index-sub{color:var(--muted); margin:0 0 20px; font-size:.92rem}
+.skills-index-sub{color:var(--muted); margin:0 0 20px; font-size:.92rem; max-width:620px}
+.skills-steps{margin:0; padding:0; list-style:none; counter-reset:step;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px}
+.skills-steps li{counter-increment:step; position:relative; background:#fff;
+  border:1px solid var(--line); border-radius:12px; padding:18px 20px 18px 54px;
+  box-shadow:var(--shadow); color:#4a473f; font-size:.9rem; line-height:1.5}
+.skills-steps li::before{content:counter(step); position:absolute; left:18px; top:16px;
+  width:26px; height:26px; border-radius:50%; background:var(--otblue); color:#fff;
+  font:600 .9rem "IBM Plex Sans",sans-serif; display:flex; align-items:center; justify-content:center}
+.skills-steps strong{color:var(--ink)}
 .skill-links{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px}
 .skill-link{display:block; text-decoration:none; background:#fff; border:1px solid var(--line);
   border-radius:12px; padding:18px 20px; box-shadow:var(--shadow);
