@@ -9,6 +9,8 @@ For every ``*.meta.json`` under icons/, templates/, examples/:
        - every id in ``composed_of`` resolves to a real library item;
        - every ``\\usetikzlibrary`` (and ``tikz`` itself) used by the ``.tex`` is
          declared in ``requires`` (so the metadata never drifts from the source);
+       - any ``edit_contract`` (templates only) names parameters/styles that
+         actually exist in the ``.tex`` (so the skill's contract never drifts);
   3. confirm the ``.tex`` compiles standalone via ``latexmk``.
 
 The static checks (1, 2) always run. The compile step (3) is SKIPped (non-fatal)
@@ -106,6 +108,39 @@ def _structural_problems(
         if cid not in known_ids:
             problems.append(
                 f"composed_of references unknown library id '{cid}'"
+            )
+
+    problems.extend(_edit_contract_problems(meta, tex))
+
+    return problems
+
+
+def _edit_contract_problems(meta: dict, tex: Path) -> list[str]:
+    """Cross-check an edit_contract against its .tex (existence checks only).
+
+    Every ``parameters[].name`` must appear as a ``\\def`` and every ``styles[]``
+    entry as a ``<name>/.style`` in the source, so the contract the
+    using-opentikz skill consumes can never drift from the figure.
+    """
+    contract = meta.get("edit_contract")
+    if contract is None:
+        return []
+
+    problems: list[str] = []
+    if meta.get("type") != "template":
+        problems.append("edit_contract is only allowed on templates")
+
+    text = _strip_tex_comments(tex.read_text(encoding="utf-8"))
+    for param in contract.get("parameters", []):
+        name = param.get("name", "")
+        if not re.search(r"\\def\s*" + re.escape(name) + r"\b", text):
+            problems.append(
+                f"edit_contract parameter '{name}' has no \\def in the .tex"
+            )
+    for style in contract.get("styles", []):
+        if not re.search(re.escape(style) + r"\s*/\.style", text):
+            problems.append(
+                f"edit_contract style '{style}' has no /.style definition in the .tex"
             )
 
     return problems

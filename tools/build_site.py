@@ -26,7 +26,7 @@ from pathlib import Path
 from _common import repo_root
 
 TAGLINE = "A TikZ resource library for academic conceptual diagrams."
-LEDE = ("Copyable icons, editable architecture templates, and AI-editable skills "
+LEDE = ("Copyable icons, editable architecture templates, and one AI-editable skill "
         "— so researchers produce paper figures fast without writing TikZ from scratch.")
 
 TYPE_ORDER = {"icon": 0, "template": 1, "example": 2, "skill": 3}
@@ -55,83 +55,6 @@ def json_for_script(obj) -> str:
         .replace(" ", "\\u2028")
         .replace(" ", "\\u2029")
     )
-
-
-def _inline_md(s: str) -> str:
-    """Inline markdown -> HTML on an already-plain string (escapes first)."""
-    s = html.escape(s)
-    s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
-    s = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", s)
-    s = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', s)
-    return s
-
-
-def md_to_html(md: str) -> str:
-    """Minimal Markdown -> HTML for skill.md (headings, code fences, lists,
-    blockquotes, bold, inline code, links). Not a general parser — covers the
-    constructs the skills actually use."""
-    lines = md.replace("\r\n", "\n").split("\n")
-    out: list[str] = []
-    list_type: str | None = None
-    i, n = 0, len(lines)
-
-    def close_list() -> None:
-        nonlocal list_type
-        if list_type:
-            out.append(f"</{list_type}>")
-            list_type = None
-
-    while i < n:
-        line = lines[i]
-        if line.startswith("```"):
-            close_list()
-            i += 1
-            buf = []
-            while i < n and not lines[i].startswith("```"):
-                buf.append(html.escape(lines[i]))
-                i += 1
-            i += 1
-            out.append('<pre class="md-code"><code>' + "\n".join(buf) + "</code></pre>")
-            continue
-        if not line.strip():
-            close_list()
-            i += 1
-            continue
-        m = re.match(r"^(#{1,6})\s+(.*)$", line)
-        if m:
-            close_list()
-            level = min(len(m.group(1)) + 1, 6)  # '#' -> h2 (page owns h1)
-            out.append(f"<h{level}>{_inline_md(m.group(2))}</h{level}>")
-            i += 1
-            continue
-        if line.startswith(">"):
-            close_list()
-            buf = []
-            while i < n and lines[i].startswith(">"):
-                buf.append(_inline_md(lines[i].lstrip(">").strip()))
-                i += 1
-            out.append("<blockquote>" + "<br>".join(buf) + "</blockquote>")
-            continue
-        ml = re.match(r"^\s*([-*]|\d+\.)\s+(.*)$", line)
-        if ml:
-            ltype = "ol" if ml.group(1)[0].isdigit() else "ul"
-            if list_type != ltype:
-                close_list()
-                out.append(f"<{ltype}>")
-                list_type = ltype
-            out.append("<li>" + _inline_md(ml.group(2)) + "</li>")
-            i += 1
-            continue
-        close_list()
-        buf = []
-        while (i < n and lines[i].strip() and not lines[i].startswith("```")
-               and not re.match(r"^#{1,6}\s", lines[i]) and not lines[i].startswith(">")
-               and not re.match(r"^\s*([-*]|\d+\.)\s", lines[i])):
-            buf.append(_inline_md(lines[i].strip()))
-            i += 1
-        out.append("<p>" + " ".join(buf) + "</p>")
-    close_list()
-    return "\n".join(out)
 
 
 # --------------------------------------------------------------------------- #
@@ -237,33 +160,60 @@ def metadata_table(item: dict) -> str:
     return "<table class=\"meta-table\">" + "".join(rows) + "</table>"
 
 
-def item_page(item: dict, code: str, tex_name: str, skill_md: str | None, css_href: str) -> str:
+def edit_contract_html(contract: dict, skills_href: str) -> str:
+    """Render a template's edit_contract as a compact, read-only 'how to edit'
+    block (parameters + operations), with a pointer to the one repo-wide skill."""
+    params = ""
+    for p in contract.get("parameters", []):
+        meaning = html.escape(p.get("meaning", ""))
+        if p.get("default"):
+            meaning += f' <span class="param-def">default <code>{html.escape(p["default"])}</code></span>'
+        params += (
+            f"<tr><td><code>{html.escape(p.get('name', ''))}</code></td>"
+            f"<td>{meaning}</td></tr>"
+        )
+    ops = "".join(
+        f"<li><code>{html.escape(o.get('id', ''))}</code> — {html.escape(o.get('summary', ''))}</li>"
+        for o in contract.get("operations", [])
+    )
+    naming = html.escape(contract.get("node_naming", ""))
+    return f"""
+  <section class="skill">
+    <div class="skill-head">
+      <h2>Edit contract <span>— how the AI edits this template</span></h2>
+      <a class="skill-link-inline" href="{skills_href}">using-opentikz skill →</a>
+    </div>
+    <details class="skill-body" open>
+      <summary>Parameters &amp; safe edit operations</summary>
+      <div class="md">
+        <h3>Parameters</h3>
+        <table class="contract-params">{params}</table>
+        <h3>Node naming</h3>
+        <p><code>{naming}</code></p>
+        <h3>Operations</h3>
+        <ul>{ops}</ul>
+      </div>
+    </details>
+  </section>
+"""
+
+
+def item_page(item: dict, code: str, tex_name: str, css_href: str) -> str:
     name = html.escape(item["name"])
     desc = html.escape(item.get("description", ""))
     preview = f"../previews/{item['id']}.svg"
     is_template = item["type"] == "template"
+    contract = item.get("edit_contract")
     skill_note = ""
     skill_section = ""
-    if is_template and skill_md:
+    if is_template and contract:
         skill_note = (
-            '<p class="skill-note">This template ships a companion '
-            '<strong>skill</strong> (<code>skill.md</code>) so an AI agent can edit it '
-            'reliably — the full guide is below. Copy it together with the <code>.tex</code> '
-            'into your AI assistant.</p>'
+            '<p class="skill-note">This template ships an <strong>edit contract</strong> '
+            '(in its <code>meta.json</code>) that the repo-wide '
+            '<a href="../skills/">using-opentikz</a> skill reads to edit it reliably — '
+            'the parameters and safe operations are listed below.</p>'
         )
-        skill_section = f"""
-  <section class="skill">
-    <div class="skill-head">
-      <h2>Companion skill <span>— edit this template with AI</span></h2>
-      <button class="copy" data-target="skillsrc">Copy skill.md</button>
-    </div>
-    <details class="skill-body">
-      <summary>Show the skill — structure · edit operations · constraints</summary>
-      <div class="md">{md_to_html(skill_md)}</div>
-    </details>
-    <pre id="skillsrc" hidden>{html.escape(skill_md)}</pre>
-  </section>
-"""
+        skill_section = edit_contract_html(contract, "../skills/")
     return (
         head(f"{item['name']} — OpenTikZ", css_href,
              description=item.get("description", TAGLINE), browse_href="../browse/")
@@ -415,7 +365,7 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
         + f"""<main class="home">
   <section class="showcase">
     <h1>Paper-grade figures from a library.</h1>
-    <p class="show-lede">Copyable icons, editable templates, and AI-editable <em>skills</em>.</p>
+    <p class="show-lede">Copyable icons, editable templates, and one AI-editable <em>skill</em>.</p>
     <div class="carousel hero-carousel" id="hero-carousel" tabindex="0" aria-roledescription="carousel" aria-label="Featured figures">
       <button class="car-nav car-prev" type="button" aria-label="Previous figure">&larr;</button>
       <div class="car-track">
@@ -433,11 +383,11 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     <h2>How it works</h2>
     <ol class="steps">
       <li><span class="step-n">1</span><h3>Clone the repo</h3>
-        <p>Pull OpenTikZ into your project — the icons, templates, and companion <strong>skill.md</strong> files come with it.</p></li>
+        <p>Pull OpenTikZ into your project — the icons, templates, and the <strong>using-opentikz</strong> skill come with it.</p></li>
       <li><span class="step-n">2</span><h3>Describe the diagram</h3>
         <p>Tell your AI agent the figure you want — "a training pipeline with two GPUs feeding a transformer," in plain words.</p></li>
       <li><span class="step-n">3</span><h3>The agent assembles it</h3>
-        <p>Guided by the skills, the agent reuses the existing icons, blocks, and templates to build editable TikZ — no hand-writing from scratch.</p></li>
+        <p>Guided by the skill, the agent reuses the existing icons, blocks, and templates to build editable TikZ — no hand-writing from scratch.</p></li>
     </ol>
   </section>
 {demos_section}
@@ -544,8 +494,9 @@ def browse_page(items: list[dict], css_href: str) -> str:
 
 
 def skills_page(template_skills: list[dict], demos: list[dict], by_id: dict, css_href: str) -> str:
-    """The Skills surface — explainer + the shared demo carousel + a catalog-driven
-    index of the per-template companion skills (deep-linking back to item pages)."""
+    """The Skills surface — explainer of the one repo-wide skill + the shared demo
+    carousel + a catalog-driven index of the editable templates (each with an
+    edit_contract) + the cross-cutting reference material."""
     carousel = demos_carousel(demos, by_id, prefix="../")
     index_cards = ""
     for t in template_skills:
@@ -557,38 +508,40 @@ def skills_page(template_skills: list[dict], demos: list[dict], by_id: dict, css
         )
     return (
         head("Skills — OpenTikZ", css_href,
-             description=("Companion skills let an AI edit OpenTikZ templates precisely — "
-                          "add parts, recolor, restructure, adapt to a venue."),
+             description=("One repo-wide skill lets an AI edit OpenTikZ figures precisely — "
+                          "discover, edit via each template's edit_contract, and verify."),
              browse_href="")
         + navbar("skills")
         + f"""<main class="skills-page">
   <section class="skills-intro">
     <h1>Edit figures with AI</h1>
-    <p class="lede">Every template ships a companion <code>skill.md</code>: precise, structured
-      instructions that let an AI edit the figure correctly — add or remove a part, recolor from
-      the palette, change counts, restructure, adapt to a venue width — without hand-writing TikZ.</p>
+    <p class="lede">OpenTikZ ships <strong>one</strong> skill,
+      <a href="{REPO_URL}/blob/main/skills/using-opentikz/SKILL.md" target="_blank" rel="noopener"><code>using-opentikz</code></a>:
+      it takes an AI agent from a request to a finished figure — discover content in the catalog,
+      edit the chosen template via its structured <code>edit_contract</code>, and verify it compiles —
+      while confirming the ambiguous details with you instead of guessing.</p>
   </section>
 {carousel}
   <section class="skills-index">
-    <h2>Companion skills</h2>
-    <p class="skills-index-sub">One per template — open a template to read its full skill.</p>
+    <h2>Editable templates</h2>
+    <p class="skills-index-sub">Each template carries an <code>edit_contract</code> — open one to see its parameters and safe edit operations.</p>
     <div class="skill-links">
 {index_cards}    </div>
   </section>
 
   <section class="skills-libwide">
-    <h2>Library-wide skills</h2>
-    <p class="skills-index-sub">Cross-cutting skills any figure can apply — colour, annotation, and layout.</p>
+    <h2>Reference</h2>
+    <p class="skills-index-sub">Cross-cutting knowledge the skill applies to any figure — colour, annotation, and layout.</p>
     <div class="skill-links">
-      <a class="skill-link" href="{REPO_URL}/blob/main/skills/color-palettes/skill.md" target="_blank" rel="noopener">
+      <a class="skill-link" href="{REPO_URL}/blob/main/reference/color-palettes/color-palettes.md" target="_blank" rel="noopener">
         <h3>Color palettes <span>&#8599;</span></h3>
         <p>The shared, colour-blind-friendly palette every figure references (light + dark variants).</p>
       </a>
-      <a class="skill-link" href="{REPO_URL}/blob/main/skills/annotations/skill.md" target="_blank" rel="noopener">
+      <a class="skill-link" href="{REPO_URL}/blob/main/reference/annotations/annotations.md" target="_blank" rel="noopener">
         <h3>Annotations <span>&#8599;</span></h3>
         <p>Labels, callout leaders, grouping braces, highlight boxes, and step badges — added consistently from the palette.</p>
       </a>
-      <a class="skill-link" href="{REPO_URL}/blob/main/skills/layout/skill.md" target="_blank" rel="noopener">
+      <a class="skill-link" href="{REPO_URL}/blob/main/reference/layout/layout.md" target="_blank" rel="noopener">
         <h3>Layout <span>&#8599;</span></h3>
         <p>Relative placement, alignment, even distribution, and fitting a figure to a paper column width.</p>
       </a>
@@ -634,13 +587,11 @@ def build(root: Path) -> int:
         tex = find_tex(item_dir)
         code = tex.read_text(encoding="utf-8") if tex else "% (source not found)"
         tex_name = tex.name if tex else ""
-        skill_path = item_dir / "skill.md"
-        skill_md = skill_path.read_text(encoding="utf-8") if skill_path.exists() else None
-        if it["type"] == "template" and skill_md:
+        if it["type"] == "template" and it.get("edit_contract"):
             template_skills.append(
                 {"id": it["id"], "name": it["name"], "description": it.get("description", "")})
         (site / "item" / f"{it['id']}.html").write_text(
-            item_page(it, code, tex_name, skill_md, "../assets/style.css"), encoding="utf-8"
+            item_page(it, code, tex_name, "../assets/style.css"), encoding="utf-8"
         )
 
     # Browse surface (the tool) under /browse/.
@@ -869,12 +820,19 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   background:#F1EFE6; border:1px solid var(--line); border-radius:999px; padding:3px 9px}
 .group .grid{max-width:none; margin:0; padding:18px 0 6px}
 
-/* ---------- companion skill (template pages) ---------- */
+/* ---------- edit contract (template pages) ---------- */
 .skill{margin:36px 0 0}
 .skill-head{display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:12px}
 .skill-head h2{margin:0; font-family:"Fraunces",serif; font-weight:600; font-size:1.4rem}
 .skill-head h2 span{font-family:"IBM Plex Sans",sans-serif; font-weight:400;
   font-size:.82rem; color:var(--muted)}
+.skill-link-inline{font:500 .82rem "IBM Plex Mono",monospace; color:var(--otblue);
+  text-decoration:none; white-space:nowrap}
+.skill-link-inline:hover{text-decoration:underline}
+.contract-params{width:100%; border-collapse:collapse; margin:.4em 0 .2em; font-size:.9rem}
+.contract-params td{padding:6px 10px 6px 0; border-bottom:1px solid var(--line); vertical-align:top}
+.contract-params td:first-child{width:34%; white-space:nowrap}
+.param-def{color:var(--muted); font-size:.86em}
 .skill-body{background:#fff; border:1px solid var(--line-strong); border-radius:12px;
   box-shadow:var(--shadow)}
 .skill-body>summary{cursor:pointer; padding:14px 16px; list-style:none;

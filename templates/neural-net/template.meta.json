@@ -9,5 +9,28 @@
   "license": "CC0-1.0",
   "requires": ["tikz"],
   "preview": "preview.svg",
-  "description": "Parametric fully-connected feed-forward neural network. Layer count and neurons-per-layer are set by a single list at the top of the file."
+  "description": "Parametric fully-connected feed-forward neural network. Layer count and neurons-per-layer are set by a single list at the top of the file.",
+  "edit_contract": {
+    "parameters": [
+      {"name": "\\layersizes", "type": "list<int>", "meaning": "neuron count per layer; the number of entries is the number of layers (layer 1 is leftmost)", "default": "{4,6,6,2}", "invariant": "same length as \\layerlabels"},
+      {"name": "\\layerlabels", "type": "list<text>", "meaning": "one label per layer", "default": "{Input,Hidden,Hidden,Output}", "invariant": "same length as \\layersizes"},
+      {"name": "\\layersep", "type": "length-cm", "meaning": "horizontal distance between layers", "default": "2.4"},
+      {"name": "\\neuronsep", "type": "length-cm", "meaning": "vertical distance between neurons within a layer", "default": "1.1"},
+      {"name": "\\neuronsize", "type": "length-cm", "meaning": "neuron diameter", "default": "0.8"}
+    ],
+    "node_naming": "L<layer>-<neuron>, both 1-based, e.g. (L1-1), (L2-3)",
+    "styles": ["neuron", "edge", "layerlabel"],
+    "operations": [
+      {"id": "add-layer", "summary": "append a count to \\layersizes AND a label to \\layerlabels (keep equal length); insert mid-network by adding at the same position in both lists"},
+      {"id": "remove-layer", "summary": "delete one entry from each list at the same position"},
+      {"id": "resize-layer", "summary": "edit one entry in \\layersizes only (the label list is unchanged)"},
+      {"id": "recolor", "summary": "change the palette color name used by the neuron style (and otgray in edge/layerlabel for tints); never a hex or stock color"},
+      {"id": "resize-spacing", "summary": "\\neuronsize for node size, \\neuronsep (vertical) and \\layersep (horizontal) for spacing"}
+    ],
+    "invariants": [
+      "\\layersizes and \\layerlabels stay equal length",
+      "preserve the L<layer>-<neuron> node-naming scheme",
+      "do not remove the \\pgfdeclarelayer{edges} / \\pgfsetlayers lines or edges draw over the neurons"
+    ]
+  }
 }

@@ -24,7 +24,7 @@ the item's `requires`):
 
 ## Palette roles for annotations
 
-Annotations use the shared palette (see `[[skills/color-palettes]]`), never raw
+Annotations use the shared palette (see `[[reference/color-palettes]]`), never raw
 hex. Two roles cover almost everything:
 
 - **`otgray`** — neutral annotation: labels, leader lines, braces, dimension

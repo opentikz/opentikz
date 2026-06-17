@@ -9,5 +9,36 @@
   "license": "CC0-1.0",
   "requires": ["tikz", "arrows.meta", "positioning", "shapes.geometric", "shapes.misc"],
   "preview": "preview.svg",
-  "description": "Standard flowchart: terminal pills (start/end), process rectangles, a decision diamond with Yes/No branches, and a retry loop. Parametric spacing and labels."
+  "description": "Standard flowchart: terminal pills (start/end), process rectangles, a decision diamond with Yes/No branches, and a retry loop. Parametric spacing and labels.",
+  "edit_contract": {
+    "parameters": [
+      {"name": "\\rowsep", "type": "length-cm", "meaning": "vertical gap between steps (tikz node distance)", "default": "0.95"},
+      {"name": "\\boxminw", "type": "length-cm", "meaning": "minimum process/terminal width", "default": "2.4"},
+      {"name": "\\boxminh", "type": "length-cm", "meaning": "minimum box height", "default": "0.95"},
+      {"name": "\\startlabel", "type": "text", "meaning": "start terminal label"},
+      {"name": "\\readlabel", "type": "text", "meaning": "first process label"},
+      {"name": "\\checklabel", "type": "text", "meaning": "decision diamond label"},
+      {"name": "\\proclabel", "type": "text", "meaning": "main process label"},
+      {"name": "\\endlabel", "type": "text", "meaning": "end terminal label"},
+      {"name": "\\errorlabel", "type": "text", "meaning": "error-branch process label"},
+      {"name": "\\yeslabel", "type": "text", "meaning": "decision Yes-edge label"},
+      {"name": "\\nolabel", "type": "text", "meaning": "decision No-edge label"},
+      {"name": "\\looplabel", "type": "text", "meaning": "retry loop edge label"}
+    ],
+    "node_naming": "fixed semantic node names: (start) (read) (check) (proc) (end) (error); give any new node a clear semantic name",
+    "styles": ["base", "terminal", "process", "decision", "flow", "loop", "elabel"],
+    "operations": [
+      {"id": "rename-step", "summary": "edit the matching label macro"},
+      {"id": "add-process-step", "summary": "insert a process node below=of the previous one and re-point the surrounding flow arrows"},
+      {"id": "add-decision", "summary": "add a decision node and route its two outgoing flow arrows, labelling each branch"},
+      {"id": "change-shape", "summary": "swap a node's style: process<->decision<->terminal (give a decision a ? label)"},
+      {"id": "add-io-step", "summary": "use a trapezium (slanted box) for an I/O step; shapes.geometric is already loaded"},
+      {"id": "recolor", "summary": "change the palette name in the relevant style; never a hex/stock color"}
+    ],
+    "invariants": [
+      "preserve the node names (start) (read) (check) (proc) (end) (error) and the per-role styles terminal/process/decision",
+      "label every decision's outgoing edges (Yes/No or equivalent)",
+      "colors only via the five palette names (tints/shades allowed); never inline hex or stock colors"
+    ]
+  }
 }

@@ -35,10 +35,12 @@ Quality decides everything; an empty repo attracts no one.
 
 ## Step 3 ✅ — Skills layer (~1–2 weeks, parallel with templates)
 
-Write a companion skill for each of the 5 templates. Test in Claude Code:
-issue "add a layer / recolor / change node count / adapt to CVPR" commands and
-verify the AI edits correctly. This is the soul of the product — polish until
-smooth.
+One repo-wide `using-opentikz` skill drives editing, backed by a per-template
+`edit_contract` (in each `meta.json`) and `reference/` material. Test in Claude
+Code: issue "add a layer / recolor / change node count / adapt to CVPR" commands
+and verify the AI edits correctly. This is the soul of the product — polish until
+smooth. (Originally shipped as per-template `skill.md` files; consolidated into
+the single skill + structured contracts.)
 
 ## Step 4 ✅ — Website (~1–2 weeks)
 

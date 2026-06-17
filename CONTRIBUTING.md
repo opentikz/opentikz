@@ -28,7 +28,7 @@ OpenTikZ has three content layers. Pick the one that fits:
 | Layer | Lives in | What it is |
 |-------|----------|-----------|
 | **Icon** | `icons/<domain>/<name>/` | An atomic, single-concept element (server, GPU, neuron, database). |
-| **Template** | `templates/<name>/` | A complete, editable conceptual figure **+ a companion `skill.md`**. |
+| **Template** | `templates/<name>/` | A complete, editable conceptual figure **+ an `edit_contract` in its `meta.json`**. |
 | **Example** | `examples/<name>/` | A paper-grade figure combining icons + templates to show real use. |
 
 **In scope:** system/architecture/pipeline/flow diagrams for papers.
@@ -49,7 +49,7 @@ them won't merge:
    [`meta.schema.json`](meta.schema.json).
 3. **Palette colors only.** Never hard-code hex inline. Use the named palette
    colors (`otblue`, `otorange`, `otteal`, `otpurple`, `otgray`, …) from
-   [`skills/color-palettes/`](skills/color-palettes/). Tints/shades like
+   [`reference/color-palettes/`](reference/color-palettes/). Tints/shades like
    `otblue!18` or `otteal!75!black` are fine. Default to the color-blind-friendly
    palette; provide a dark-friendly variant where feasible.
 4. **Semantic node names.** Name nodes for what they are — `(enc)`, `(input)`,
@@ -76,8 +76,7 @@ icons/<domain>/<name>/
 
 templates/<name>/
   template.tex
-  template.meta.json
-  skill.md              # REQUIRED — how an AI edits this template
+  template.meta.json    # REQUIRED edit_contract — how an AI edits this template
   preview.svg
 
 examples/<name>/
@@ -106,29 +105,35 @@ Validated against [`meta.schema.json`](meta.schema.json). Required fields:
 ```
 
 - `id` — globally unique, stable, kebab-case (`^[a-z0-9]+(?:-[a-z0-9]+)*$`).
-- `type` — `icon` · `template` · `example` · `skill`.
+- `type` — `icon` · `template` · `example`.
 - `domain` — browse grouping (e.g. `systems`, `ml`, `pipeline`). At least one.
 - `tags` — free-form search keywords.
 - `requires` — LaTeX packages / TikZ libraries the `.tex` preamble needs.
 - `preview` — relative path to the generated `.svg`.
 - Optional: `venue` (column widths it's tuned for), `description`, `featured`,
-  `composed_of` (ids of items an example is built from).
+  `composed_of` (ids of items an example is built from), and — templates only —
+  `edit_contract` (below).
 
-## Companion `skill.md` (templates only)
+## `edit_contract` (templates only)
 
-A template's `skill.md` is the differentiator — it lets an AI agent edit the
-figure correctly. Document three things (see existing templates for the shape,
-e.g. [`templates/encoder-decoder/skill.md`](templates/encoder-decoder/skill.md)):
+A template's `edit_contract` (a field in its `meta.json`) is the differentiator —
+it is the structured knowledge the `skills/using-opentikz/` skill reads to edit
+the figure correctly. It replaces the old per-template `skill.md`. Five parts
+(see [`templates/neural-net/template.meta.json`](templates/neural-net/template.meta.json)
+for a worked example):
 
-1. **Structure** — the named parts, the parameters (`\def`s), and how they relate.
-2. **Common edit operations** — add/remove a part, recolor (by palette name),
-   change counts, resize, adapt to a venue/column width — each with the **exact**
-   approach (which line/macro to touch).
-3. **Constraints** — must stay standalone-compilable, which node names to
-   preserve, palette-only colors.
+1. **`parameters`** — the `\def` macros that drive the figure: `name` (with
+   backslash), `type`, `meaning`, optional `default`/`invariant`.
+2. **`node_naming`** — the scheme the skill targets (e.g. `L<layer>-<neuron>`).
+3. **`styles`** — the tikz style names (each `<name>/.style=` in the `.tex`).
+4. **`operations`** — real, safe edits (`id` + `summary`): add/remove a part,
+   recolor, change counts, resize, etc.
+5. **`invariants`** — rules an edit must never break.
 
-Only document operations the template can actually back. Don't ship a skill that
-promises an edit the figure can't do.
+`validate.py` checks that every `parameters[].name` and `styles[]` entry actually
+exists in the `.tex`, so the contract can't drift. Only document operations the
+template can actually back. Cross-cutting how-to (dark palette, venue widths) lives
+once in the skill, not per template; see `reference/` for palette/annotations/layout.
 
 ## Local workflow
 
@@ -170,7 +175,8 @@ Before opening a PR, confirm:
 - [ ] Generated `.svg` preview committed.
 - [ ] `catalog.json` regenerated via `tools/build_catalog.py` (not hand-edited);
       `tools/build_catalog.py --check` is clean.
-- [ ] Templates: a `skill.md` is included and documents real edit operations.
+- [ ] Templates: an `edit_contract` is included and documents real edit operations
+      (and `validate.py` confirms its parameters/styles exist in the `.tex`).
 - [ ] Content `.meta.json` has `"license": "CC0-1.0"`; you can release it as CC0.
 
 CI runs `validate.py --strict` and `build_catalog.py --check` on every PR and

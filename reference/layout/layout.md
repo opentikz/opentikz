@@ -108,12 +108,12 @@ the figure in `figure`/`\includegraphics` or pastes the `tikzpicture` directly.
 - Prefer **relative** placement (`positioning`) and **named distances** over
   absolute coordinates, so the figure stays re-flowable and AI-editable.
 - Keep node **names semantic** (see `[[docs/DESIGN_GUIDE.md]]`) — layout edits
-  target nodes by name; a renamed node breaks every companion skill.
+  target nodes by name; a renamed node breaks the template's edit contract.
 - When scaling to fit, use `transform shape` so text scales with the drawing;
   a scaled picture with unscaled labels reads as broken.
 - One `node distance` (or a small set of named steps) per figure — don't mix ad
   hoc gaps that can't be adjusted together.
-- Colors still come from the palette (`[[skills/color-palettes]]`); layout never
+- Colors still come from the palette (`[[reference/color-palettes]]`); layout never
   introduces a new color.
 
 See `cheatsheet.tex` / `cheatsheet.svg` for a rendered reference of relative
