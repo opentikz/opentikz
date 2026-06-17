@@ -50,7 +50,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ghostscript librsvg2-bin
 
       - name: Set up TeX Live (cached)
-        uses: teatimeguest/setup-texlive-action@v3
+        # Was teatimeguest/setup-texlive-action@v3; that account/repo was deleted
+        # (404), which blocked every CI run at action resolution. TeX-Live/ is the
+        # community fork that preserved the tags and inputs (packages list below is
+        # unchanged). See https://github.com/TeX-Live/setup-texlive-action
+        uses: TeX-Live/setup-texlive-action@v4
         with:
           # Mirror the local toolchain. tlmgr resolves further dependencies.
           packages: >-
