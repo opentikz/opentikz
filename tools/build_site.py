@@ -611,13 +611,15 @@ def build(root: Path) -> int:
                 if src.exists():
                     shutil.copyfile(src, site / "demos" / g[key])
 
-    # Home surface (marketing). Showcase = featured items, flagship first; fall
-    # back to the examples so the page still builds before any flagship lands.
+    # Home surface (marketing). The hero showcase is examples-only: a flagship
+    # paper-grade figure, never a bare icon/template. Prefer the example items
+    # flagged featured (flagship first); fall back to all examples so the page
+    # still builds before any flagship is flagged.
     by_id = {it["id"]: it for it in catalog}
     counts = {"icon": 0, "template": 0, "example": 0}
     for it in catalog:
         counts[it["type"]] = counts.get(it["type"], 0) + 1
-    featured = [it for it in catalog if it.get("featured")]
+    featured = [it for it in catalog if it.get("featured") and it["type"] == "example"]
     featured.sort(key=lambda it: (0 if "lora" in it["id"] else 1, it["name"].lower()))
     if not featured:
         featured = [it for it in catalog if it["type"] == "example"]

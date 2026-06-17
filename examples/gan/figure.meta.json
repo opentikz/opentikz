@@ -1,0 +1,14 @@
+{
+  "id": "gan",
+  "name": "Generative Adversarial Network (GAN)",
+  "type": "example",
+  "domain": ["ml"],
+  "tags": ["gan", "generative", "adversarial", "generator", "discriminator", "latent space", "real fake", "architecture", "deep learning"],
+  "venue": ["NeurIPS", "ICML", "CVPR", "ICLR"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz", "arrows.meta", "positioning"],
+  "preview": "preview.svg",
+  "featured": true,
+  "description": "Block-level GAN overview: a low-dimensional latent bar feeds the generator G (expanding trapezoid) producing generated fake images, while a high-dimensional sample-space stack supplies real images; both feed the discriminator D (compressing trapezoid) that outputs a real/fake decision. Parametric sizes, colors, and labels."
+}
