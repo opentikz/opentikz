@@ -1,0 +1,141 @@
+\documentclass[border=6pt]{standalone}
+
+% --- packages (mirror these in template.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+
+% --- palette (canonical source: reference/color-palettes/color-palettes.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+% ==== parameters (edit these) ============================================
+\def\trapW{2.2}        % width (horizontal length) of the G and D trapezoids (cm)
+\def\trapBig{3.0}      % long (wide) parallel edge of each trapezoid (cm)
+\def\trapSmall{1.2}    % short (narrow) parallel edge of each trapezoid (cm)
+\def\imgW{2.0}         % width of the Real/Fake image boxes (cm)
+\def\imgH{0.95}        % height of the Real/Fake image boxes (cm)
+\def\rowsep{3.6}       % vertical gap between the top (real) and bottom (fake) rows (cm)
+\def\colgap{1.1}       % horizontal gap between columns; also the arrow length (cm)
+\def\latentW{0.5}      % width of the latent-space bar (cm)
+\def\cellH{0.4}        % height of one latent-space cell (cm)
+\def\latentcells{8}    % number of latent cells (keep equal to length of \latentcolors)
+\def\stackS{1.1}       % side length of each sample-space plane (cm)
+\def\stackoff{0.18}    % diagonal offset between stacked planes (cm)
+\def\stackcount{4}     % number of sample planes (keep equal to length of \stackcolors)
+\def\outR{0.27}        % radius of the Real/Fake output lights (cm)
+% per-cell colors of the latent bar (bottom-to-top), one palette tint per cell
+\def\latentcolors{otblue!45, otteal!40, otgray!25, otorange!45, otblue!28, otpurple!40, otorange!30, otgray!40}
+% per-plane colors of the sample-space stack (back-to-front)
+\def\stackcolors{otteal!45, otorange!45, otblue!45, otgray!25}
+% labels
+\def\latentlabel{Low Dimensional\\Latent Space}
+\def\samplelabel{High Dimensional\\Sample Space}
+\def\genlabel{Generative\\Network}
+\def\gensym{$G$}
+\def\disclabel{Discriminative\\Network}
+\def\discsym{$D$}
+\def\reallabel{Real Images}
+\def\fakelabel{Generated\\Fake Images}
+\def\realout{Real}
+\def\fakeout{Fake}
+% =========================================================================
+
+\begin{tikzpicture}[
+    >={Stealth[length=2.4mm]},
+    trap/.style={line width=0.8pt, rounded corners=1.5pt},
+    imgbox/.style={draw=otteal!75!black, line width=0.8pt, fill=otteal!22,
+                   rounded corners=2pt, align=center, font=\sffamily\small},
+    lbl/.style={font=\sffamily\small, align=center, text=otgray!90!black},
+    flow/.style={draw=otgray!75, line width=0.9pt, ->},
+    cell/.style={draw=otgray!55, line width=0.4pt},
+    plane/.style={draw=otgray!60, line width=0.6pt},
+    light/.style={draw=otgray!70, line width=0.7pt},
+  ]
+  % --- row y-levels ---
+  \pgfmathsetmacro{\yB}{0}                  % bottom row (latent / G / fake)
+  \pgfmathsetmacro{\yT}{\rowsep}            % top row (sample / real)
+  \pgfmathsetmacro{\ymid}{\rowsep/2}        % midline (D / output)
+
+  % --- precomputed half-extents ---
+  \pgfmathsetmacro{\sH}{\trapSmall/2}
+  \pgfmathsetmacro{\bH}{\trapBig/2}
+  \pgfmathsetmacro{\latHalf}{\latentW/2}
+  \pgfmathsetmacro{\stackHalf}{\stackS/2}
+  \pgfmathsetmacro{\stackC}{(\stackcount-1)*\stackoff/2}
+  \pgfmathsetmacro{\outD}{2*\outR}
+
+  % --- column x-edges, laid out left to right ---
+  \pgfmathsetmacro{\xA}{0}                              % inputs (latent bar + sample stack)
+  \pgfmathsetmacro{\xBL}{\xA+\stackHalf+\colgap}        % G left edge
+  \pgfmathsetmacro{\xBR}{\xBL+\trapW}                   % G right edge
+  \pgfmathsetmacro{\xB}{(\xBL+\xBR)/2}                  % G centre
+  \pgfmathsetmacro{\xC}{\xBR+\colgap+\imgW/2}           % image boxes centre
+  \pgfmathsetmacro{\xDL}{\xC+\imgW/2+\colgap}           % D left edge
+  \pgfmathsetmacro{\xDR}{\xDL+\trapW}                   % D right edge
+  \pgfmathsetmacro{\xD}{(\xDL+\xDR)/2}                  % D centre
+  \pgfmathsetmacro{\xE}{\xDR+\colgap}                   % output lights centre
+  \pgfmathsetmacro{\latentRight}{\xA+\latHalf}
+  \pgfmathsetmacro{\stackRight}{\xA+\stackHalf+\stackC}
+  \pgfmathsetmacro{\dUpper}{\ymid+\trapBig/4}           % D left-edge target (real arrow)
+  \pgfmathsetmacro{\dLower}{\ymid-\trapBig/4}           % D left-edge target (fake arrow)
+
+  % --- inputs: low-dimensional latent-space bar (bottom-left) ---
+  \pgfmathsetmacro{\barTop}{\yB+(\latentcells-1)*\cellH/2}
+  \foreach \c [count=\i from 0] in \latentcolors {
+    \pgfmathsetmacro{\yy}{\barTop-\i*\cellH}
+    \pgfmathsetmacro{\cyB}{\yy-\cellH/2}
+    \pgfmathsetmacro{\cyT}{\yy+\cellH/2}
+    \filldraw[cell, fill=\c] (\xA-\latHalf,\cyB) rectangle (\xA+\latHalf,\cyT);
+  }
+  \node[lbl, anchor=east] at (\xA-\latHalf-0.18,\yB) {\latentlabel};
+
+  % --- inputs: high-dimensional sample-space stack (top-left) ---
+  \foreach \c [count=\i from 0] in \stackcolors {
+    \pgfmathsetmacro{\ox}{\xA+\i*\stackoff-\stackC}
+    \pgfmathsetmacro{\oy}{\yT+\i*\stackoff-\stackC}
+    \filldraw[plane, fill=\c] (\ox-\stackHalf,\oy-\stackHalf) rectangle (\ox+\stackHalf,\oy+\stackHalf);
+  }
+  \pgfmathsetmacro{\stackLeft}{\xA-\stackHalf-\stackC-0.18}
+  \node[lbl, anchor=east] at (\stackLeft,\yT) {\samplelabel};
+
+  % --- generative network G (expands: narrow left -> wide right) ---
+  \filldraw[trap, fill=otblue!16, draw=otblue!75!black]
+    (\xBL,\yB+\sH) -- (\xBL,\yB-\sH) -- (\xBR,\yB-\bH) -- (\xBR,\yB+\bH) -- cycle;
+  \node[lbl] (gen) at (\xB,\yB) {\genlabel\\[3pt]{\large\gensym}};
+
+  % --- discriminative network D (compresses: wide left -> narrow right) ---
+  \filldraw[trap, fill=otpurple!16, draw=otpurple!70!black]
+    (\xDL,\ymid+\bH) -- (\xDL,\ymid-\bH) -- (\xDR,\ymid-\sH) -- (\xDR,\ymid+\sH) -- cycle;
+  \node[lbl] (disc) at (\xD,\ymid) {\disclabel\\[3pt]{\large\discsym}};
+
+  % --- real / generated-fake image boxes ---
+  \node[imgbox, minimum width=\imgW cm, minimum height=\imgH cm] (real) at (\xC,\yT) {\reallabel};
+  \node[imgbox, minimum width=\imgW cm, minimum height=\imgH cm] (fake) at (\xC,\yB) {\fakelabel};
+
+  % --- output: traffic-light decision (Real / Fake) ---
+  \pgfmathsetmacro{\lightGap}{\outR+0.16}
+  \pgfmathsetmacro{\realY}{\ymid+\lightGap}
+  \pgfmathsetmacro{\fakeY}{\ymid-\lightGap}
+  \pgfmathsetmacro{\boxL}{\xE-\outR-0.13}
+  \pgfmathsetmacro{\boxR}{\xE+\outR+0.13}
+  \pgfmathsetmacro{\boxT}{\realY+\outR+0.10}
+  \pgfmathsetmacro{\boxB}{\fakeY-\outR-0.10}
+  \draw[light, rounded corners=3pt, fill=otgray!8] (\boxL,\boxB) rectangle (\boxR,\boxT);
+  \node[light, circle, fill=otteal!75!black,   minimum size=\outD cm, inner sep=0] (realout) at (\xE,\realY) {};
+  \node[light, circle, fill=otorange!88!black, minimum size=\outD cm, inner sep=0] (fakeout) at (\xE,\fakeY) {};
+  \node[lbl, anchor=south] at (\xE,\boxT+0.04) {\realout};
+  \node[lbl, anchor=north] at (\xE,\boxB-0.04) {\fakeout};
+
+  % --- flow arrows ---
+  \draw[flow] (\latentRight,\yB) -- (\xBL,\yB);          % latent -> G
+  \draw[flow] (\xBR,\yB) -- (fake.west);                 % G -> generated fake images
+  \draw[flow] (\stackRight,\yT) -- (real.west);          % sample stack -> real images
+  \draw[flow] (real.east) -- (\xDL,\dUpper);             % real -> D
+  \draw[flow] (fake.east) -- (\xDL,\dLower);             % fake -> D
+  \draw[flow] (\xDR,\ymid) -- (\boxL,\ymid);             % D -> decision
+\end{tikzpicture}
+\end{document}

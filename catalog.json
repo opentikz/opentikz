@@ -158,8 +158,7 @@
     "path": "icons/systems/cloud",
     "preview": "cloud.svg",
     "requires": [
-      "tikz",
-      "shapes.symbols"
+      "tikz"
     ],
     "tags": [
       "cloud",
@@ -566,32 +565,6 @@
   },
   {
     "author": "OpenTikZ contributors",
-    "description": "A transformer block: stacked multi-head-attention and feed-forward sub-layers with an x N repeat indicator.",
-    "domain": [
-      "ml"
-    ],
-    "id": "transformer",
-    "license": "CC0-1.0",
-    "name": "Transformer block",
-    "path": "icons/ml/transformer",
-    "preview": "transformer.svg",
-    "requires": [
-      "tikz"
-    ],
-    "tags": [
-      "transformer",
-      "attention",
-      "multi-head",
-      "feed-forward",
-      "encoder",
-      "decoder",
-      "block",
-      "nlp"
-    ],
-    "type": "icon"
-  },
-  {
-    "author": "OpenTikZ contributors",
     "description": "A user/client avatar: head and shoulders silhouette, for system actors and endpoints.",
     "domain": [
       "systems"
@@ -889,6 +862,231 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "description": "Block-level GAN overview: a low-dimensional latent bar feeds the generator G (expanding trapezoid) producing generated fake images, while a high-dimensional sample-space stack supplies real images; both feed the discriminator D (compressing trapezoid) that outputs a real/fake decision. Parametric sizes, colors, and labels.",
+    "domain": [
+      "ml"
+    ],
+    "edit_contract": {
+      "invariants": [
+        "preserve the node names (gen) (disc) (real) (fake) (realout) (fakeout)",
+        "keep G expanding (narrow left, wide right) and D compressing (wide left, narrow right) so the generator/discriminator roles stay readable",
+        "keep \\latentcells equal to the length of \\latentcolors and \\stackcount equal to the length of \\stackcolors",
+        "colors only via the five palette names (tints/shades allowed); never inline hex or stock colors"
+      ],
+      "node_naming": "fixed semantic node names: (gen) (disc) are the centre text nodes of the G/D trapezoids; (real) (fake) are the image boxes; (realout) (fakeout) are the output lights. The latent bar and sample stack are drawn as \\foreach groups (no single node); arrows attach to the computed edges \\latentRight and \\stackRight.",
+      "operations": [
+        {
+          "id": "rename-part",
+          "summary": "edit the matching label macro (\\genlabel, \\disclabel, \\reallabel, \\fakelabel, \\latentlabel, \\samplelabel, \\realout, \\fakeout); no layout change needed"
+        },
+        {
+          "id": "recolor",
+          "summary": "change the palette name in the G \\filldraw (otblue), the D \\filldraw (otpurple), the imgbox style (otteal), or the output-light fills (otteal/otorange); never a hex/stock color"
+        },
+        {
+          "id": "resize",
+          "summary": "\\trapW/\\trapBig/\\trapSmall for the trapezoids, \\imgW/\\imgH for the image boxes, \\rowsep for row spacing, \\colgap for column spacing/arrow length"
+        },
+        {
+          "id": "retune-inputs",
+          "summary": "set the number/colors of latent cells via \\latentcolors (and matching \\latentcells), and sample planes via \\stackcolors (and matching \\stackcount)"
+        },
+        {
+          "id": "add-loss-annotation",
+          "summary": "add a callout near (disc) or the output describing the adversarial objective; use a palette-colored lbl node and keep existing nodes intact (see reference/annotations/)"
+        }
+      ],
+      "parameters": [
+        {
+          "default": "2.2",
+          "meaning": "horizontal length of the G and D trapezoids",
+          "name": "\\trapW",
+          "type": "length-cm"
+        },
+        {
+          "default": "3.0",
+          "meaning": "long (wide) parallel edge of each trapezoid",
+          "name": "\\trapBig",
+          "type": "length-cm"
+        },
+        {
+          "default": "1.2",
+          "meaning": "short (narrow) parallel edge of each trapezoid",
+          "name": "\\trapSmall",
+          "type": "length-cm"
+        },
+        {
+          "default": "2.0",
+          "meaning": "width of the Real/Fake image boxes",
+          "name": "\\imgW",
+          "type": "length-cm"
+        },
+        {
+          "default": "0.95",
+          "meaning": "height of the Real/Fake image boxes",
+          "name": "\\imgH",
+          "type": "length-cm"
+        },
+        {
+          "default": "3.6",
+          "meaning": "vertical gap between the top (real) and bottom (fake) rows; D and the output sit on the midline",
+          "name": "\\rowsep",
+          "type": "length-cm"
+        },
+        {
+          "default": "1.1",
+          "meaning": "horizontal gap between columns; also the flow-arrow length",
+          "name": "\\colgap",
+          "type": "length-cm"
+        },
+        {
+          "default": "0.5",
+          "meaning": "width of the latent-space bar",
+          "name": "\\latentW",
+          "type": "length-cm"
+        },
+        {
+          "default": "0.4",
+          "meaning": "height of one latent-space cell",
+          "name": "\\cellH",
+          "type": "length-cm"
+        },
+        {
+          "default": "8",
+          "invariant": "must equal the number of entries in \\latentcolors",
+          "meaning": "number of latent cells; keep equal to the length of \\latentcolors (it drives the bar's vertical centering)",
+          "name": "\\latentcells",
+          "type": "int"
+        },
+        {
+          "default": "1.1",
+          "meaning": "side length of each sample-space plane",
+          "name": "\\stackS",
+          "type": "length-cm"
+        },
+        {
+          "default": "0.18",
+          "meaning": "diagonal offset between stacked sample planes",
+          "name": "\\stackoff",
+          "type": "length-cm"
+        },
+        {
+          "default": "4",
+          "invariant": "must equal the number of entries in \\stackcolors",
+          "meaning": "number of sample planes; keep equal to the length of \\stackcolors",
+          "name": "\\stackcount",
+          "type": "int"
+        },
+        {
+          "default": "0.27",
+          "meaning": "radius of the Real/Fake output lights",
+          "name": "\\outR",
+          "type": "length-cm"
+        },
+        {
+          "default": "otblue!45, otteal!40, otgray!25, otorange!45, otblue!28, otpurple!40, otorange!30, otgray!40",
+          "meaning": "per-cell palette tints of the latent bar (bottom-to-top); one entry per cell",
+          "name": "\\latentcolors",
+          "type": "list<color>"
+        },
+        {
+          "default": "otteal!45, otorange!45, otblue!45, otgray!25",
+          "meaning": "per-plane palette tints of the sample-space stack (back-to-front)",
+          "name": "\\stackcolors",
+          "type": "list<color>"
+        },
+        {
+          "meaning": "label left of the latent bar (\\\\ for line breaks)",
+          "name": "\\latentlabel",
+          "type": "text"
+        },
+        {
+          "meaning": "label left of the sample-space stack (\\\\ for line breaks)",
+          "name": "\\samplelabel",
+          "type": "text"
+        },
+        {
+          "meaning": "generator name drawn inside G (above the symbol)",
+          "name": "\\genlabel",
+          "type": "text"
+        },
+        {
+          "meaning": "generator symbol drawn inside G, e.g. $G$",
+          "name": "\\gensym",
+          "type": "text"
+        },
+        {
+          "meaning": "discriminator name drawn inside D (above the symbol)",
+          "name": "\\disclabel",
+          "type": "text"
+        },
+        {
+          "meaning": "discriminator symbol drawn inside D, e.g. $D$",
+          "name": "\\discsym",
+          "type": "text"
+        },
+        {
+          "meaning": "label inside the real-images box",
+          "name": "\\reallabel",
+          "type": "text"
+        },
+        {
+          "meaning": "label inside the generated-fake-images box",
+          "name": "\\fakelabel",
+          "type": "text"
+        },
+        {
+          "meaning": "label above the top (real) output light",
+          "name": "\\realout",
+          "type": "text"
+        },
+        {
+          "meaning": "label below the bottom (fake) output light",
+          "name": "\\fakeout",
+          "type": "text"
+        }
+      ],
+      "styles": [
+        "trap",
+        "imgbox",
+        "lbl",
+        "flow",
+        "cell",
+        "plane",
+        "light"
+      ]
+    },
+    "id": "gan",
+    "license": "CC0-1.0",
+    "name": "Generative Adversarial Network (GAN)",
+    "path": "templates/gan",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz",
+      "arrows.meta",
+      "positioning"
+    ],
+    "tags": [
+      "gan",
+      "generative",
+      "adversarial",
+      "generator",
+      "discriminator",
+      "latent space",
+      "real fake",
+      "architecture",
+      "deep learning"
+    ],
+    "type": "template",
+    "venue": [
+      "NeurIPS",
+      "ICML",
+      "CVPR",
+      "ICLR"
+    ]
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "Parametric fully-connected feed-forward neural network. Layer count and neurons-per-layer are set by a single list at the top of the file.",
     "domain": [
       "ml"
@@ -984,6 +1182,145 @@
       "NeurIPS",
       "ICML",
       "CVPR"
+    ]
+  },
+  {
+    "author": "OpenTikZ contributors",
+    "description": "The classic ResNet residual learning building block (He et al.): a stack of weight layers forming F(x), an identity skip connection that re-enters at a summation node, and a final activation. The number of weight layers is driven by a single list at the top of the file.",
+    "domain": [
+      "ml"
+    ],
+    "edit_contract": {
+      "invariants": [
+        "\\branchlabels has at least one entry",
+        "preserve the wl<i> / xlabel / sum / out node-naming scheme",
+        "keep the identity skip connection running from the input line into the sum node (the residual shortcut is the point of the figure)"
+      ],
+      "node_naming": "wl<i> for weight-layer boxes (1-based, top to bottom, e.g. wl1, wl2); xlabel for the input; sum for the addition node; out for the output coordinate",
+      "operations": [
+        {
+          "id": "add-weight-layer",
+          "summary": "append a label to \\branchlabels (the relu between layers and the wl<i> naming follow automatically); insert mid-branch by adding at the desired position in the list"
+        },
+        {
+          "id": "remove-weight-layer",
+          "summary": "delete one entry from \\branchlabels (keep at least one)"
+        },
+        {
+          "id": "relabel-activation",
+          "summary": "change \\actlabel (e.g. relu -> GELU); it applies to every inter-layer arrow and the post-sum arrow"
+        },
+        {
+          "id": "recolor",
+          "summary": "change the palette color name used by the wlayer style (e.g. otblue -> otteal) and/or otgray in flow/skip/addop; never a hex or stock color"
+        },
+        {
+          "id": "resize-spacing",
+          "summary": "\\blockw and \\blockh size the boxes; \\blocksep sets vertical spacing; \\skipbow controls how far the identity path bows right"
+        }
+      ],
+      "parameters": [
+        {
+          "default": "{weight layer,weight layer}",
+          "invariant": "at least one entry",
+          "meaning": "labels of the weight-layer boxes in the residual branch, top to bottom; the number of entries is the number of stacked layers",
+          "name": "\\branchlabels",
+          "type": "list<text>"
+        },
+        {
+          "default": "relu",
+          "meaning": "activation label shown between consecutive weight layers and after the summation",
+          "name": "\\actlabel",
+          "type": "text"
+        },
+        {
+          "default": "$\\mathbf{x}$",
+          "meaning": "top input label",
+          "name": "\\inputlabel",
+          "type": "text"
+        },
+        {
+          "default": "$\\mathcal{F}(\\mathbf{x})$",
+          "meaning": "side label naming the residual branch",
+          "name": "\\residuallabel",
+          "type": "text"
+        },
+        {
+          "default": "$\\mathcal{F}(\\mathbf{x})+\\mathbf{x}$",
+          "meaning": "side label at the summation node",
+          "name": "\\outputlabel",
+          "type": "text"
+        },
+        {
+          "default": "$\\mathbf{x}$",
+          "meaning": "upper label on the identity skip path",
+          "name": "\\skiplabel",
+          "type": "text"
+        },
+        {
+          "default": "identity",
+          "meaning": "lower label on the identity skip path",
+          "name": "\\identitylabel",
+          "type": "text"
+        },
+        {
+          "default": "1.8",
+          "meaning": "vertical centre-to-centre distance between stages",
+          "name": "\\blocksep",
+          "type": "length-cm"
+        },
+        {
+          "default": "3.0",
+          "meaning": "weight-layer box width",
+          "name": "\\blockw",
+          "type": "length-cm"
+        },
+        {
+          "default": "0.9",
+          "meaning": "weight-layer box height",
+          "name": "\\blockh",
+          "type": "length-cm"
+        },
+        {
+          "default": "2.7",
+          "meaning": "how far right the identity skip connection bows out",
+          "name": "\\skipbow",
+          "type": "length-cm"
+        }
+      ],
+      "styles": [
+        "wlayer",
+        "addop",
+        "flow",
+        "skip",
+        "actlbl",
+        "sidelbl"
+      ]
+    },
+    "id": "resnet-block",
+    "license": "CC0-1.0",
+    "name": "ResNet residual block",
+    "path": "templates/resnet-block",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz",
+      "arrows.meta"
+    ],
+    "tags": [
+      "resnet",
+      "residual block",
+      "residual learning",
+      "skip connection",
+      "identity shortcut",
+      "deep learning",
+      "architecture",
+      "cnn"
+    ],
+    "type": "template",
+    "venue": [
+      "CVPR",
+      "NeurIPS",
+      "ICML"
     ]
   },
   {

@@ -1,0 +1,88 @@
+\documentclass[border=10pt]{standalone}
+
+% --- packages (mirror these in template.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+% --- palette (canonical source: reference/color-palettes/color-palettes.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+% ==== parameters (edit these) ============================================
+% Labels of the weight-layer boxes in the residual branch, top to bottom.
+% The number of entries IS the number of stacked layers (classic block = 2).
+\def\branchlabels{weight layer,weight layer}
+\def\actlabel{relu}                              % activation between layers and after the sum
+\def\inputlabel{$\mathbf{x}$}                    % top input
+\def\residuallabel{$\mathcal{F}(\mathbf{x})$}    % side label for the residual branch
+\def\outputlabel{$\mathcal{F}(\mathbf{x})+\mathbf{x}$} % side label at the sum
+\def\skiplabel{$\mathbf{x}$}                      % identity / skip-path label (upper)
+\def\identitylabel{identity}                      % identity / skip-path label (lower)
+\def\blocksep{1.8}   % vertical centre-to-centre distance between stages (cm)
+\def\blockw{3.0}     % weight-layer box width (cm)
+\def\blockh{0.9}     % weight-layer box height (cm)
+\def\skipbow{2.7}    % how far right the identity skip connection bows out (cm)
+% =========================================================================
+
+\begin{tikzpicture}[
+    >={Stealth[length=2.4mm]},
+    wlayer/.style={
+      draw=otblue!70!black, fill=otblue!12, rounded corners=2pt,
+      line width=0.8pt, align=center, font=\sffamily\small,
+      minimum width=\blockw cm, minimum height=\blockh cm,
+    },
+    addop/.style={
+      circle, draw=otgray!85!black, line width=0.8pt,
+      inner sep=1.4pt, minimum size=0.62cm, font=\small,
+    },
+    flow/.style={draw=otgray!85, line width=0.9pt, ->},
+    skip/.style={draw=otgray!85, line width=0.9pt, ->, rounded corners=10pt},
+    actlbl/.style={font=\sffamily\footnotesize, text=otgray, inner sep=2.5pt},
+    sidelbl/.style={font=\small, text=otgray},
+  ]
+
+  % --- input ---
+  \node[font=\bfseries] (xlabel) at (0,0) {\inputlabel};
+
+  % --- residual branch: stack the weight-layer boxes, relu between them ---
+  \foreach \lab [count=\i, remember=\i as \previ (initially 0)] in \branchlabels {
+    \pgfmathsetmacro{\yy}{-\i*\blocksep}
+    \node[wlayer] (wl\i) at (0,\yy) {\lab};
+    \ifnum\i=1
+      \draw[flow] (xlabel) -- (wl\i);
+    \else
+      \draw[flow] (wl\previ) -- node[actlbl, right] {\actlabel} (wl\i);
+    \fi
+    \global\let\nlayers\i
+  }
+
+  % --- summation node and output ---
+  \pgfmathsetmacro{\sumy}{-(\nlayers+1)*\blocksep}
+  \node[addop] (sum) at (0,\sumy) {$+$};
+  \draw[flow] (wl\nlayers) -- (sum);
+  \pgfmathsetmacro{\outy}{\sumy-0.85*\blocksep}
+  \coordinate (out) at (0,\outy);
+  \draw[flow] (sum) -- node[actlbl, right] {\actlabel} (out);
+
+  % --- identity skip connection: branches off the input line, bows right,
+  %     and re-enters the sum from the right ---
+  \coordinate (branch)    at (0,{-0.5*\blocksep});
+  \coordinate (skipright) at (\skipbow,{-0.5*\blocksep});
+  \draw[skip] (branch) -- (skipright) -- (skipright |- sum) -- (sum);
+
+  % --- side labels ---
+  \pgfmathsetmacro{\leftx}{-\blockw/2-0.55}
+  \pgfmathsetmacro{\midy}{-(1+\nlayers)/2*\blocksep}
+  \node[sidelbl, anchor=east] at (\leftx,\midy)  {\residuallabel};
+  \node[sidelbl, anchor=east] at (\leftx,\sumy)  {\outputlabel};
+
+  \pgfmathsetmacro{\skmy}{(-0.5*\blocksep+\sumy)/2}
+  \node[sidelbl, anchor=west] at (\skipbow+0.25,\skmy+0.32) {\skiplabel};
+  \node[sidelbl, anchor=west] at (\skipbow+0.25,\skmy-0.10) {\identitylabel};
+
+\end{tikzpicture}
+\end{document}

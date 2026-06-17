@@ -1,0 +1,58 @@
+{
+  "id": "gan",
+  "name": "Generative Adversarial Network (GAN)",
+  "type": "template",
+  "domain": ["ml"],
+  "tags": ["gan", "generative", "adversarial", "generator", "discriminator", "latent space", "real fake", "architecture", "deep learning"],
+  "venue": ["NeurIPS", "ICML", "CVPR", "ICLR"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz", "arrows.meta", "positioning"],
+  "preview": "preview.svg",
+  "description": "Block-level GAN overview: a low-dimensional latent bar feeds the generator G (expanding trapezoid) producing generated fake images, while a high-dimensional sample-space stack supplies real images; both feed the discriminator D (compressing trapezoid) that outputs a real/fake decision. Parametric sizes, colors, and labels.",
+  "edit_contract": {
+    "parameters": [
+      {"name": "\\trapW", "type": "length-cm", "meaning": "horizontal length of the G and D trapezoids", "default": "2.2"},
+      {"name": "\\trapBig", "type": "length-cm", "meaning": "long (wide) parallel edge of each trapezoid", "default": "3.0"},
+      {"name": "\\trapSmall", "type": "length-cm", "meaning": "short (narrow) parallel edge of each trapezoid", "default": "1.2"},
+      {"name": "\\imgW", "type": "length-cm", "meaning": "width of the Real/Fake image boxes", "default": "2.0"},
+      {"name": "\\imgH", "type": "length-cm", "meaning": "height of the Real/Fake image boxes", "default": "0.95"},
+      {"name": "\\rowsep", "type": "length-cm", "meaning": "vertical gap between the top (real) and bottom (fake) rows; D and the output sit on the midline", "default": "3.6"},
+      {"name": "\\colgap", "type": "length-cm", "meaning": "horizontal gap between columns; also the flow-arrow length", "default": "1.1"},
+      {"name": "\\latentW", "type": "length-cm", "meaning": "width of the latent-space bar", "default": "0.5"},
+      {"name": "\\cellH", "type": "length-cm", "meaning": "height of one latent-space cell", "default": "0.4"},
+      {"name": "\\latentcells", "type": "int", "meaning": "number of latent cells; keep equal to the length of \\latentcolors (it drives the bar's vertical centering)", "default": "8", "invariant": "must equal the number of entries in \\latentcolors"},
+      {"name": "\\stackS", "type": "length-cm", "meaning": "side length of each sample-space plane", "default": "1.1"},
+      {"name": "\\stackoff", "type": "length-cm", "meaning": "diagonal offset between stacked sample planes", "default": "0.18"},
+      {"name": "\\stackcount", "type": "int", "meaning": "number of sample planes; keep equal to the length of \\stackcolors", "default": "4", "invariant": "must equal the number of entries in \\stackcolors"},
+      {"name": "\\outR", "type": "length-cm", "meaning": "radius of the Real/Fake output lights", "default": "0.27"},
+      {"name": "\\latentcolors", "type": "list<color>", "meaning": "per-cell palette tints of the latent bar (bottom-to-top); one entry per cell", "default": "otblue!45, otteal!40, otgray!25, otorange!45, otblue!28, otpurple!40, otorange!30, otgray!40"},
+      {"name": "\\stackcolors", "type": "list<color>", "meaning": "per-plane palette tints of the sample-space stack (back-to-front)", "default": "otteal!45, otorange!45, otblue!45, otgray!25"},
+      {"name": "\\latentlabel", "type": "text", "meaning": "label left of the latent bar (\\\\ for line breaks)"},
+      {"name": "\\samplelabel", "type": "text", "meaning": "label left of the sample-space stack (\\\\ for line breaks)"},
+      {"name": "\\genlabel", "type": "text", "meaning": "generator name drawn inside G (above the symbol)"},
+      {"name": "\\gensym", "type": "text", "meaning": "generator symbol drawn inside G, e.g. $G$"},
+      {"name": "\\disclabel", "type": "text", "meaning": "discriminator name drawn inside D (above the symbol)"},
+      {"name": "\\discsym", "type": "text", "meaning": "discriminator symbol drawn inside D, e.g. $D$"},
+      {"name": "\\reallabel", "type": "text", "meaning": "label inside the real-images box"},
+      {"name": "\\fakelabel", "type": "text", "meaning": "label inside the generated-fake-images box"},
+      {"name": "\\realout", "type": "text", "meaning": "label above the top (real) output light"},
+      {"name": "\\fakeout", "type": "text", "meaning": "label below the bottom (fake) output light"}
+    ],
+    "node_naming": "fixed semantic node names: (gen) (disc) are the centre text nodes of the G/D trapezoids; (real) (fake) are the image boxes; (realout) (fakeout) are the output lights. The latent bar and sample stack are drawn as \\foreach groups (no single node); arrows attach to the computed edges \\latentRight and \\stackRight.",
+    "styles": ["trap", "imgbox", "lbl", "flow", "cell", "plane", "light"],
+    "operations": [
+      {"id": "rename-part", "summary": "edit the matching label macro (\\genlabel, \\disclabel, \\reallabel, \\fakelabel, \\latentlabel, \\samplelabel, \\realout, \\fakeout); no layout change needed"},
+      {"id": "recolor", "summary": "change the palette name in the G \\filldraw (otblue), the D \\filldraw (otpurple), the imgbox style (otteal), or the output-light fills (otteal/otorange); never a hex/stock color"},
+      {"id": "resize", "summary": "\\trapW/\\trapBig/\\trapSmall for the trapezoids, \\imgW/\\imgH for the image boxes, \\rowsep for row spacing, \\colgap for column spacing/arrow length"},
+      {"id": "retune-inputs", "summary": "set the number/colors of latent cells via \\latentcolors (and matching \\latentcells), and sample planes via \\stackcolors (and matching \\stackcount)"},
+      {"id": "add-loss-annotation", "summary": "add a callout near (disc) or the output describing the adversarial objective; use a palette-colored lbl node and keep existing nodes intact (see reference/annotations/)"}
+    ],
+    "invariants": [
+      "preserve the node names (gen) (disc) (real) (fake) (realout) (fakeout)",
+      "keep G expanding (narrow left, wide right) and D compressing (wide left, narrow right) so the generator/discriminator roles stay readable",
+      "keep \\latentcells equal to the length of \\latentcolors and \\stackcount equal to the length of \\stackcolors",
+      "colors only via the five palette names (tints/shades allowed); never inline hex or stock colors"
+    ]
+  }
+}

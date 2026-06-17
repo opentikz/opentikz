@@ -1,0 +1,42 @@
+{
+  "id": "resnet-block",
+  "name": "ResNet residual block",
+  "type": "template",
+  "domain": ["ml"],
+  "tags": ["resnet", "residual block", "residual learning", "skip connection", "identity shortcut", "deep learning", "architecture", "cnn"],
+  "venue": ["CVPR", "NeurIPS", "ICML"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz", "arrows.meta"],
+  "preview": "preview.svg",
+  "description": "The classic ResNet residual learning building block (He et al.): a stack of weight layers forming F(x), an identity skip connection that re-enters at a summation node, and a final activation. The number of weight layers is driven by a single list at the top of the file.",
+  "edit_contract": {
+    "parameters": [
+      {"name": "\\branchlabels", "type": "list<text>", "meaning": "labels of the weight-layer boxes in the residual branch, top to bottom; the number of entries is the number of stacked layers", "default": "{weight layer,weight layer}", "invariant": "at least one entry"},
+      {"name": "\\actlabel", "type": "text", "meaning": "activation label shown between consecutive weight layers and after the summation", "default": "relu"},
+      {"name": "\\inputlabel", "type": "text", "meaning": "top input label", "default": "$\\mathbf{x}$"},
+      {"name": "\\residuallabel", "type": "text", "meaning": "side label naming the residual branch", "default": "$\\mathcal{F}(\\mathbf{x})$"},
+      {"name": "\\outputlabel", "type": "text", "meaning": "side label at the summation node", "default": "$\\mathcal{F}(\\mathbf{x})+\\mathbf{x}$"},
+      {"name": "\\skiplabel", "type": "text", "meaning": "upper label on the identity skip path", "default": "$\\mathbf{x}$"},
+      {"name": "\\identitylabel", "type": "text", "meaning": "lower label on the identity skip path", "default": "identity"},
+      {"name": "\\blocksep", "type": "length-cm", "meaning": "vertical centre-to-centre distance between stages", "default": "1.8"},
+      {"name": "\\blockw", "type": "length-cm", "meaning": "weight-layer box width", "default": "3.0"},
+      {"name": "\\blockh", "type": "length-cm", "meaning": "weight-layer box height", "default": "0.9"},
+      {"name": "\\skipbow", "type": "length-cm", "meaning": "how far right the identity skip connection bows out", "default": "2.7"}
+    ],
+    "node_naming": "wl<i> for weight-layer boxes (1-based, top to bottom, e.g. wl1, wl2); xlabel for the input; sum for the addition node; out for the output coordinate",
+    "styles": ["wlayer", "addop", "flow", "skip", "actlbl", "sidelbl"],
+    "operations": [
+      {"id": "add-weight-layer", "summary": "append a label to \\branchlabels (the relu between layers and the wl<i> naming follow automatically); insert mid-branch by adding at the desired position in the list"},
+      {"id": "remove-weight-layer", "summary": "delete one entry from \\branchlabels (keep at least one)"},
+      {"id": "relabel-activation", "summary": "change \\actlabel (e.g. relu -> GELU); it applies to every inter-layer arrow and the post-sum arrow"},
+      {"id": "recolor", "summary": "change the palette color name used by the wlayer style (e.g. otblue -> otteal) and/or otgray in flow/skip/addop; never a hex or stock color"},
+      {"id": "resize-spacing", "summary": "\\blockw and \\blockh size the boxes; \\blocksep sets vertical spacing; \\skipbow controls how far the identity path bows right"}
+    ],
+    "invariants": [
+      "\\branchlabels has at least one entry",
+      "preserve the wl<i> / xlabel / sum / out node-naming scheme",
+      "keep the identity skip connection running from the input line into the sum node (the residual shortcut is the point of the figure)"
+    ]
+  }
+}

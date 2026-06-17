@@ -2,7 +2,6 @@
 
 % --- packages (mirror these in cloud.meta.json "requires") ---
 \usepackage{tikz}
-\usetikzlibrary{shapes.symbols}
 
 % --- palette (canonical source: reference/color-palettes/color-palettes.md; light variant) ---
 \definecolor{otblue}{HTML}{0072B2}
@@ -12,9 +11,14 @@
 \definecolor{otgray}{HTML}{5A5A5A}
 
 \begin{document}
-\begin{tikzpicture}
-  \node[cloud, cloud puffs=11, cloud puff arc=110, aspect=2.2,
-        draw=otblue!75!black, fill=otblue!15, line width=0.9pt,
-        minimum width=3.2cm, minimum height=2cm] {};
+\begin{tikzpicture}[line width=0.9pt]
+  % smooth cloud silhouette: four rounded bumps over a flat base
+  \filldraw[draw=otblue!75!black, fill=otblue!15]
+    (-1.5,-0.4)
+    .. controls (-2.25,-0.4) and (-2.20,0.65) .. (-1.35,0.70)
+    .. controls (-1.45,1.45) and (-0.15,1.55) .. (0.15,0.95)
+    .. controls (0.55,1.65) and (1.85,1.50) .. (1.80,0.70)
+    .. controls (2.55,0.72) and (2.45,-0.40) .. (1.65,-0.40)
+    -- cycle;
 \end{tikzpicture}
 \end{document}

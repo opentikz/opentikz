@@ -12,19 +12,17 @@
 
 \begin{document}
 \begin{tikzpicture}[line width=0.9pt]
-  % node positions: a central hub with four peers
-  \coordinate (c)  at (1.2,1.0);
-  \coordinate (n1) at (0,1.9);
-  \coordinate (n2) at (2.4,1.9);
-  \coordinate (n3) at (0,0);
-  \coordinate (n4) at (2.4,0);
-  % links
-  \foreach \n in {n1,n2,n3,n4}{ \draw[otgray!65] (c) -- (\n); }
-  % peer nodes
-  \foreach \n in {n1,n2,n3,n4}{
-    \filldraw[draw=otblue!75!black, fill=otblue!22] (\n) circle[radius=0.3];
+  % node positions: an interconnected mesh of peers
+  \coordinate (a) at (0.0,1.4);
+  \coordinate (b) at (2.4,1.5);
+  \coordinate (c) at (3.0,-0.4);
+  \coordinate (d) at (1.2,-1.2);
+  \coordinate (e) at (-0.4,-0.2);
+  % links (outer ring + two cross-links)
+  \foreach \p/\q in {a/b,b/c,c/d,d/e,e/a,a/c,b/d}{ \draw[otgray!60] (\p) -- (\q); }
+  % nodes
+  \foreach \n in {a,b,c,d,e}{
+    \filldraw[draw=otblue!75!black, fill=otblue!22] (\n) circle[radius=0.28];
   }
-  % hub
-  \filldraw[draw=otblue!80!black, fill=otblue!45] (c) circle[radius=0.38];
 \end{tikzpicture}
 \end{document}
