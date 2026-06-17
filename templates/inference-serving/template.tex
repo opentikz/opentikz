@@ -48,6 +48,21 @@
 % ========================================================================
 
 \begin{document}
+% ==== parameters (edit these) ============================================
+\def\colsep{3.0}    % horizontal gap between stages: client -> cloud -> lb -> nodes -> store (cm)
+\def\rowsep{1.5}    % vertical offset of the stacked inference nodes (cm)
+% labels
+\def\clientlabel{Client}
+\def\internetlabel{Internet}
+\def\lblabel{Load\\balancer}
+\def\nodeonelabel{Inference node 1}
+\def\nodetwolabel{Inference node 2}
+\def\storelabel{Feature store}
+\def\featurelabel{features}
+\def\clusterlabel{Inference cluster}
+\def\titlelabel{Model inference serving}
+% =========================================================================
+
 \begin{tikzpicture}[
     >={Stealth[length=2.4mm]},
     icon/.style={inner sep=1pt},
@@ -59,19 +74,19 @@
     read/.style={draw=otteal!70!black, line width=1pt, ->, dashed},
   ]
 
-  \node[compbox] (client) at (0,0) {Client};
-  \node[icon] (cloud) at (3.0,0) {\cloudpic};
-  \node[slbl, below=0pt of cloud] {Internet};
-  \node[compbox] (lb) at (6.0,0) {Load\\balancer};
+  \node[compbox] (client) at (0,0) {\clientlabel};
+  \node[icon] (cloud) at (\colsep,0) {\cloudpic};
+  \node[slbl, below=0pt of cloud] {\internetlabel};
+  \node[compbox] (lb) at (2*\colsep,0) {\lblabel};
 
   % GPU-backed inference nodes (server + gpu composed in one box)
-  \node[nodebox] (node1) at (9.4,1.5) {\serverpic\hspace{4pt}\gpupic};
-  \node[nodebox] (node2) at (9.4,-1.5) {\serverpic\hspace{4pt}\gpupic};
-  \node[slbl, below=1pt of node1] (n1lab) {Inference node 1};
-  \node[slbl, below=1pt of node2] (n2lab) {Inference node 2};
+  \node[nodebox] (node1) at (3*\colsep,\rowsep)  {\serverpic\hspace{4pt}\gpupic};
+  \node[nodebox] (node2) at (3*\colsep,-\rowsep) {\serverpic\hspace{4pt}\gpupic};
+  \node[slbl, below=1pt of node1] (n1lab) {\nodeonelabel};
+  \node[slbl, below=1pt of node2] (n2lab) {\nodetwolabel};
 
-  \node[icon] (db) at (13.0,0) {\dbpic};
-  \node[slbl, below=2pt of db] {Feature store};
+  \node[icon] (db) at (4.3*\colsep,0) {\dbpic};
+  \node[slbl, below=2pt of db] {\storelabel};
 
   % request path
   \draw[req] (client.east) -- (cloud.west);
@@ -81,17 +96,17 @@
   % feature reads
   \draw[read] (node1.east) -- (db.west);
   \draw[read] (node2.east) -- (db.west);
-  \node[slbl, text=otteal!70!black] at (11.55,0.55) {features};
+  \node[slbl, text=otteal!70!black] at (3.85*\colsep,0.55) {\featurelabel};
 
   % inference cluster boundary (fits the nodes and their labels)
   \begin{scope}[on background layer]
     \node[draw=otgray!50, dashed, rounded corners=6pt, fill=otgray!4, inner sep=10pt,
           fit=(node1)(node2)(n1lab)(n2lab)] (cluster) {};
-    \node[slbl, anchor=south west] at ([xshift=2pt, yshift=2pt]cluster.north west) {Inference cluster};
+    \node[slbl, anchor=south west] at ([xshift=2pt, yshift=2pt]cluster.north west) {\clusterlabel};
   \end{scope}
 
   % title
-  \node[font=\sffamily\bfseries] at (6.5,3.2) {Model inference serving};
+  \node[font=\sffamily\bfseries] at (2.17*\colsep,{\rowsep+1.7}) {\titlelabel};
 
 \end{tikzpicture}
 \end{document}

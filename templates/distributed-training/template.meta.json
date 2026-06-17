@@ -1,0 +1,44 @@
+{
+  "id": "distributed-training",
+  "name": "Distributed data-parallel training",
+  "type": "template",
+  "domain": ["ml", "systems"],
+  "tags": ["distributed training", "data parallel", "parameter server", "gpu", "gradients", "synchronization", "system diagram"],
+  "venue": ["NeurIPS", "MLSys", "OSDI"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz", "arrows.meta", "positioning"],
+  "preview": "preview.svg",
+  "featured": true,
+  "composed_of": ["dataset", "gpu", "server"],
+  "description": "Editable data-parallel training figure composing the dataset, gpu, and server icons: a training-data source shards batches to GPU workers that exchange gradients and weights with a parameter server. Parametric spacing and labels.",
+  "edit_contract": {
+    "parameters": [
+      {"name": "\\colsep", "type": "length-cm", "meaning": "horizontal gap between the three stages (data -> workers -> server)", "default": "4.6"},
+      {"name": "\\rowsep", "type": "length-cm", "meaning": "vertical gap between adjacent GPU workers", "default": "2.5"},
+      {"name": "\\datalabel", "type": "text", "meaning": "data-source label"},
+      {"name": "\\workeronelabel", "type": "text", "meaning": "top GPU worker label"},
+      {"name": "\\workertwolabel", "type": "text", "meaning": "middle GPU worker label"},
+      {"name": "\\workerthreelabel", "type": "text", "meaning": "bottom GPU worker label"},
+      {"name": "\\pslabel", "type": "text", "meaning": "parameter-server label"},
+      {"name": "\\batchlabel", "type": "text", "meaning": "label on the data-sharding edge"},
+      {"name": "\\gradlabel", "type": "text", "meaning": "gradient-flow label (math allowed)"},
+      {"name": "\\weightlabel", "type": "text", "meaning": "weight-flow label (math allowed)"},
+      {"name": "\\titlelabel", "type": "text", "meaning": "figure title"}
+    ],
+    "node_naming": "fixed semantic names: (data) source; GPU workers (w1)(w2)(w3) top-to-bottom; (ps) parameter server. New workers continue the w<n> sequence and are positioned at (\\colsep, k*\\rowsep)",
+    "styles": ["icon", "slbl", "data", "grad", "wts"],
+    "operations": [
+      {"id": "rename-node", "summary": "edit the matching label macro (\\datalabel, \\worker*label, \\pslabel, \\titlelabel)"},
+      {"id": "add-worker", "summary": "declare \\node[icon] (w4) at (\\colsep, k*\\rowsep) {\\gpupic} plus its slbl label, then add it to the sync \\foreach list and a data edge from (data.east)"},
+      {"id": "change-spacing", "summary": "edit \\colsep (stage gap) or \\rowsep (worker gap); the server and title positions are derived from \\colsep/\\rowsep"},
+      {"id": "swap-icon", "summary": "replace a node body picture macro (\\datasetpic, \\gpupic, \\serverpic) with another icon sub-picture adapted from icons/"},
+      {"id": "recolor", "summary": "change the palette name in the data/grad/wts styles or an icon macro; keep distinct flows (data/gradient/weight) in distinct colors; never inline hex"}
+    ],
+    "invariants": [
+      "the data/gradient/weight flows must stay in distinct palette colors (gray data, purple gradients, teal dashed weights)",
+      "every worker added to the layout must also appear in the gradient/weight sync \\foreach list",
+      "colors only via the five palette names (tints/shades allowed); never inline hex or stock colors"
+    ]
+  }
+}

@@ -28,8 +28,25 @@ OpenTikZ has three content layers. Pick the one that fits:
 | Layer | Lives in | What it is |
 |-------|----------|-----------|
 | **Icon** | `icons/<domain>/<name>/` | An atomic, single-concept element (server, GPU, neuron, database). |
-| **Template** | `templates/<name>/` | A complete, editable conceptual figure **+ an `edit_contract` in its `meta.json`**. |
-| **Example** | `examples/<name>/` | A paper-grade figure combining icons + templates to show real use. |
+| **Template** | `templates/<name>/` | A complete, **parametric** conceptual figure meant to be edited as a starting point — **carries a required `edit_contract` in its `meta.json`**. |
+| **Example** | `examples/<name>/` | A fixed, paper-grade **showcase** composed of ≥2 library items (`composed_of`), shown as-is — **no `edit_contract`**. |
+
+### Template vs. example: which layer?
+
+The dividing line is **the `edit_contract`, and it is deliberate**:
+
+- If the figure is worth editing parametrically — it has a clear parameter
+  surface (spacing/count/label `\def`s) and a stable node-naming scheme an AI can
+  target — it is a **template**, and it MUST ship an `edit_contract`.
+- If the figure is a fixed reference composition — its value is "look, this is
+  what the library assembles into," not "edit me" — it is an **example**, defined
+  by `composed_of` (the ids it is built from) and carrying **no** `edit_contract`.
+
+So the presence of an `edit_contract` *is* the definition of a template. Don't add
+one to an example: examples are already editable directly (the skill edits any
+`.tex`), they just don't promise the contract's safety rails. If you find yourself
+wanting to parametrize and contract an example, that figure has become a template —
+move it to `templates/`, rename `figure.*` → `template.*`, and add the contract.
 
 **In scope:** system/architecture/pipeline/flow diagrams for papers.
 **Out of scope** (see [`CLAUDE.md`](CLAUDE.md)): data plots (use pgfplots/matplotlib),

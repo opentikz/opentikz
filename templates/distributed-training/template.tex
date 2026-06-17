@@ -46,6 +46,21 @@
 % ========================================================================
 
 \begin{document}
+% ==== parameters (edit these) ============================================
+\def\colsep{4.6}    % horizontal gap between stages: data -> workers -> server (cm)
+\def\rowsep{2.5}    % vertical gap between GPU workers (cm)
+% labels
+\def\datalabel{Training data}
+\def\workeronelabel{Worker 1}
+\def\workertwolabel{Worker 2}
+\def\workerthreelabel{Worker 3}
+\def\pslabel{Parameter server}
+\def\batchlabel{batch}
+\def\gradlabel{$\nabla\theta$}
+\def\weightlabel{$\theta$}
+\def\titlelabel{Distributed data-parallel training}
+% =========================================================================
+
 \begin{tikzpicture}[
     >={Stealth[length=2.4mm]},
     icon/.style={inner sep=1pt},
@@ -57,23 +72,23 @@
 
   % data source
   \node[icon] (data) at (0,0) {\datasetpic};
-  \node[slbl, below=2pt of data] {Training data};
+  \node[slbl, below=2pt of data] {\datalabel};
 
   % GPU workers
-  \node[icon] (w1) at (4.3,2.5)  {\gpupic};
-  \node[icon] (w2) at (4.3,0)    {\gpupic};
-  \node[icon] (w3) at (4.3,-2.5) {\gpupic};
-  \node[slbl, below=2pt of w1] {Worker 1};
-  \node[slbl, below=2pt of w2] {Worker 2};
-  \node[slbl, below=2pt of w3] {Worker 3};
+  \node[icon] (w1) at (\colsep, \rowsep)  {\gpupic};
+  \node[icon] (w2) at (\colsep, 0)        {\gpupic};
+  \node[icon] (w3) at (\colsep, -\rowsep) {\gpupic};
+  \node[slbl, below=2pt of w1] {\workeronelabel};
+  \node[slbl, below=2pt of w2] {\workertwolabel};
+  \node[slbl, below=2pt of w3] {\workerthreelabel};
 
   % parameter server
-  \node[icon] (ps) at (9.2,0) {\serverpic};
-  \node[slbl, below=2pt of ps] {Parameter server};
+  \node[icon] (ps) at (2*\colsep,0) {\serverpic};
+  \node[slbl, below=2pt of ps] {\pslabel};
 
   % data sharding: dataset -> workers
   \draw[data] (data.east) -- (w1.west);
-  \draw[data] (data.east) -- (w2.west) node[midway, above, slbl] {batch};
+  \draw[data] (data.east) -- (w2.west) node[midway, above, slbl] {\batchlabel};
   \draw[data] (data.east) -- (w3.west);
 
   % synchronisation: gradients up to the server, weights back down (curved apart)
@@ -81,11 +96,11 @@
     \draw[grad] (\w.east) to[bend left=10] (ps.west);
     \draw[wts]  (ps.west) to[bend left=10] (\w.east);
   }
-  \node[slbl, text=otpurple!85!black] at (6.75,0.6)  {$\nabla\theta$};
-  \node[slbl, text=otteal!70!black]   at (6.75,-0.6) {$\theta$};
+  \node[slbl, text=otpurple!85!black] at (1.5*\colsep,0.6)  {\gradlabel};
+  \node[slbl, text=otteal!70!black]   at (1.5*\colsep,-0.6) {\weightlabel};
 
   % title
-  \node[font=\sffamily\bfseries] at (4.6,3.7) {Distributed data-parallel training};
+  \node[font=\sffamily\bfseries] at (\colsep,{\rowsep+1.2}) {\titlelabel};
 
 \end{tikzpicture}
 \end{document}

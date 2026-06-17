@@ -34,9 +34,20 @@ pipeline/flow diagrams, but don't want to hand-write TikZ. We call them the
    cloud, database, neuron, attention block, user, arrow/pipe). Each compiles
    standalone and is independently copyable.
 
-2. **Templates** (`templates/`) — complete, editable conceptual figures (neural
-   net, encoder-decoder, training pipeline, federated learning, system block
-   diagram, flowchart). This is the core value.
+2. **Templates** (`templates/`) — complete, **parametric** conceptual figures
+   (neural net, encoder-decoder, training pipeline, system block diagram,
+   flowchart, distributed training, inference serving). This is the core value.
+   Every template carries an `edit_contract` — that contract IS what makes a
+   figure a template (see the boundary rule below).
+
+   **Template vs. example (the boundary):** a figure that is worth editing
+   parametrically (clear parameter surface + stable node names an AI can target)
+   is a **template** and MUST ship an `edit_contract`; a fixed reference figure
+   whose value is "look what the library assembles into" is an **example**
+   (defined by `composed_of`, no `edit_contract`). The presence of an
+   `edit_contract` is the definition of a template — never add one to an example;
+   if you want to, that figure has become a template, so move it to `templates/`.
+   The full rule lives in `CONTRIBUTING.md`.
 
 3. **Skill** (`skills/using-opentikz/`) — THE KEY DIFFERENTIATOR. One repo-wide
    skill that takes an AI agent (you) from a request to a finished figure:
@@ -131,7 +142,7 @@ opentikz/
 ## Current status
 
 Live. MVP Roadmap Steps 1–4 are complete: repo skeleton + CI, the cold-start
-content (28 catalog items — icons, 5 templates, 3 examples), the skills layer (one
+content (29 catalog items — 19 icons, 9 templates, 1 example), the skills layer (one
 repo-wide `using-opentikz` skill + per-template `edit_contract`s + `reference/`
 material), and the static website (built by `tools/build_site.py`, deployed to
 GitHub Pages). See `docs/ROADMAP.md` for per-step status and what remains

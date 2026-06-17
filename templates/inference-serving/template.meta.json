@@ -1,0 +1,45 @@
+{
+  "id": "inference-serving",
+  "name": "Model inference serving",
+  "type": "template",
+  "domain": ["systems", "ml"],
+  "tags": ["inference", "serving", "deployment", "load balancer", "gpu", "cloud", "feature store", "system diagram"],
+  "venue": ["OSDI", "NSDI", "MLSys"],
+  "author": "OpenTikZ contributors",
+  "license": "CC0-1.0",
+  "requires": ["tikz", "arrows.meta", "backgrounds", "fit", "positioning", "shapes.symbols"],
+  "preview": "preview.svg",
+  "featured": true,
+  "composed_of": ["cloud", "server", "gpu", "database"],
+  "description": "Editable deployment figure composing the cloud, server, gpu, and database icons: client requests flow over the internet through a load balancer to GPU-backed inference nodes that read from a feature store, with a dashed inference-cluster boundary. Parametric spacing and labels.",
+  "edit_contract": {
+    "parameters": [
+      {"name": "\\colsep", "type": "length-cm", "meaning": "horizontal gap between request-path stages (client -> cloud -> lb -> nodes -> store)", "default": "3.0"},
+      {"name": "\\rowsep", "type": "length-cm", "meaning": "vertical offset of the two stacked inference nodes from the centerline", "default": "1.5"},
+      {"name": "\\clientlabel", "type": "text", "meaning": "client box label"},
+      {"name": "\\internetlabel", "type": "text", "meaning": "label under the cloud"},
+      {"name": "\\lblabel", "type": "text", "meaning": "load-balancer label (use \\\\ for two lines)"},
+      {"name": "\\nodeonelabel", "type": "text", "meaning": "top inference-node label"},
+      {"name": "\\nodetwolabel", "type": "text", "meaning": "bottom inference-node label"},
+      {"name": "\\storelabel", "type": "text", "meaning": "feature-store label"},
+      {"name": "\\featurelabel", "type": "text", "meaning": "label on the feature-read edges"},
+      {"name": "\\clusterlabel", "type": "text", "meaning": "dashed inference-cluster boundary label"},
+      {"name": "\\titlelabel", "type": "text", "meaning": "figure title"}
+    ],
+    "node_naming": "fixed semantic names along the request path: (client) (cloud) (lb); inference nodes (node1)(node2) with their labels (n1lab)(n2lab); (db) feature store; (cluster) dashed boundary box. New nodes get role-based names and join the (cluster) fit list if inside the boundary",
+    "styles": ["icon", "compbox", "nodebox", "slbl", "req", "read"],
+    "operations": [
+      {"id": "rename-node", "summary": "edit the matching label macro (\\clientlabel, \\lblabel, \\node*label, \\storelabel, \\titlelabel)"},
+      {"id": "add-inference-node", "summary": "declare \\node[nodebox] (node3) at (3*\\colsep, y) {\\serverpic\\hspace{4pt}\\gpupic} plus its slbl label, route a req edge from (lb.east) and a read edge to (db.west), then add the node and its label to the (cluster) fit list"},
+      {"id": "change-spacing", "summary": "edit \\colsep (stage gap) or \\rowsep (node offset); node and store x-positions are multiples of \\colsep, title position is derived from \\colsep/\\rowsep"},
+      {"id": "swap-icon", "summary": "replace a node body picture macro (\\cloudpic, \\serverpic, \\gpupic, \\dbpic) with another icon sub-picture adapted from icons/"},
+      {"id": "recolor", "summary": "change the palette name in the req/read styles or an icon macro; keep request vs feature-read flows in distinct colors; never inline hex"}
+    ],
+    "invariants": [
+      "the request path (req, solid) and feature reads (read, teal dashed) must stay visually distinct",
+      "the (cluster) boundary node must be drawn in the on-background-layer scope after the nodes it fits, so it sits behind them",
+      "any inference node inside the boundary must be added to the (cluster) fit=(...) list",
+      "colors only via the five palette names (tints/shades allowed); never inline hex or stock colors"
+    ]
+  }
+}
