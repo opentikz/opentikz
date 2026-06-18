@@ -1089,6 +1089,57 @@ body.lb-open{overflow:hidden}
   background:var(--ink); color:var(--paper); font-family:"Fraunces",serif; font-weight:600; margin-bottom:12px}
 .steps h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.15rem; margin:0 0 .3em}
 .steps p{margin:0; color:#4a473f; font-size:.95rem}
+
+/* why-tikz band */
+.why-tikz{padding:42px 0; border-top:1px solid var(--line)}
+.why-tikz h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 18px; letter-spacing:-.01em}
+.why-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
+.why-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 20px; box-shadow:var(--shadow)}
+.why-card h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.1rem; margin:0 0 .35em}
+.why-card p{margin:0; color:#4a473f; font-size:.92rem}
+.why-card code{font-size:.82em}
+
+/* magic moment (prompt -> editable TikZ -> figure) */
+.magic .magic-sub{color:var(--muted); margin:0 0 20px; font-size:.98rem}
+.magic-card{background:#fff; border:1px solid var(--line); border-radius:16px; padding:20px; box-shadow:var(--shadow)}
+.magic-label{display:block; font-family:"IBM Plex Mono",monospace; font-size:.68rem; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.06em; margin-bottom:7px}
+.magic-label em{font-style:normal; color:var(--otblue)}
+.magic-prompt{margin-bottom:18px}
+.magic-prompt code{display:block; background:#FFF8EC; border:1px solid #F0DDB6; border-radius:10px;
+  padding:12px 14px; color:#5b5341; font-size:.95rem; line-height:1.4}
+.magic-body{display:grid; grid-template-columns:1.15fr 1fr; gap:18px; align-items:stretch}
+.magic-pane{min-width:0}
+.magic-code{margin:0; background:#0F1422; border-radius:10px; padding:14px 16px; overflow-x:auto;
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.8rem; line-height:1.6; color:#CBD5E1}
+.magic-code .ml-line{display:block; white-space:pre}
+.magic-code .ml-add{background:rgba(0,158,115,.14); color:#7EE0A8;
+  box-shadow:inset 3px 0 0 var(--otteal); padding-left:7px; margin-left:-10px}
+.magic-fig{margin:0; height:100%; border:1px solid var(--line); border-radius:10px; padding:18px; background:
+    linear-gradient(rgba(0,0,0,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,.028) 1px,transparent 1px) #fcfcfa; background-size:18px 18px;
+  display:flex; align-items:center; justify-content:center}
+.magic-fig img{display:block; width:100%; max-height:240px; object-fit:contain}
+
+/* why-opentikz verdict cards */
+.why-ot{padding:42px 0; border-top:1px solid var(--line)}
+.why-ot h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .25em; letter-spacing:-.01em}
+.why-ot-sub{color:var(--muted); margin:0 0 20px; font-size:.98rem}
+.cmp-cards{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+.cmp-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 22px; box-shadow:var(--shadow)}
+.cmp-card h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.15rem; margin:0 0 .6em; display:flex; align-items:center; gap:.4em}
+.cmp-card ul{margin:0; padding-left:1.1em}
+.cmp-card li{margin:.4em 0; font-size:.92rem; color:#4a473f}
+.cmp-card code{font-size:.82em}
+.cmp-bad{border-top:3px solid #C2554D}
+.cmp-bad h3::before{content:"\2717"; color:#C2554D}
+.cmp-good{border-top:3px solid var(--otteal)}
+.cmp-good h3::before{content:"\2713"; color:var(--otteal)}
+
+/* stack the two-column sections on narrow screens */
+@media (max-width:720px){
+  .why-grid,.magic-body,.cmp-cards{grid-template-columns:1fr}
+}
 .cta-band{text-align:center; border-bottom:none}
 .cta-band h2{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
   font-size:clamp(1.6rem,3.4vw,2.4rem); margin:0 0 .6em}
