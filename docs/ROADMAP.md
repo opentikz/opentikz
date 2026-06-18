@@ -1,7 +1,7 @@
 # OpenTikZ — Roadmap (MVP)
 
 > **Progress (as of 2026-06):** Steps 0–4 ✅ complete — repo skeleton + CI,
-> cold-start content (28 catalog items: icons, 5 templates, 3 examples), the
+> cold-start content (30 catalog items: 19 icons, 8 templates, 3 examples), the
 > per-template skills layer, and the live static website are all shipped.
 > Currently on **Step 5 — launch + community** 🚧. Post-launch explorations are
 > listed under "Future".
