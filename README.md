@@ -30,8 +30,8 @@ on the [website](#website)**; or browse [`examples/`](examples/),
 <table>
 <tr>
 <td align="center" width="33%"><a href="examples/lora/"><img src="examples/lora/preview.svg" alt="LoRA (low-rank adaptation)" width="260"></a><br><sub><b>LoRA</b> · low-rank adaptation</sub></td>
-<td align="center" width="33%"><a href="examples/distributed-training/"><img src="examples/distributed-training/preview.svg" alt="Distributed data-parallel training" width="260"></a><br><sub><b>Distributed</b> data-parallel training</sub></td>
-<td align="center" width="33%"><a href="examples/inference-serving/"><img src="examples/inference-serving/preview.svg" alt="Model inference serving" width="260"></a><br><sub><b>Inference</b> serving</sub></td>
+<td align="center" width="33%"><a href="examples/flash-attention/"><img src="examples/flash-attention/preview.svg" alt="FlashAttention" width="260"></a><br><sub><b>FlashAttention</b> · tiled attention</sub></td>
+<td align="center" width="33%"><a href="examples/gan/"><img src="examples/gan/preview.svg" alt="Generative adversarial network" width="260"></a><br><sub><b>GAN</b> · generator / discriminator</sub></td>
 </tr>
 </table>
 
@@ -55,7 +55,7 @@ training, inference serving. See [`templates/`](templates/).</sub>
 <td align="center" width="20%"><a href="icons/systems/server/"><img src="icons/systems/server/server.svg" alt="Server" width="84"></a><br><sub>Server</sub></td>
 <td align="center" width="20%"><a href="icons/systems/gpu/"><img src="icons/systems/gpu/gpu.svg" alt="GPU" width="84"></a><br><sub>GPU</sub></td>
 <td align="center" width="20%"><a href="icons/systems/cloud/"><img src="icons/systems/cloud/cloud.svg" alt="Cloud" width="84"></a><br><sub>Cloud</sub></td>
-<td align="center" width="20%"><a href="icons/ml/transformer/"><img src="icons/ml/transformer/transformer.svg" alt="Transformer block" width="84"></a><br><sub>Transformer</sub></td>
+<td align="center" width="20%"><a href="icons/ml/neuron/"><img src="icons/ml/neuron/neuron.svg" alt="Neuron" width="84"></a><br><sub>Neuron</sub></td>
 <td align="center" width="20%"><a href="icons/ml/attention/"><img src="icons/ml/attention/attention.svg" alt="Attention block" width="84"></a><br><sub>Attention</sub></td>
 </tr>
 </table>
