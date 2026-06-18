@@ -62,6 +62,17 @@ def json_for_script(obj) -> str:
 # --------------------------------------------------------------------------- #
 REPO_URL = "https://github.com/opentikz/opentikz"
 
+# Inline SVG glyphs for the download/copy button bar (currentColor → inherit button color).
+DL_ICON = ('<svg class="dl-ic" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">'
+           '<path d="M8 1.5v8m0 0L4.8 6.3M8 9.5l3.2-3.2M2.5 13.5h11" fill="none" '
+           'stroke="currentColor" stroke-width="1.6" stroke-linecap="round" '
+           'stroke-linejoin="round"/></svg>')
+COPY_ICON = ('<svg class="dl-ic" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">'
+             '<rect x="5" y="5" width="9" height="9" rx="1.6" fill="none" stroke="currentColor" '
+             'stroke-width="1.6"/><path d="M11 5V3.2A1.2 1.2 0 0 0 9.8 2H3.2A1.2 1.2 0 0 0 2 3.2'
+             'v6.6A1.2 1.2 0 0 0 3.2 11H5" fill="none" stroke="currentColor" stroke-width="1.6" '
+             'stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
 
 def head(title: str, css_href: str, *, description: str = TAGLINE, browse_href: str = "") -> str:
     """``browse_href`` lets the '/' shortcut jump to Browse from surfaces that
@@ -230,21 +241,24 @@ def item_page(item: dict, code: str, tex_name: str, css_href: str) -> str:
       {metadata_table(item)}
       <p class="tags">{tag_list(item.get('tags', []))}</p>
       <div class="downloads">
-        <span class="dl-label">Download</span>
-        <a class="dl-btn" href="{preview}" download="{item['id']}.svg">SVG</a>
-        <button class="dl-btn" data-png="{preview}" data-name="{item['id']}.png">PNG</button>
-        <button class="dl-btn" data-tex="src" data-name="{html.escape(tex_name)}">.tex</button>
+        <button class="dl-btn dl-primary dl-copy" data-target="src">{COPY_ICON}Copy .tex</button>
+        <button class="dl-btn" data-tex="src" data-name="{html.escape(tex_name)}">{DL_ICON}.tex</button>
+        <a class="dl-btn" href="{preview}" download="{item['id']}.svg">{DL_ICON}SVG</a>
+        <button class="dl-btn" data-png="{preview}" data-name="{item['id']}.png">{DL_ICON}PNG</button>
       </div>
     </div>
   </div>
 
-  <section class="code-block">
-    <div class="code-head">
+  <details class="code-block">
+    <summary class="code-head">
       <span class="filename">{html.escape(tex_name)}</span>
-      <button class="copy" data-target="src">Copy .tex</button>
+      <span class="code-toggle" aria-hidden="true"></span>
+    </summary>
+    <div class="code-body">
+      <button class="copy code-copy" data-target="src">Copy .tex</button>
+      <pre><code id="src">{html.escape(code)}</code></pre>
     </div>
-    <pre><code id="src">{html.escape(code)}</code></pre>
-  </section>
+  </details>
 {skill_section}
   <section class="usage">
     <h2>Use it</h2>
@@ -357,14 +371,15 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
 """
 
     return (
-        head("OpenTikZ — paper-grade TikZ figures from a copyable library", css_href,
-             description=("Paper-grade conceptual TikZ figures, assembled from copyable icons "
-                          "and editable, AI-editable templates."),
+        head("OpenTikZ — paper-ready TikZ figures from a copyable library", css_href,
+             description=("Paper-ready conceptual TikZ figures — simple and fast: copyable icons, "
+                          "editable templates, and one AI-editable skill."),
              browse_href="browse/")
         + navbar("home")
         + f"""<main class="home">
   <section class="showcase">
-    <h1>Paper-grade figures from a library.</h1>
+    <a class="hero-logo" href="index.html" aria-label="OpenTikZ home">Open<span class="tik">TikZ</span><span class="caret">┃</span></a>
+    <h1>Paper-ready figures &mdash; simple and fast.</h1>
     <p class="show-lede">Copyable icons, editable templates, and one AI-editable <em>skill</em>.</p>
     <div class="carousel hero-carousel" id="hero-carousel" tabindex="0" aria-roledescription="carousel" aria-label="Featured figures">
       <button class="car-nav car-prev" type="button" aria-label="Previous figure">&larr;</button>
@@ -798,20 +813,37 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .tag{font:.74rem/1 "IBM Plex Mono",monospace; color:var(--muted);
   background:#F1EFE6; border:1px solid var(--line); border-radius:999px; padding:5px 9px}
 
-/* ---------- downloads ---------- */
-.downloads{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:18px 0 0}
-.dl-label{font-family:"IBM Plex Mono",monospace; font-size:.78rem; color:var(--muted); margin-right:2px}
-.dl-btn{font:500 .82rem "IBM Plex Mono",monospace; cursor:pointer; text-decoration:none;
-  color:var(--ink); background:#fff; border:1.5px solid var(--line-strong);
-  border-radius:8px; padding:7px 13px; transition:.15s}
-.dl-btn:hover{border-color:var(--otblue); color:var(--otblue)}
+/* ---------- downloads (bold action bar) ---------- */
+.downloads{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:22px 0 0}
+.dl-btn{display:inline-flex; align-items:center; gap:7px; cursor:pointer; text-decoration:none;
+  font:600 .9rem "IBM Plex Sans",sans-serif; color:var(--ink); background:#fff;
+  border:1.5px solid var(--line-strong); border-radius:10px; padding:10px 16px;
+  transition:transform .15s, box-shadow .15s, border-color .15s, color .15s}
+.dl-btn .dl-ic{flex:none}
+.dl-btn:hover{border-color:var(--otblue); color:var(--otblue); transform:translateY(-1px);
+  box-shadow:0 8px 18px -12px rgba(0,114,178,.6)}
+.dl-primary{background:var(--otblue); color:#fff; border-color:var(--otblue);
+  box-shadow:0 10px 24px -12px rgba(0,114,178,.7)}
+.dl-primary:hover{background:var(--otblue); color:#fff; filter:brightness(1.07)}
+.dl-primary.done{background:var(--otteal); border-color:var(--otteal); color:#fff; filter:none}
 
-/* ---------- code block ---------- */
+/* ---------- code block (collapsed by default) ---------- */
 .code-block{margin:34px 0 0; border:1px solid var(--line-strong); border-radius:12px;
   overflow:hidden; box-shadow:var(--shadow); background:#1c1b1f}
-.code-head{display:flex; align-items:center; justify-content:space-between;
-  padding:10px 14px; background:#26242b; border-bottom:1px solid #34313b}
+.code-head{display:flex; align-items:center; justify-content:space-between; cursor:pointer;
+  padding:12px 16px; background:#26242b; list-style:none; user-select:none}
+.code-head::-webkit-details-marker{display:none}
+.code-block[open] .code-head{border-bottom:1px solid #34313b}
 .filename{font-family:"IBM Plex Mono",monospace; font-size:.82rem; color:#cfc9d6}
+.code-toggle{display:inline-flex; align-items:center; font:500 .8rem "IBM Plex Mono",monospace;
+  color:var(--otorange)}
+.code-toggle::before{content:"\25B8"; margin-right:7px}
+.code-toggle::after{content:"View source"}
+.code-block[open] .code-toggle{color:#cfc9d6}
+.code-block[open] .code-toggle::before{content:"\25BE"}
+.code-block[open] .code-toggle::after{content:"Hide source"}
+.code-body{position:relative}
+.code-copy{position:absolute; top:12px; right:14px; z-index:2}
 .copy{font:500 .8rem "IBM Plex Mono",monospace; cursor:pointer; color:#1c1b1f;
   background:var(--otorange); border:none; padding:7px 13px; border-radius:6px; transition:.15s}
 .copy:hover{filter:brightness(1.08)}
@@ -880,8 +912,14 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 
 /* figure-led, centred hero — the figure is the largest element */
 .showcase{max-width:880px; margin:0 auto; padding:50px 0 42px; text-align:center}
+/* large brand lockup, centred above the headline (mirrors the navbar wordmark) */
+.hero-logo{display:inline-block; text-decoration:none; font-family:"Fraunces",serif;
+  font-weight:900; letter-spacing:-.025em; line-height:1; margin:0 0 .5em;
+  font-size:clamp(2.6rem,7vw,4.6rem)}
+.hero-logo .tik{color:var(--otblue)}
+.hero-logo .caret{color:var(--otorange); animation:blink 1.2s steps(1) infinite; margin-left:.03em}
 .showcase h1{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.025em;
-  font-size:clamp(2rem,4.6vw,3rem); line-height:1.04; margin:0 0 .25em}
+  font-size:clamp(1.55rem,3.6vw,2.3rem); line-height:1.08; margin:0 0 .25em; color:#34322b}
 .show-lede{font-family:"Fraunces",serif; font-weight:400; color:#34322b;
   font-size:clamp(1.05rem,2vw,1.3rem); max-width:48ch; margin:0 auto 1.5em}
 .show-lede em{font-style:italic; color:var(--otblue)}
@@ -1215,15 +1253,16 @@ APP_JS = r"""(function () {
   }
 
   // ---- copy-to-clipboard (item page) ----
-  document.querySelectorAll('.copy').forEach(function (btn) {
-    btn.addEventListener('click', function () {
+  document.querySelectorAll('.copy, .dl-copy').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();          // primary copy lives outside <summary>, but be safe
       var el = document.getElementById(btn.getAttribute('data-target'));
       if (!el) return;
       navigator.clipboard.writeText(el.textContent).then(function () {
-        var old = btn.textContent;
-        btn.textContent = 'Copied ✓';
+        var old = btn.innerHTML;   // innerHTML preserves any inline icon on restore
+        btn.innerHTML = 'Copied ✓';
         btn.classList.add('done');
-        setTimeout(function () { btn.textContent = old; btn.classList.remove('done'); }, 1600);
+        setTimeout(function () { btn.innerHTML = old; btn.classList.remove('done'); }, 1600);
       });
     });
   });

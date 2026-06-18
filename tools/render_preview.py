@@ -84,8 +84,15 @@ def _latexmk(tex: Path, out_dir: Path, fmt: str) -> Path:
 def _render_dvisvgm(dvi: Path, svg: Path) -> None:
     # DVI input (not --pdf): dvisvgm >=3 cannot drive Ghostscript >=10.01 for PDF
     # input, but the DVI/PostScript-specials path works with current Ghostscript.
+    #
+    # --no-fonts: trace every glyph as a vector <path> instead of emitting SVG 1.1
+    # <font>/<glyph> elements. Browsers dropped SVG-font support years ago, so the
+    # font route silently falls back to a system font whose metrics don't match the
+    # dvisvgm-computed <tspan> x-offsets — which splits multi-word labels apart
+    # ("data-pa rallel", "IO -aware"). Outlined paths render identically everywhere.
     subprocess.run(
-        ["dvisvgm", "--bbox=min", "--optimize", "--output=" + str(svg), str(dvi)],
+        ["dvisvgm", "--no-fonts", "--bbox=min", "--optimize",
+         "--output=" + str(svg), str(dvi)],
         check=True,
         capture_output=True,
         text=True,
