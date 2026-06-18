@@ -1081,15 +1081,6 @@ body.lb-open{overflow:hidden}
   .lb-backdrop,.lb-panel,.hero-slide.active{animation:none}
 }
 
-/* how it works */
-.steps{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:24px}
-.steps li{background:#fff; border:1px solid var(--line); border-radius:14px;
-  padding:24px 22px; box-shadow:var(--shadow)}
-.step-n{display:grid; place-items:center; width:34px; height:34px; border-radius:50%;
-  background:var(--ink); color:var(--paper); font-family:"Fraunces",serif; font-weight:600; margin-bottom:12px}
-.steps h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.15rem; margin:0 0 .3em}
-.steps p{margin:0; color:#4a473f; font-size:.95rem}
-
 /* why-tikz band */
 .why-tikz{padding:42px 0; border-top:1px solid var(--line)}
 .why-tikz h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 18px; letter-spacing:-.01em}

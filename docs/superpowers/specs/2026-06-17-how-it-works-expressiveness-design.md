@@ -85,9 +85,10 @@ Rejected alternatives:
 - Optionally tighten the hero subtitle string.
 - **CSS:** append new classes to `STYLE_CSS` (e.g. `.why-tikz`, `.magic`,
   `.magic-prompt`, `.magic-code`, `.magic-fig`, `.cmp-cards`, `.cmp-card`).
-  Colors MUST use existing palette vars (`--otblue`, `--otorange`, `--otteal`,
-  etc.) — never raw hex inline, per the project's hard rules. Added/removed code
-  lines use a restrained green/red that fits the `--paper` theme.
+  Colors should prefer existing palette vars (`--otblue`, `--otorange`, `--otteal`,
+  etc.) where a palette color fits, but may use hex consistent with the existing
+  `STYLE_CSS` (the no-raw-hex rule applies to `.tex` content, not the site stylesheet).
+  Added/removed code lines use a restrained green/red that fits the `--paper` theme.
 
 ### `skills-demos/skills-demos.json` (data model)
 The magic moment needs real code, not just SVGs. Extend the featured
