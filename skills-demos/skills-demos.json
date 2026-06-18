@@ -24,6 +24,8 @@
     "prompt": "add a cross-attention block and make it blue",
     "before_svg": "encdec-before.svg",
     "after_svg": "encdec-xattn.svg",
-    "changed": "A blue cross-attention block added — the decoder now attends to the encoder (a documented skill op)."
+    "changed": "A blue cross-attention block added — the decoder now attends to the encoder (a documented skill op).",
+    "featured": true,
+    "tex_excerpt": "  % decoder → output (existing)\n  \\draw[flow] (\\xdR,0) -- (\\xoL,0);\n+ % cross-attention block (decoder attends to encoder)\n+ \\node[draw=otblue!80!black, fill=otblue!18, rounded corners=2pt,\n+   minimum width=\\trapW cm, minimum height=0.7cm]\n+   (xattn) at (\\xdC,\\bh+0.9) {\\sffamily\\small Cross-Attn};\n+ \\draw[flow, draw=otblue] (enc) to[bend left=20] (xattn);\n+ \\draw[flow, draw=otblue] (xattn) -- (dec);"
   }
 ]
