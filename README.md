@@ -11,12 +11,65 @@ flowcharts. **Data plots are out of scope** (use pgfplots/matplotlib).
 
 ## Quick start
 
-1. Browse the **[gallery](#gallery)** below and pick an icon, template, or example.
-2. Copy its `.tex` into your project — every file compiles standalone with
-   `pdflatex`, `lualatex`, or `xelatex`, no extra setup.
-3. Want changes? Tell Claude Code *"add a hidden layer / recolor this blue / fit
-   it to a CVPR column"* — the `using-opentikz` skill plus each template's
-   `edit_contract` guide the AI to edit it correctly.
+The fastest path is to let an AI agent do the TikZ for you:
+
+1. **Clone OpenTikZ into your project** — the icons, templates, and the
+   `using-opentikz` skill come with it.
+2. **Tell Claude Code the figure or edit you want** — *"draw an encoder–decoder
+   with a cross-attention block,"* or, pointing at a template, *"add a hidden
+   layer / recolor this blue / fit it to a CVPR column."* The skill plus each
+   template's `edit_contract` guide the agent to edit real TikZ correctly.
+3. **Get editable TikZ that compiles** — every file is
+   `\documentclass{standalone}`, so it builds with `pdflatex`, `lualatex`, or
+   `xelatex`, no extra setup.
+
+Prefer to grab one by hand? **[Browse the gallery](#gallery)**, copy its `.tex`,
+and you're done — no AI required.
+
+## Why TikZ, and why OpenTikZ
+
+**Why TikZ at all?** A TikZ figure is *source code*, not an image:
+
+- **Vector quality** — crisp at any zoom, sharp in print; no pixelated screenshots.
+- **Native to your paper** — same fonts, math (`$\mathbf{W}x$`), and
+  `\ref`/`\cite` as the document, so the figure looks part of the paper.
+- **Diffable** — version it in git, tweak one number, recompile.
+
+**Why not just ask ChatGPT for TikZ directly?** You can — but raw LLM TikZ tends
+to fight you. OpenTikZ anchors the edit to a real, parametric template:
+
+| What you care about | Raw LLM TikZ | OpenTikZ + skill |
+| --- | --- | --- |
+| Compiles first try | Often not | Yes, standalone |
+| Packages / macros | Sometimes invented | Real, declared in `requires` |
+| Colors | Random hex | Shared palette |
+| Re-editing later | Re-describe everything | Stable node names |
+| AI guidance | None | Each template ships an `edit_contract` |
+
+Because every template is parametric, palette-correct, and carries an
+`edit_contract`, an agent edits it **accurately** and **fast** instead of
+hand-writing TikZ that may not compile.
+
+### A concrete edit
+
+Starting from [`templates/encoder-decoder/`](templates/encoder-decoder/), tell
+Claude Code:
+
+> *"add a cross-attention block and make it blue"*
+
+Guided by the template's `edit_contract` — using the shared palette and the
+template's stable node names — it adds:
+
+```tex
+% cross-attention block (decoder attends to encoder)
+\node[draw=otblue!80!black, fill=otblue!18, rounded corners=2pt,
+  minimum width=\trapW cm, minimum height=0.7cm]
+  (xattn) at (\xdC,\bh+0.9) {\sffamily\small Cross-Attn};
+\draw[flow, draw=otblue] (enc) to[bend left=20] (xattn);
+\draw[flow, draw=otblue] (xattn) -- (dec);
+```
+
+…and it compiles standalone, first try.
 
 ## Gallery
 
