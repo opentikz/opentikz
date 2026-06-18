@@ -319,7 +319,7 @@ def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
   <section class="skills-demo">
     <h2>Skills in action</h2>
     <p class="skills-sub">One prompt, one precise edit — across different kinds of change.</p>
-    <div class="carousel skills-carousel" id="skills-carousel" tabindex="0" aria-roledescription="carousel" aria-label="Skills in action">
+    <div class="carousel skills-carousel" id="skills-carousel" tabindex="0" data-autoplay data-interval="5000" aria-roledescription="carousel" aria-label="Skills in action">
       <button class="car-nav car-prev" aria-label="Previous">←</button>
       <div class="car-track">
 {slides}      </div>
@@ -381,7 +381,7 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     <a class="hero-logo" href="index.html" aria-label="OpenTikZ home">Open<span class="tik">TikZ</span><span class="caret">┃</span></a>
     <h1>Paper-ready figures &mdash; simple and fast.</h1>
     <p class="show-lede">Copyable icons, editable templates, and one AI-editable <em>skill</em>.</p>
-    <div class="carousel hero-carousel" id="hero-carousel" tabindex="0" aria-roledescription="carousel" aria-label="Featured figures">
+    <div class="carousel hero-carousel" id="hero-carousel" tabindex="0" data-autoplay data-interval="5000" aria-roledescription="carousel" aria-label="Featured figures">
       <button class="car-nav car-prev" type="button" aria-label="Previous figure">&larr;</button>
       <div class="car-track">
 {hero_slides}      </div>
@@ -1340,6 +1340,34 @@ APP_JS = r"""(function () {
       else if (e.key === 'ArrowRight') { e.preventDefault(); show(idx + 1); }
     });
     show(0);
+
+    // ---- autoplay (opt-in via data-autoplay; honors reduced motion) ----
+    // Pauses on hover, keyboard focus, a hidden tab, or an external hold
+    // (the lightbox). Manual navigation restarts the countdown so the slide
+    // never advances the instant after you click.
+    var prefersReduced = window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (car.hasAttribute('data-autoplay') && slides.length > 1 && !prefersReduced) {
+      var autoMs = parseInt(car.getAttribute('data-interval'), 10) || 5000;
+      var hover = false, focused = false, external = false, timer = null;
+      function autoActive() { return !(hover || focused || external || document.hidden); }
+      function start() {
+        if (timer) clearInterval(timer);
+        timer = setInterval(function () { if (autoActive()) show(idx + 1); }, autoMs);
+      }
+      car._pauseAuto = function () { external = true; };
+      car._resumeAuto = function () { external = false; };
+      car.addEventListener('mouseenter', function () { hover = true; });
+      car.addEventListener('mouseleave', function () { hover = false; });
+      car.addEventListener('focusin', function () { focused = true; });
+      car.addEventListener('focusout', function () { focused = false; });
+      car.addEventListener('click', start);    // manual nav resets the cadence
+      car.addEventListener('keydown', start);
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) start();         // realign cadence when the tab returns
+      });
+      start();
+    }
   });
 
   // ---- click-to-zoom lightbox (Home hero) ----
@@ -1382,6 +1410,7 @@ APP_JS = r"""(function () {
       lb.hidden = false;
       lb.setAttribute('aria-hidden', 'false');
       if (reduceMotion) lb.classList.add('no-anim');
+      if (hero._pauseAuto) hero._pauseAuto();   // hold autoplay while zoomed
       document.body.classList.add('lb-open');   // lock scroll
       var close = lb.querySelector('.lb-close');
       if (close) close.focus();
@@ -1391,6 +1420,7 @@ APP_JS = r"""(function () {
       lb.hidden = true;
       lb.setAttribute('aria-hidden', 'true');
       lb.classList.remove('no-anim');
+      if (hero._resumeAuto) hero._resumeAuto();   // resume autoplay on close
       document.body.classList.remove('lb-open');
       if (lastFocus && lastFocus.focus) lastFocus.focus();
     }
