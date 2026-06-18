@@ -40,6 +40,9 @@ Thumbs.db
 # Generated static site (built by tools/build_site.py; deployed via Pages CI)
 site/
 
+# Visual-companion brainstorming scratch (mockups, server state)
+.superpowers/
+
 # NOTE: generated previews (*.svg) and catalog.json are COMMITTED on purpose
 # (the website serves CI-rendered previews), so they are intentionally NOT
 # ignored here.
