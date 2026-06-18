@@ -413,6 +413,31 @@
   },
   {
     "author": "OpenTikZ contributors",
+    "description": "A grid of binary digits in curly braces, for raw data / encoded tensors / bit matrices.",
+    "domain": [
+      "ml"
+    ],
+    "id": "matrix",
+    "license": "CC0-1.0",
+    "name": "Binary matrix",
+    "path": "icons/ml/matrix",
+    "preview": "matrix.svg",
+    "requires": [
+      "tikz",
+      "decorations.pathreplacing"
+    ],
+    "tags": [
+      "matrix",
+      "binary",
+      "bits",
+      "data",
+      "encoding",
+      "tensor"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "OpenTikZ contributors",
     "description": "A handset representing a mobile or edge device, for client- and edge-side blocks.",
     "domain": [
       "systems"
