@@ -317,8 +317,8 @@ def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
         dots += f'<button class="demo-dot{active}" data-dot="{i}" aria-label="{dim}"><span>{dim}</span></button>'
     return f"""
   <section class="skills-demo">
-    <h2>Skills in action</h2>
-    <p class="skills-sub">One prompt, one precise edit — across different kinds of change.</p>
+    <h2>See it on real templates</h2>
+    <p class="skills-sub">Every before/after is rendered from committed source — the same kind of edit, across different templates.</p>
     <div class="carousel skills-carousel" id="skills-carousel" tabindex="0" data-autoplay data-interval="5000" aria-roledescription="carousel" aria-label="Skills in action">
       <button class="car-nav car-prev" aria-label="Previous">←</button>
       <div class="car-track">
@@ -330,9 +330,106 @@ def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
 """
 
 
+def magic_moment(demos: list[dict], by_id: dict, prefix: str = "") -> str:
+    """The 'how it works' centerpiece: prompt -> editable TikZ -> rendered figure.
+    Uses the demo flagged ``featured`` (fallback: first demo). Empty -> ''.
+    ``prefix`` adjusts the demos/ path for surface depth ('' Home)."""
+    if not demos:
+        return ""
+    demo = next((d for d in demos if d.get("featured")), demos[0])
+    tmpl = by_id.get(demo.get("template_id"), {})
+    tname = html.escape(tmpl.get("name", demo.get("template_id", "")))
+    prompt = html.escape(demo.get("prompt", ""))
+    after = html.escape(demo.get("after_svg", ""))
+    # Render the excerpt line-by-line; a leading '+' marks an AI-added line.
+    code_lines = ""
+    for raw in demo.get("tex_excerpt", "").split("\n"):
+        added = raw.startswith("+")
+        text = html.escape(raw[1:].rstrip() if added else raw.rstrip())
+        cls = " ml-add" if added else ""
+        code_lines += f'<span class="ml-line{cls}">{text or "&nbsp;"}</span>\n'
+    return f"""
+  <section class="how magic" id="how">
+    <h2>How it works</h2>
+    <p class="magic-sub">Tell your AI agent what you want. It edits a real template &mdash; and you get TikZ that compiles.</p>
+    <div class="magic-card">
+      <div class="magic-prompt"><span class="magic-label">you type</span><code>&ldquo;{prompt}&rdquo;</code></div>
+      <div class="magic-body">
+        <div class="magic-pane">
+          <span class="magic-label">editable TikZ <em>on {tname}</em></span>
+          <pre class="magic-code">{code_lines}</pre>
+        </div>
+        <div class="magic-pane">
+          <span class="magic-label">renders to</span>
+          <figure class="magic-fig"><img src="{prefix}demos/{after}" alt="rendered figure after the edit" loading="lazy"></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+"""
+
+
+def why_tikz_band() -> str:
+    """Beat 1: why a TikZ figure (source, not an image) beats a raster screenshot."""
+    return r"""
+  <section class="why-tikz">
+    <h2>Why TikZ</h2>
+    <div class="why-grid">
+      <article class="why-card">
+        <h3>Vector quality</h3>
+        <p>Crisp at any zoom, sharp in print and on screen &mdash; no pixelated screenshots, no re-exporting at 300&nbsp;dpi.</p>
+      </article>
+      <article class="why-card">
+        <h3>Native to your paper</h3>
+        <p>Same fonts, math (<code>$\mathbf{W}x$</code>), and <code>\ref</code>/<code>\cite</code> as the document. The figure looks part of the paper, not pasted on top.</p>
+      </article>
+      <article class="why-card">
+        <h3>Text, so it's diffable</h3>
+        <p>It's source, not a binary. Version it in git, tweak one number, recompile &mdash; review the change in a pull request.</p>
+      </article>
+    </div>
+  </section>
+"""
+
+
+def why_opentikz_band() -> str:
+    """Beat 3: why an edit anchored to a real template beats raw LLM TikZ."""
+    return """
+  <section class="why-ot">
+    <h2>Why not just ask ChatGPT for TikZ?</h2>
+    <p class="why-ot-sub">You can &mdash; here's what changes when the edit is anchored to a real template.</p>
+    <div class="cmp-cards">
+      <article class="cmp-card cmp-bad">
+        <h3>Raw LLM TikZ</h3>
+        <ul>
+          <li>Often won't compile on the first try</li>
+          <li>Invents packages and macros that don't exist</li>
+          <li>Picks random hex colors, inconsistent across figures</li>
+          <li>No stable structure &mdash; re-editing means re-describing everything</li>
+          <li>You burn time on compile-error round-trips</li>
+        </ul>
+      </article>
+      <article class="cmp-card cmp-good">
+        <h3>OpenTikZ + skill</h3>
+        <ul>
+          <li>Compiles standalone, first try</li>
+          <li>Starts from a real, parametric template</li>
+          <li>Shared palette &mdash; colors stay consistent</li>
+          <li>Stable node names, so the next edit is precise</li>
+          <li>An <code>edit_contract</code> tells the agent exactly how to change it</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+"""
+
+
 def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], css_href: str) -> str:
     """Marketing Home — no content grid, no search box (per spec)."""
     demos_section = demos_carousel(demos, by_id)
+    magic = magic_moment(demos, by_id)
+    why_tikz = why_tikz_band()
+    why_opentikz = why_opentikz_band()
 
     # Hero carousel: one featured figure per slide (flagship first). Each slide is a
     # zoomable figure + caption (name deep-links to the item page). DISTINCT id and
@@ -394,17 +491,9 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     </div>
   </section>
 {lightbox}
-  <section class="how" id="how">
-    <h2>How it works</h2>
-    <ol class="steps">
-      <li><span class="step-n">1</span><h3>Clone the repo</h3>
-        <p>Pull OpenTikZ into your project — the icons, templates, and the <strong>using-opentikz</strong> skill come with it.</p></li>
-      <li><span class="step-n">2</span><h3>Describe the diagram</h3>
-        <p>Tell your AI agent the figure you want — "a training pipeline with two GPUs feeding a transformer," in plain words.</p></li>
-      <li><span class="step-n">3</span><h3>The agent assembles it</h3>
-        <p>Guided by the skill, the agent reuses the existing icons, blocks, and templates to build editable TikZ — no hand-writing from scratch.</p></li>
-    </ol>
-  </section>
+{why_tikz}
+{magic}
+{why_opentikz}
 {demos_section}
   <section class="roadmap">
     <h2>On the roadmap</h2>
