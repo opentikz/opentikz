@@ -592,6 +592,9 @@ def build(root: Path) -> int:
     (site / "assets" / "style.css").write_text(STYLE_CSS, encoding="utf-8")
     (site / "assets" / "app.js").write_text(APP_JS, encoding="utf-8")
     (site / ".nojekyll").write_text("", encoding="utf-8")
+    # Custom domain for GitHub Pages. site/ is rebuilt from scratch each run, so
+    # the CNAME must be (re)written here rather than committed under site/.
+    (site / "CNAME").write_text("opentikz.org\n", encoding="utf-8")
 
     n_prev = 0
     for it in catalog:

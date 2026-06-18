@@ -14,7 +14,7 @@ abstract: >-
 type: software
 authors:
   - name: "OpenTikZ contributors"
-url: "https://github.com/opentikz/opentikz"
+url: "https://opentikz.org"
 repository-code: "https://github.com/opentikz/opentikz"
 license: CC0-1.0
 keywords:

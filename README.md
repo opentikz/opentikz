@@ -117,8 +117,9 @@ python3 tools/build_site.py        # generates site/ (gitignored)
 python3 -m http.server -d site     # preview at http://localhost:8000
 ```
 
-It deploys to GitHub Pages automatically via `.github/workflows/pages.yml` on
-push to `main`. Client-side search uses Fuse.js (CDN, pinned + SRI).
+It is live at **[opentikz.org](https://opentikz.org)**, deployed to GitHub Pages
+automatically via `.github/workflows/pages.yml` on push to `main`. Client-side
+search uses Fuse.js (CDN, pinned + SRI).
 
 ## Citing OpenTikZ
 
@@ -131,7 +132,7 @@ it is appreciated. Use the **"Cite this repository"** button on GitHub (powered 
   title        = {{OpenTikZ}: a TikZ resource library for academic conceptual diagrams},
   author       = {{OpenTikZ contributors}},
   year         = {2026},
-  howpublished = {\url{https://github.com/opentikz/opentikz}},
+  howpublished = {\url{https://opentikz.org}},
   note         = {Content licensed CC0 1.0}
 }
 ```
