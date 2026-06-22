@@ -363,44 +363,6 @@ def render_tex_excerpt(tex: str) -> str:
     return out
 
 
-def magic_moment(demos: list[dict], by_id: dict, prefix: str = "") -> str:
-    """The 'how it works' centerpiece: prompt -> editable TikZ -> rendered figure.
-    Uses the demo flagged ``featured`` (fallback: first demo). Empty -> ''.
-    ``prefix`` adjusts the demos/ path for surface depth ('' Home)."""
-    if not demos:
-        return ""
-    demo = next((d for d in demos if d.get("featured")), demos[0])
-    tmpl = by_id.get(demo.get("template_id"), {})
-    tname = html.escape(tmpl.get("name", demo.get("template_id", "")))
-    prompt = html.escape(demo.get("prompt", ""))
-    after = html.escape(demo.get("after_svg", ""))
-    # Render the excerpt line-by-line; a leading '+' marks an AI-added line.
-    code_lines = ""
-    for raw in demo.get("tex_excerpt", "").split("\n"):
-        added = raw.startswith("+")
-        text = html.escape(raw[1:].rstrip() if added else raw.rstrip())
-        cls = " ml-add" if added else ""
-        code_lines += f'<span class="ml-line{cls}">{text or "&nbsp;"}</span>\n'
-    return f"""
-  <section class="how magic" id="how">
-    <h2>How it works</h2>
-    <p class="magic-sub">Tell your AI agent what you want. It edits a real template &mdash; and you get TikZ that compiles.</p>
-    <div class="magic-card">
-      <div class="magic-prompt"><span class="magic-label">you type</span><code>&ldquo;{prompt}&rdquo;</code></div>
-      <div class="magic-body">
-        <div class="magic-pane">
-          <span class="magic-label">editable TikZ <em>on {tname}</em></span>
-          <pre class="magic-code">{code_lines}</pre>
-        </div>
-        <div class="magic-pane">
-          <span class="magic-label">renders to</span>
-          <figure class="magic-fig"><img src="{prefix}demos/{after}" alt="rendered figure after the edit" loading="lazy"></figure>
-        </div>
-      </div>
-    </div>
-  </section>
-"""
-
 
 def why_tikz_band() -> str:
     """Foundational reassurance, slimmed to a 3-point inline strip."""
@@ -506,10 +468,10 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
       <a class="btn btn-ghost" href="browse/">Browse the library &rarr;</a>
     </div>
   </section>
-{why_tikz}
-{why_opentikz}
 {demos_section}
+{why_opentikz}
 {library}
+{why_tikz}
   <section class="roadmap">
     <h2>On the roadmap</h2>
     <div class="roadmap-cards">
@@ -1035,66 +997,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .btn-ghost{border-color:var(--line-strong); color:var(--ink)}
 .btn-ghost:hover{border-color:var(--otblue); color:var(--otblue)}
 
-.how,.cta-band{padding:42px 0; border-top:1px solid var(--line)}
-.how h2{font-family:"Fraunces",serif; font-weight:600;
-  font-size:1.7rem; margin:0 0 20px; letter-spacing:-.01em}
-
-/* hero figure carousel (Home) — one featured figure per slide, click to zoom */
-.hero-carousel{margin:0 auto 1.1em; width:min(100%,860px); outline:none}
-.hero-carousel:focus-visible{box-shadow:0 0 0 3px rgba(0,114,178,.22); border-radius:16px}
-.hero-slide{display:none}
-.hero-slide.active{display:block; animation:fade .25s both}
-.hero-fig{margin:0}
-.hero-zoom{display:block; width:100%; cursor:zoom-in; position:relative; padding:30px 30px 24px;
-  border:1px solid var(--line); border-radius:14px; background:
-    linear-gradient(rgba(0,0,0,.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,0,0,.03) 1px,transparent 1px) #fff;
-  background-size:24px 24px; transition:border-color .15s, box-shadow .15s}
-.hero-zoom:hover{border-color:var(--line-strong); box-shadow:var(--shadow)}
-.hero-zoom:focus-visible{outline:2px solid var(--otblue); outline-offset:2px}
-.hero-zoom img{display:block; width:100%; height:360px; object-fit:contain; margin:0 auto}
-.zoom-hint{position:absolute; top:12px; right:12px; font:500 .72rem "IBM Plex Mono",monospace;
-  color:var(--ink); background:rgba(255,255,255,.92); border:1px solid var(--line-strong);
-  border-radius:999px; padding:5px 11px; box-shadow:var(--shadow); transition:opacity .15s}
-.hero-cap{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:14px}
-.hero-cap a{font-family:"Fraunces",serif; font-weight:600; font-size:1.12rem; letter-spacing:-.01em;
-  color:var(--ink); text-decoration:none}
-.hero-cap a:hover{color:var(--otblue); text-decoration:underline}
-.hero-dots{margin-top:14px}
-.hero-dot{width:10px; height:10px; padding:0; cursor:pointer; border-radius:50%;
-  background:#fff; border:1.5px solid var(--line-strong); transition:.15s}
-.hero-dot:hover{border-color:var(--otblue)}
-.hero-dot.active{background:var(--ink); border-color:var(--ink)}
-
-/* lightbox modal */
-.lightbox{position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:4vh 4vw}
-.lightbox[hidden]{display:none}
-.lb-backdrop{position:absolute; inset:0; background:rgba(20,19,15,.72);
-  backdrop-filter:blur(4px); animation:lbfade .2s both}
-.lb-panel{position:relative; z-index:1; display:flex; align-items:center; gap:14px;
-  width:min(96vw,1200px); max-height:92vh; animation:lbpop .22s cubic-bezier(.2,.7,.2,1) both}
-.lb-fig{flex:1; min-width:0; margin:0; background:#fff; border-radius:16px;
-  box-shadow:0 30px 80px -30px rgba(0,0,0,.8); padding:24px 24px 16px; display:flex;
-  flex-direction:column; max-height:92vh}
-.lb-fig img{display:block; width:100%; height:auto; max-height:78vh; object-fit:contain; margin:0 auto}
-.lb-cap{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:12px}
-.lb-cap a{font-family:"Fraunces",serif; font-weight:600; font-size:1.1rem; color:var(--ink);
-  text-decoration:none}
-.lb-cap a:hover{color:var(--otblue); text-decoration:underline}
-.lb-nav{flex:none; width:46px; height:46px; border-radius:50%; cursor:pointer; font-size:1.2rem;
-  background:rgba(255,255,255,.94); border:1.5px solid var(--line-strong); color:var(--ink); transition:.15s}
-.lb-nav:hover{border-color:var(--otblue); color:var(--otblue)}
-.lb-close{position:absolute; top:-6px; right:-6px; width:40px; height:40px; border-radius:50%;
-  cursor:pointer; font-size:1.4rem; line-height:1; background:#fff; border:1.5px solid var(--line-strong);
-  color:var(--ink); box-shadow:var(--shadow); transition:.15s}
-.lb-close:hover{border-color:var(--otorange); color:var(--otorange)}
-@keyframes lbfade{from{opacity:0}to{opacity:1}}
-@keyframes lbpop{from{opacity:0; transform:scale(.97)}to{opacity:1; transform:none}}
-.lightbox.no-anim .lb-backdrop,.lightbox.no-anim .lb-panel{animation:none}
-body.lb-open{overflow:hidden}
-@media(prefers-reduced-motion: reduce){
-  .lb-backdrop,.lb-panel,.hero-slide.active{animation:none}
-}
+.cta-band{padding:42px 0; border-top:1px solid var(--line)}
 
 /* ---------- why-tikz (slim) ---------- */
 .why-tikz-slim{max-width:980px; margin:0 auto; padding:40px 28px; text-align:center}
@@ -1104,27 +1007,12 @@ body.lb-open{overflow:hidden}
 .wts-item span{font:.85rem/1.45 system-ui; opacity:.72}
 @media(max-width:680px){.wts-strip{grid-template-columns:1fr}}
 
-/* magic moment (prompt -> editable TikZ -> figure) */
-.magic .magic-sub{color:var(--muted); margin:0 0 20px; font-size:.98rem}
-.magic-card{background:#fff; border:1px solid var(--line); border-radius:16px; padding:20px; box-shadow:var(--shadow)}
-.magic-label{display:block; font-family:"IBM Plex Mono",monospace; font-size:.68rem; color:var(--muted);
-  text-transform:uppercase; letter-spacing:.06em; margin-bottom:7px}
-.magic-label em{font-style:normal; color:var(--otblue)}
-.magic-prompt{margin-bottom:18px}
-.magic-prompt code{display:block; background:#FFF8EC; border:1px solid #F0DDB6; border-radius:10px;
-  padding:12px 14px; color:#5b5341; font-size:.95rem; line-height:1.4}
-.magic-body{display:grid; grid-template-columns:1.15fr 1fr; gap:18px; align-items:stretch}
-.magic-pane{min-width:0}
+/* view-source code block (hero) — keep: used by .hero-src > pre.magic-code */
 .magic-code{margin:0; background:#0F1422; border-radius:10px; padding:14px 16px; overflow-x:auto;
   font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.8rem; line-height:1.6; color:#CBD5E1}
 .magic-code .ml-line{display:block; white-space:pre}
 .magic-code .ml-add{background:rgba(0,158,115,.14); color:#7EE0A8;
   box-shadow:inset 3px 0 0 var(--otteal); padding-left:7px; margin-left:-10px}
-.magic-fig{margin:0; height:100%; border:1px solid var(--line); border-radius:10px; padding:18px; background:
-    linear-gradient(rgba(0,0,0,.028) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,0,0,.028) 1px,transparent 1px) #fcfcfa; background-size:18px 18px;
-  display:flex; align-items:center; justify-content:center}
-.magic-fig img{display:block; width:100%; max-height:240px; object-fit:contain}
 
 /* why-opentikz verdict cards */
 .why-ot{padding:42px 0; border-top:1px solid var(--line)}
@@ -1143,7 +1031,7 @@ body.lb-open{overflow:hidden}
 
 /* stack the two-column sections on narrow screens */
 @media (max-width:720px){
-  .magic-body,.cmp-cards{grid-template-columns:1fr}
+  .cmp-cards{grid-template-columns:1fr}
 }
 .cta-band{text-align:center; border-bottom:none}
 .cta-band h2{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
@@ -1237,10 +1125,6 @@ body.lb-open{overflow:hidden}
 .browse-title{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
   font-size:clamp(1.7rem,4vw,2.4rem); margin:0 0 .5em}
 
-@media(max-width:980px){
-  .lb-panel{flex-wrap:wrap; justify-content:center}
-  .lb-nav{order:2}
-}
 @media(max-width:720px){
   :root{--gutter:18px}            /* one place sets the mobile gutter for every container */
   .item-top{grid-template-columns:1fr; gap:22px}
@@ -1264,12 +1148,6 @@ body.lb-open{overflow:hidden}
   .hero{padding:34px 20px 8px}
   .showcase{padding:32px 0 26px}
   .steps{grid-template-columns:1fr}
-  .hero-zoom{padding:18px}
-  .hero-zoom img{height:240px}
-  .zoom-hint{font-size:.66rem; padding:4px 8px}
-  .lightbox{padding:2vh 3vw}
-  .lb-fig{padding:14px}
-  .lb-nav{width:40px; height:40px}
   .demo-trip{grid-template-columns:1fr; gap:12px}
   .demo-prompt{max-width:none}
   .demo-prompt::before,.demo-prompt::after{display:none}
@@ -1493,19 +1371,19 @@ APP_JS = r"""(function () {
 
   // ---- per-instance carousels (supports multiple on one page) ----
   // Each .carousel keeps its OWN active index; all inner queries are scoped to the
-  // element so the hero (#hero-carousel/.hero-slide/.hero-dot) and the skills demo
-  // (#skills-carousel/.demo-slide/.demo-dot) never share state.
+  // element so the skills demo (#skills-carousel/.demo-slide/.demo-dot) never shares
+  // state across multiple carousels on the same page.
   var carousels = Array.prototype.slice.call(document.querySelectorAll('.carousel'));
   carousels.forEach(function (car) {
     var slides = Array.prototype.slice.call(
-      car.querySelectorAll('.hero-slide, .demo-slide'));
+      car.querySelectorAll('.demo-slide'));
     if (!slides.length) return;
     // dots live in a sibling .car-dots (or any node with [data-dots-for=id])
     var dotWrap = car.parentNode
       ? car.parentNode.querySelector('.car-dots')
       : null;
     var dots = dotWrap
-      ? Array.prototype.slice.call(dotWrap.querySelectorAll('.hero-dot, .demo-dot'))
+      ? Array.prototype.slice.call(dotWrap.querySelectorAll('.demo-dot'))
       : [];
     var idx = 0;
     function show(n) {
@@ -1556,90 +1434,6 @@ APP_JS = r"""(function () {
       start();
     }
   });
-
-  // ---- click-to-zoom lightbox (Home hero) ----
-  var lb = document.getElementById('lightbox');
-  var hero = document.getElementById('hero-carousel');
-  if (lb && hero) {
-    var figs = Array.prototype.slice.call(hero.querySelectorAll('.hero-slide'));
-    var lbImg = document.getElementById('lb-img');
-    var lbLink = document.getElementById('lb-link');
-    var lbBadge = document.getElementById('lb-badge');
-    var lbPrev = lb.querySelector('.lb-prev');
-    var lbNext = lb.querySelector('.lb-next');
-    var lbIdx = 0;
-    var lastFocus = null;
-    var reduceMotion = window.matchMedia
-      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function focusable() {
-      return Array.prototype.slice.call(lb.querySelectorAll(
-        'button, [href], img[tabindex], [tabindex]:not([tabindex="-1"])'))
-        .filter(function (el) { return el.offsetParent !== null || el === document.activeElement; });
-    }
-
-    function render(n) {
-      lbIdx = (n + figs.length) % figs.length;
-      var slide = figs[lbIdx];
-      var img = slide.querySelector('img');
-      lbImg.src = img.getAttribute('src');
-      lbImg.alt = slide.getAttribute('data-name') || '';
-      var link = slide.querySelector('.hero-cap a');
-      var badgeEl = slide.querySelector('.hero-cap .badge');
-      lbLink.textContent = slide.getAttribute('data-name') || '';
-      lbLink.setAttribute('href', link ? link.getAttribute('href') : '#');
-      lbBadge.innerHTML = badgeEl ? badgeEl.outerHTML : '';
-    }
-
-    function openLb(n, trigger) {
-      lastFocus = trigger || document.activeElement;
-      render(n);
-      lb.hidden = false;
-      lb.setAttribute('aria-hidden', 'false');
-      if (reduceMotion) lb.classList.add('no-anim');
-      if (hero._pauseAuto) hero._pauseAuto();   // hold autoplay while zoomed
-      document.body.classList.add('lb-open');   // lock scroll
-      var close = lb.querySelector('.lb-close');
-      if (close) close.focus();
-    }
-
-    function closeLb() {
-      lb.hidden = true;
-      lb.setAttribute('aria-hidden', 'true');
-      lb.classList.remove('no-anim');
-      if (hero._resumeAuto) hero._resumeAuto();   // resume autoplay on close
-      document.body.classList.remove('lb-open');
-      if (lastFocus && lastFocus.focus) lastFocus.focus();
-    }
-
-    // open via the per-slide zoom button
-    Array.prototype.slice.call(hero.querySelectorAll('.hero-zoom')).forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        openLb(parseInt(btn.getAttribute('data-zoom'), 10) || 0, btn);
-      });
-    });
-    if (lbPrev) lbPrev.addEventListener('click', function () { render(lbIdx - 1); });
-    if (lbNext) lbNext.addEventListener('click', function () { render(lbIdx + 1); });
-    Array.prototype.slice.call(lb.querySelectorAll('[data-lb-close]')).forEach(function (el) {
-      el.addEventListener('click', closeLb);
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (lb.hidden) return;
-      if (e.key === 'Escape') { e.preventDefault(); closeLb(); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); render(lbIdx - 1); }
-      else if (e.key === 'ArrowRight') { e.preventDefault(); render(lbIdx + 1); }
-      else if (e.key === 'Tab') {
-        // focus trap
-        var f = focusable();
-        if (!f.length) return;
-        var first = f[0], last = f[f.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    });
-  }
 
   // before/after compare sliders
   document.querySelectorAll('[data-ba]').forEach(function (ba) {
