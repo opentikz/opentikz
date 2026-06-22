@@ -457,11 +457,34 @@ def why_opentikz_band() -> str:
 """
 
 
+def library_gallery(featured: list[dict], counts: dict) -> str:
+    """Compact thumbnail grid of featured figures + counts + Browse CTA."""
+    thumbs = ""
+    for it in featured:
+        name = html.escape(it["name"])
+        thumbs += f"""      <a class="lib-thumb" href="item/{html.escape(it['id'])}.html">
+        <img src="previews/{html.escape(it['id'])}.svg" alt="{name}" loading="lazy">
+        <span>{name}</span>
+      </a>
+"""
+    return f"""
+  <section class="library">
+    <h2>The library you&rsquo;re drawing from</h2>
+    <p class="library-sub">Editable templates and copyable icons &mdash; the figures your agent starts from.</p>
+    <div class="lib-grid">
+{thumbs}    </div>
+    <div class="cta-row"><a class="btn btn-primary" href="browse/">Browse the library &rarr;</a></div>
+    <p class="cta-sub">{counts.get('icon', 0)} icons &middot; {counts.get('template', 0)} templates &middot; {counts.get('example', 0)} examples &middot; content <code>CC0&nbsp;1.0</code></p>
+  </section>
+"""
+
+
 def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], css_href: str) -> str:
     """Marketing Home — no content grid, no search box (per spec)."""
     demos_section = demos_carousel(demos, by_id)
     why_tikz = why_tikz_band()
     why_opentikz = why_opentikz_band()
+    library = library_gallery(featured, counts)
 
     # Featured demo drives the hero slider + view-source. Guard against no demos.
     demo = next((d for d in demos if d.get("featured")), (demos[0] if demos else None))
@@ -495,6 +518,7 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
 {why_tikz}
 {why_opentikz}
 {demos_section}
+{library}
   <section class="roadmap">
     <h2>On the roadmap</h2>
     <div class="roadmap-cards">
@@ -1294,6 +1318,16 @@ body.lb-open{overflow:hidden}
 .hero-src summary::before{content:"\25B8 "; }
 .hero-src[open] summary::before{content:"\25BE "; }
 .hero-src .magic-code{margin-top:.5em}
+
+/* ---------- library gallery ---------- */
+.library{max-width:1000px; margin:0 auto; padding:46px 28px 8px; text-align:center}
+.lib-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; margin:22px 0}
+.lib-thumb{display:flex; flex-direction:column; gap:6px; text-decoration:none; color:inherit;
+  border:1px solid var(--line-strong); border-radius:10px; padding:12px; background:rgba(255,255,255,.02);
+  transition:border-color .15s, transform .15s}
+.lib-thumb:hover{border-color:var(--otblue); transform:translateY(-2px)}
+.lib-thumb img{width:100%; height:90px; object-fit:contain}
+.lib-thumb span{font:.78rem system-ui; opacity:.8}
 """
 
 APP_JS = r"""(function () {
