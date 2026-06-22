@@ -330,6 +330,28 @@ def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
 """
 
 
+def before_after_slider(before_svg: str, after_svg: str, *,
+                        before_label: str = "before", after_label: str = "after",
+                        prefix: str = "") -> str:
+    """Draggable before/after compare slider. ``before_svg``/``after_svg`` are
+    filenames under demos/; ``prefix`` adjusts depth ('' on Home). Built on a
+    native range input (keyboard + no-JS fallback at 50%); app.js adds pointer
+    drag. The after image is revealed to the RIGHT of the bar."""
+    b, a = html.escape(before_svg), html.escape(after_svg)
+    bl, al = html.escape(before_label), html.escape(after_label)
+    return f"""    <div class="ba" data-ba style="--pos:50%">
+      <img class="ba-img ba-before-img" src="{prefix}demos/{b}" alt="{bl}" loading="lazy">
+      <img class="ba-img ba-after-img" src="{prefix}demos/{a}" alt="{al}" loading="lazy">
+      <span class="ba-tag ba-tag-l" aria-hidden="true">{bl}</span>
+      <span class="ba-tag ba-tag-r" aria-hidden="true">{al}</span>
+      <span class="ba-bar" aria-hidden="true"></span>
+      <span class="ba-handle" aria-hidden="true">&#8646;</span>
+      <input class="ba-range" type="range" min="0" max="100" value="50"
+             aria-label="Compare {bl} and {al}">
+    </div>
+"""
+
+
 def magic_moment(demos: list[dict], by_id: dict, prefix: str = "") -> str:
     """The 'how it works' centerpiece: prompt -> editable TikZ -> rendered figure.
     Uses the demo flagged ``featured`` (fallback: first demo). Empty -> ''.
@@ -1262,6 +1284,25 @@ body.lb-open{overflow:hidden}
   .carousel{gap:6px}
   .car-nav{width:34px; height:34px}
 }
+
+/* ---------- before/after compare slider ---------- */
+.ba{--pos:50%; position:relative; width:100%; max-width:560px; aspect-ratio:16/7;
+    margin:0 auto; border:1px solid var(--border); border-radius:12px; overflow:hidden;
+    background:var(--surface,#0d0f15); touch-action:none; cursor:ew-resize}
+.ba-img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:10px}
+.ba-after-img{clip-path:inset(0 0 0 var(--pos))}
+.ba-before-img{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.ba-tag{position:absolute; bottom:8px; font:600 .62rem/1 "IBM Plex Mono",monospace;
+        letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:5px;
+        background:rgba(0,0,0,.55); color:#fff}
+.ba-tag-l{left:8px} .ba-tag-r{right:8px; color:var(--otblue)}
+.ba-bar{position:absolute; top:0; bottom:0; left:var(--pos); width:2px;
+        background:#fff; transform:translateX(-1px); pointer-events:none}
+.ba-handle{position:absolute; top:50%; left:var(--pos); width:30px; height:30px;
+           transform:translate(-50%,-50%); border-radius:50%; background:#fff; color:#11131a;
+           display:flex; align-items:center; justify-content:center; font:14px monospace;
+           box-shadow:0 2px 8px rgba(0,0,0,.4); pointer-events:none}
+.ba-range{position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize}
 """
 
 APP_JS = r"""(function () {
@@ -1584,6 +1625,24 @@ APP_JS = r"""(function () {
       }
     });
   }
+
+  // before/after compare sliders
+  document.querySelectorAll('[data-ba]').forEach(function (ba) {
+    var range = ba.querySelector('.ba-range');
+    if (!range) return;
+    function apply() { ba.style.setProperty('--pos', range.value + '%'); }
+    range.addEventListener('input', apply);
+    apply();
+    var dragging = false;
+    function setFromX(clientX) {
+      var r = ba.getBoundingClientRect();
+      var p = Math.max(0, Math.min(100, (clientX - r.left) / r.width * 100));
+      range.value = p; apply();
+    }
+    ba.addEventListener('pointerdown', function (e) { dragging = true; setFromX(e.clientX); });
+    window.addEventListener('pointermove', function (e) { if (dragging) setFromX(e.clientX); });
+    window.addEventListener('pointerup', function () { dragging = false; });
+  });
 })();
 """
 
