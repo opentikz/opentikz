@@ -352,6 +352,17 @@ def before_after_slider(before_svg: str, after_svg: str, *,
 """
 
 
+def render_tex_excerpt(tex: str) -> str:
+    """Render a demo tex_excerpt: a leading '+' marks an AI-added line."""
+    out = ""
+    for raw in tex.split("\n"):
+        added = raw.startswith("+")
+        text = html.escape(raw[1:].rstrip() if added else raw.rstrip())
+        cls = " ml-add" if added else ""
+        out += f'<span class="ml-line{cls}">{text or "&nbsp;"}</span>\n'
+    return out
+
+
 def magic_moment(demos: list[dict], by_id: dict, prefix: str = "") -> str:
     """The 'how it works' centerpiece: prompt -> editable TikZ -> rendered figure.
     Uses the demo flagged ``featured`` (fallback: first demo). Empty -> ''.
@@ -449,45 +460,18 @@ def why_opentikz_band() -> str:
 def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], css_href: str) -> str:
     """Marketing Home — no content grid, no search box (per spec)."""
     demos_section = demos_carousel(demos, by_id)
-    magic = magic_moment(demos, by_id)
     why_tikz = why_tikz_band()
     why_opentikz = why_opentikz_band()
 
-    # Hero carousel: one featured figure per slide (flagship first). Each slide is a
-    # zoomable figure + caption (name deep-links to the item page). DISTINCT id and
-    # slide/dot classes (#hero-carousel / .hero-slide / .hero-dot) so it never shares
-    # state with the skills-in-action carousel (#skills-carousel / .demo-slide / .demo-dot).
-    hero_slides, hero_dots = "", ""
-    for i, it in enumerate(featured):
-        name = html.escape(it["name"])
-        active = " active" if i == 0 else ""
-        hero_slides += f"""        <div class="hero-slide{active}" data-slide="{i}" data-id="{html.escape(it['id'])}" data-name="{name}">
-          <figure class="hero-fig">
-            <button class="hero-zoom" type="button" data-zoom="{i}" aria-label="Enlarge {name}">
-              <img src="previews/{it['id']}.svg" alt="{name}" loading="lazy">
-              <span class="zoom-hint" aria-hidden="true">&#128269; click to enlarge</span>
-            </button>
-            <figcaption class="hero-cap">{badge(it['type'])}<a href="item/{it['id']}.html">{name}</a></figcaption>
-          </figure>
-        </div>
-"""
-        hero_dots += f'<button class="hero-dot{active}" data-dot="{i}" aria-label="Show {name}"></button>'
-
-    # Lightbox modal, emitted once. The figure is filled in by app.js from the
-    # featured slides (same ordered list as the hero carousel).
-    lightbox = """  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Figure viewer" aria-hidden="true" hidden>
-    <div class="lb-backdrop" data-lb-close></div>
-    <div class="lb-panel" role="document">
-      <button class="lb-nav lb-prev" type="button" aria-label="Previous figure">&larr;</button>
-      <figure class="lb-fig">
-        <img id="lb-img" src="" alt="">
-        <figcaption class="lb-cap"><span id="lb-badge"></span><a id="lb-link" href="#"></a></figcaption>
-      </figure>
-      <button class="lb-nav lb-next" type="button" aria-label="Next figure">&rarr;</button>
-      <button class="lb-close" type="button" aria-label="Close" data-lb-close>&times;</button>
-    </div>
-  </div>
-"""
+    # Featured demo drives the hero slider + view-source. Guard against no demos.
+    demo = next((d for d in demos if d.get("featured")), (demos[0] if demos else None))
+    if demo:
+        slider = before_after_slider(demo["before_svg"], demo["after_svg"],
+                                     before_label="before", after_label="after")
+        hero_prompt = html.escape(demo.get("prompt", ""))
+        hero_src = render_tex_excerpt(demo.get("tex_excerpt", ""))
+    else:
+        slider, hero_prompt, hero_src = "", "", ""
 
     return (
         head("OpenTikZ — paper-ready TikZ figures from a copyable library", css_href,
@@ -497,24 +481,18 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
         + navbar("home")
         + f"""<main class="home">
   <section class="showcase">
-    <a class="hero-logo" href="index.html" aria-label="OpenTikZ home">Open<span class="tik">TikZ</span><span class="caret">┃</span></a>
-    <h1>Paper-ready figures &mdash; simple and fast.</h1>
-    <p class="show-lede">Copyable icons, editable templates, and one AI-editable <em>skill</em>.</p>
-    <div class="carousel hero-carousel" id="hero-carousel" tabindex="0" data-autoplay data-interval="5000" aria-roledescription="carousel" aria-label="Featured figures">
-      <button class="car-nav car-prev" type="button" aria-label="Previous figure">&larr;</button>
-      <div class="car-track">
-{hero_slides}      </div>
-      <button class="car-nav car-next" type="button" aria-label="Next figure">&rarr;</button>
-    </div>
-    <div class="car-dots hero-dots">{hero_dots}</div>
+    <a class="hero-logo" href="index.html" aria-label="OpenTikZ home">Open<span class="tik">TikZ</span><span class="caret">&#9475;</span></a>
+    <h1>Describe your figure. Get it, paper-ready.</h1>
+    <p class="show-lede">Your AI agent edits a real TikZ template &mdash; you never write TikZ yourself.</p>
+    <p class="hero-prompt"><span class="hero-prompt-label">you said</span><code>&ldquo;{hero_prompt}&rdquo;</code></p>
+{slider}
+    <details class="hero-src"><summary>view TikZ source</summary><pre class="magic-code">{hero_src}</pre></details>
     <div class="cta-row">
-      <a class="btn btn-primary" href="browse/">Browse the library →</a>
-      <a class="btn btn-ghost" href="#how">See how it's built</a>
+      <a class="btn btn-primary" href="skills/">Get started</a>
+      <a class="btn btn-ghost" href="browse/">Browse the library &rarr;</a>
     </div>
   </section>
-{lightbox}
 {why_tikz}
-{magic}
 {why_opentikz}
 {demos_section}
   <section class="roadmap">
@@ -1303,6 +1281,19 @@ body.lb-open{overflow:hidden}
            display:flex; align-items:center; justify-content:center; font:14px monospace;
            box-shadow:0 2px 8px rgba(0,0,0,.4); pointer-events:none}
 .ba-range{position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize}
+
+/* ---------- figure-first hero additions ---------- */
+.hero-prompt{display:inline-flex; align-items:center; gap:8px; margin:0 auto .9em;
+  background:rgba(255,255,255,.05); border:1px solid color-mix(in srgb,var(--otorange) 45%,transparent);
+  border-radius:30px; padding:9px 16px; font:.92rem "IBM Plex Mono",monospace; max-width:92%}
+.hero-prompt-label{font:600 .58rem "IBM Plex Mono",monospace; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--otorange)}
+.hero-prompt code{background:none; padding:0}
+.hero-src{margin:.9em auto 0; max-width:560px; text-align:left}
+.hero-src summary{font:.78rem "IBM Plex Mono",monospace; opacity:.6; cursor:pointer; list-style:none}
+.hero-src summary::before{content:"\25B8 "; }
+.hero-src[open] summary::before{content:"\25BE "; }
+.hero-src .magic-code{margin-top:.5em}
 """
 
 APP_JS = r"""(function () {
