@@ -1287,8 +1287,8 @@ body.lb-open{overflow:hidden}
 
 /* ---------- before/after compare slider ---------- */
 .ba{--pos:50%; position:relative; width:100%; max-width:560px; aspect-ratio:16/7;
-    margin:0 auto; border:1px solid var(--border); border-radius:12px; overflow:hidden;
-    background:var(--surface,#0d0f15); touch-action:none; cursor:ew-resize}
+    margin:0 auto; border:1px solid var(--line-strong); border-radius:12px; overflow:hidden;
+    background:var(--paper); touch-action:none; cursor:ew-resize}
 .ba-img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:10px}
 .ba-after-img{clip-path:inset(0 0 0 var(--pos))}
 .ba-before-img{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
@@ -1299,7 +1299,7 @@ body.lb-open{overflow:hidden}
 .ba-bar{position:absolute; top:0; bottom:0; left:var(--pos); width:2px;
         background:#fff; transform:translateX(-1px); pointer-events:none}
 .ba-handle{position:absolute; top:50%; left:var(--pos); width:30px; height:30px;
-           transform:translate(-50%,-50%); border-radius:50%; background:#fff; color:#11131a;
+           transform:translate(-50%,-50%); border-radius:50%; background:#fff; color:var(--ink);
            display:flex; align-items:center; justify-content:center; font:14px monospace;
            box-shadow:0 2px 8px rgba(0,0,0,.4); pointer-events:none}
 .ba-range{position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize}
