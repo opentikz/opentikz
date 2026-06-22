@@ -1391,8 +1391,6 @@ APP_JS = r"""(function () {
       slides.forEach(function (s, i) { s.classList.toggle('active', i === idx); });
       dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
     }
-    car._show = show;
-    Object.defineProperty(car, '_index', { get: function () { return idx; } });
     var prev = car.querySelector('.car-prev'), next = car.querySelector('.car-next');
     if (prev) prev.addEventListener('click', function () { show(idx - 1); });
     if (next) next.addEventListener('click', function () { show(idx + 1); });
@@ -1407,21 +1405,19 @@ APP_JS = r"""(function () {
     show(0);
 
     // ---- autoplay (opt-in via data-autoplay; honors reduced motion) ----
-    // Pauses on hover, keyboard focus, a hidden tab, or an external hold
-    // (the lightbox). Manual navigation restarts the countdown so the slide
-    // never advances the instant after you click.
+    // Pauses on hover, keyboard focus, or a hidden tab.
+    // Manual navigation restarts the countdown so the slide never advances
+    // the instant after you click.
     var prefersReduced = window.matchMedia
       && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (car.hasAttribute('data-autoplay') && slides.length > 1 && !prefersReduced) {
       var autoMs = parseInt(car.getAttribute('data-interval'), 10) || 5000;
-      var hover = false, focused = false, external = false, timer = null;
-      function autoActive() { return !(hover || focused || external || document.hidden); }
+      var hover = false, focused = false, timer = null;
+      function autoActive() { return !(hover || focused || document.hidden); }
       function start() {
         if (timer) clearInterval(timer);
         timer = setInterval(function () { if (autoActive()) show(idx + 1); }, autoMs);
       }
-      car._pauseAuto = function () { external = true; };
-      car._resumeAuto = function () { external = false; };
       car.addEventListener('mouseenter', function () { hover = true; });
       car.addEventListener('mouseleave', function () { hover = false; });
       car.addEventListener('focusin', function () { focused = true; });
