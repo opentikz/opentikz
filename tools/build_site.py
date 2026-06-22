@@ -330,37 +330,6 @@ def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
 """
 
 
-def before_after_slider(before_svg: str, after_svg: str, *,
-                        before_label: str = "before", after_label: str = "after",
-                        prefix: str = "") -> str:
-    """Draggable before/after compare slider. ``before_svg``/``after_svg`` are
-    filenames under demos/; ``prefix`` adjusts depth ('' on Home). Built on a
-    native range input (keyboard + no-JS fallback at 50%); app.js adds pointer
-    drag. The after image is revealed to the RIGHT of the bar."""
-    b, a = html.escape(before_svg), html.escape(after_svg)
-    bl, al = html.escape(before_label), html.escape(after_label)
-    return f"""    <div class="ba" data-ba style="--pos:50%">
-      <img class="ba-img ba-before-img" src="{prefix}demos/{b}" alt="{bl}" loading="lazy">
-      <img class="ba-img ba-after-img" src="{prefix}demos/{a}" alt="{al}" loading="lazy">
-      <span class="ba-tag ba-tag-l" aria-hidden="true">{bl}</span>
-      <span class="ba-tag ba-tag-r" aria-hidden="true">{al}</span>
-      <span class="ba-bar" aria-hidden="true"></span>
-      <span class="ba-handle" aria-hidden="true">&#8646;</span>
-      <input class="ba-range" type="range" min="0" max="100" value="50"
-             aria-label="Compare {bl} and {al}">
-    </div>
-"""
-
-
-def render_tex_excerpt(tex: str) -> str:
-    """Render a demo tex_excerpt: a leading '+' marks an AI-added line."""
-    out = ""
-    for raw in tex.split("\n"):
-        added = raw.startswith("+")
-        text = html.escape(raw[1:].rstrip() if added else raw.rstrip())
-        cls = " ml-add" if added else ""
-        out += f'<span class="ml-line{cls}">{text or "&nbsp;"}</span>\n'
-    return out
 
 
 
@@ -410,26 +379,17 @@ def why_opentikz_band() -> str:
 """
 
 
-def library_gallery(featured: list[dict], counts: dict) -> str:
-    """Compact thumbnail grid of featured figures + counts + Browse CTA."""
+def gallery_grid(items: list[dict]) -> str:
+    """Thumbnail grid of figures linking to their item pages (used in the hero)."""
     thumbs = ""
-    for it in featured:
+    for it in items:
         name = html.escape(it["name"])
         thumbs += f"""      <a class="lib-thumb" href="item/{html.escape(it['id'])}.html">
         <img src="previews/{html.escape(it['id'])}.svg" alt="{name}" loading="lazy">
         <span>{name}</span>
       </a>
 """
-    return f"""
-  <section class="library">
-    <h2>The library you&rsquo;re drawing from</h2>
-    <p class="library-sub">Editable templates and copyable icons &mdash; the figures your agent starts from.</p>
-    <div class="lib-grid">
-{thumbs}    </div>
-    <div class="cta-row"><a class="btn btn-primary" href="browse/">Browse the library &rarr;</a></div>
-    <p class="cta-sub">{counts.get('icon', 0)} icons &middot; {counts.get('template', 0)} templates &middot; {counts.get('example', 0)} examples &middot; content <code>CC0&nbsp;1.0</code></p>
-  </section>
-"""
+    return f'    <div class="lib-grid">\n{thumbs}    </div>\n'
 
 
 def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], css_href: str) -> str:
@@ -437,17 +397,10 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     demos_section = demos_carousel(demos, by_id)
     why_tikz = why_tikz_band()
     why_opentikz = why_opentikz_band()
-    library = library_gallery(featured, counts)
 
-    # Featured demo drives the hero slider + view-source. Guard against no demos.
-    demo = next((d for d in demos if d.get("featured")), (demos[0] if demos else None))
-    if demo:
-        slider = before_after_slider(demo["before_svg"], demo["after_svg"],
-                                     before_label="before", after_label="after")
-        hero_prompt = html.escape(demo.get("prompt", ""))
-        hero_src = render_tex_excerpt(demo.get("tex_excerpt", ""))
-    else:
-        slider, hero_prompt, hero_src = "", "", ""
+    templates = sorted((it for it in by_id.values() if it.get("type") == "template"),
+                       key=lambda it: it["name"].lower())
+    showcase_items = list(featured) + templates
 
     return (
         head("OpenTikZ — paper-ready TikZ figures from a copyable library", css_href,
@@ -460,17 +413,14 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     <a class="hero-logo" href="index.html" aria-label="OpenTikZ home">Open<span class="tik">TikZ</span><span class="caret">&#9475;</span></a>
     <h1>Describe your figure. Get it, paper-ready.</h1>
     <p class="show-lede">Your AI agent edits a real TikZ template &mdash; you never write TikZ yourself.</p>
-    <p class="hero-prompt"><span class="hero-prompt-label">you said</span><code>&ldquo;{hero_prompt}&rdquo;</code></p>
-{slider}
-    <details class="hero-src"><summary>view TikZ source</summary><pre class="magic-code">{hero_src}</pre></details>
-    <div class="cta-row">
+{gallery_grid(showcase_items)}    <div class="cta-row">
       <a class="btn btn-primary" href="skills/">Get started</a>
       <a class="btn btn-ghost" href="browse/">Browse the library &rarr;</a>
     </div>
+    <p class="cta-sub">{counts.get('icon',0)} icons &middot; {counts.get('template',0)} templates &middot; {counts.get('example',0)} examples &middot; content <code>CC0&nbsp;1.0</code></p>
   </section>
 {demos_section}
 {why_opentikz}
-{library}
 {why_tikz}
   <section class="roadmap">
     <h2>On the roadmap</h2>
@@ -1007,13 +957,6 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .wts-item span{font:.85rem/1.45 system-ui; opacity:.72}
 @media(max-width:680px){.wts-strip{grid-template-columns:1fr}}
 
-/* view-source code block (hero) — keep: used by .hero-src > pre.magic-code */
-.magic-code{margin:0; background:#0F1422; border-radius:10px; padding:14px 16px; overflow-x:auto;
-  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.8rem; line-height:1.6; color:#CBD5E1}
-.magic-code .ml-line{display:block; white-space:pre}
-.magic-code .ml-add{background:rgba(0,158,115,.14); color:#7EE0A8;
-  box-shadow:inset 3px 0 0 var(--otteal); padding-left:7px; margin-left:-10px}
-
 /* why-opentikz verdict cards */
 .why-ot{padding:42px 0; border-top:1px solid var(--line)}
 .why-ot h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .25em; letter-spacing:-.01em}
@@ -1155,40 +1098,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   .car-nav{width:34px; height:34px}
 }
 
-/* ---------- before/after compare slider ---------- */
-.ba{--pos:50%; position:relative; width:100%; max-width:560px; aspect-ratio:16/7;
-    margin:0 auto; border:1px solid var(--line-strong); border-radius:12px; overflow:hidden;
-    background:var(--paper); touch-action:none; cursor:ew-resize}
-.ba-img{position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:10px}
-.ba-after-img{clip-path:inset(0 0 0 var(--pos))}
-.ba-before-img{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
-.ba-tag{position:absolute; bottom:8px; font:600 .62rem/1 "IBM Plex Mono",monospace;
-        letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:5px;
-        background:rgba(0,0,0,.55); color:#fff}
-.ba-tag-l{left:8px} .ba-tag-r{right:8px; color:var(--otblue)}
-.ba-bar{position:absolute; top:0; bottom:0; left:var(--pos); width:2px;
-        background:#fff; transform:translateX(-1px); pointer-events:none}
-.ba-handle{position:absolute; top:50%; left:var(--pos); width:30px; height:30px;
-           transform:translate(-50%,-50%); border-radius:50%; background:#fff; color:var(--ink);
-           display:flex; align-items:center; justify-content:center; font:14px monospace;
-           box-shadow:0 2px 8px rgba(0,0,0,.4); pointer-events:none}
-.ba-range{position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize}
-
-/* ---------- figure-first hero additions ---------- */
-.hero-prompt{display:inline-flex; align-items:center; gap:8px; margin:0 auto .9em;
-  background:rgba(255,255,255,.05); border:1px solid color-mix(in srgb,var(--otorange) 45%,transparent);
-  border-radius:30px; padding:9px 16px; font:.92rem "IBM Plex Mono",monospace; max-width:92%}
-.hero-prompt-label{font:600 .58rem "IBM Plex Mono",monospace; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--otorange)}
-.hero-prompt code{background:none; padding:0}
-.hero-src{margin:.9em auto 0; max-width:560px; text-align:left}
-.hero-src summary{font:.78rem "IBM Plex Mono",monospace; opacity:.6; cursor:pointer; list-style:none}
-.hero-src summary::before{content:"\25B8 "; }
-.hero-src[open] summary::before{content:"\25BE "; }
-.hero-src .magic-code{margin-top:.5em}
-
-/* ---------- library gallery ---------- */
-.library{max-width:1000px; margin:0 auto; padding:46px 28px 8px; text-align:center}
+/* ---------- library gallery (hero) ---------- */
 .lib-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; margin:22px 0}
 .lib-thumb{display:flex; flex-direction:column; gap:6px; text-decoration:none; color:inherit;
   border:1px solid var(--line-strong); border-radius:10px; padding:12px; background:rgba(255,255,255,.02);
@@ -1431,23 +1341,6 @@ APP_JS = r"""(function () {
     }
   });
 
-  // before/after compare sliders
-  document.querySelectorAll('[data-ba]').forEach(function (ba) {
-    var range = ba.querySelector('.ba-range');
-    if (!range) return;
-    function apply() { ba.style.setProperty('--pos', range.value + '%'); }
-    range.addEventListener('input', apply);
-    apply();
-    var dragging = false;
-    function setFromX(clientX) {
-      var r = ba.getBoundingClientRect();
-      var p = Math.max(0, Math.min(100, (clientX - r.left) / r.width * 100));
-      range.value = p; apply();
-    }
-    ba.addEventListener('pointerdown', function (e) { dragging = true; setFromX(e.clientX); });
-    window.addEventListener('pointermove', function (e) { if (dragging) setFromX(e.clientX); });
-    window.addEventListener('pointerup', function () { dragging = false; });
-  });
 })();
 """
 
