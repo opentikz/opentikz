@@ -403,23 +403,14 @@ def magic_moment(demos: list[dict], by_id: dict, prefix: str = "") -> str:
 
 
 def why_tikz_band() -> str:
-    """Beat 1: why a TikZ figure (source, not an image) beats a raster screenshot."""
+    """Foundational reassurance, slimmed to a 3-point inline strip."""
     return r"""
-  <section class="why-tikz">
+  <section class="why-tikz-slim">
     <h2>Why TikZ</h2>
-    <div class="why-grid">
-      <article class="why-card">
-        <h3>Vector quality</h3>
-        <p>Crisp at any zoom, sharp in print and on screen &mdash; no pixelated screenshots, no re-exporting at 300&nbsp;dpi.</p>
-      </article>
-      <article class="why-card">
-        <h3>Native to your paper</h3>
-        <p>Same fonts, math (<code>$\mathbf{W}x$</code>), and <code>\ref</code>/<code>\cite</code> as the document. The figure looks part of the paper, not pasted on top.</p>
-      </article>
-      <article class="why-card">
-        <h3>Text, so it's diffable</h3>
-        <p>It's source, not a binary. Version it in git, tweak one number, recompile &mdash; review the change in a pull request.</p>
-      </article>
+    <div class="wts-strip">
+      <div class="wts-item"><b>Vector quality</b><span>Crisp at any zoom, sharp in print &mdash; no pixelated screenshots.</span></div>
+      <div class="wts-item"><b>Native to your paper</b><span>Same fonts, math, and <code>\ref</code>/<code>\cite</code> as the document.</span></div>
+      <div class="wts-item"><b>Text, so it's diffable</b><span>It's source &mdash; version it in git, tweak one number, recompile.</span></div>
     </div>
   </section>
 """
@@ -1105,14 +1096,13 @@ body.lb-open{overflow:hidden}
   .lb-backdrop,.lb-panel,.hero-slide.active{animation:none}
 }
 
-/* why-tikz band */
-.why-tikz{padding:42px 0; border-top:1px solid var(--line)}
-.why-tikz h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 18px; letter-spacing:-.01em}
-.why-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px}
-.why-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 20px; box-shadow:var(--shadow)}
-.why-card h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.1rem; margin:0 0 .35em}
-.why-card p{margin:0; color:#4a473f; font-size:.92rem}
-.why-card code{font-size:.82em}
+/* ---------- why-tikz (slim) ---------- */
+.why-tikz-slim{max-width:980px; margin:0 auto; padding:40px 28px; text-align:center}
+.wts-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:18px; text-align:left}
+.wts-item{display:flex; flex-direction:column; gap:4px}
+.wts-item b{font:600 .95rem system-ui; color:var(--otblue)}
+.wts-item span{font:.85rem/1.45 system-ui; opacity:.72}
+@media(max-width:680px){.wts-strip{grid-template-columns:1fr}}
 
 /* magic moment (prompt -> editable TikZ -> figure) */
 .magic .magic-sub{color:var(--muted); margin:0 0 20px; font-size:.98rem}
@@ -1153,7 +1143,7 @@ body.lb-open{overflow:hidden}
 
 /* stack the two-column sections on narrow screens */
 @media (max-width:720px){
-  .why-grid,.magic-body,.cmp-cards{grid-template-columns:1fr}
+  .magic-body,.cmp-cards{grid-template-columns:1fr}
 }
 .cta-band{text-align:center; border-bottom:none}
 .cta-band h2{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
