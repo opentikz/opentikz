@@ -1036,7 +1036,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .hero-slide{display:none}
 .hero-slide.active{display:block; animation:fade .25s both}
 .hero-fig{margin:0; display:flex; flex-direction:column; align-items:center; gap:14px}
-.hero-fig img{max-width:100%; max-height:320px; object-fit:contain}
+.hero-fig img{width:100%; height:300px; object-fit:contain}
 .hero-cap{display:flex; align-items:center; gap:10px; font:.95rem "IBM Plex Sans",sans-serif}
 .hero-cap a{color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line-strong)}
 .hero-cap a:hover{color:var(--otblue); border-color:var(--otblue)}
