@@ -1010,7 +1010,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .demo-fig{margin:0; border:1px solid var(--line); border-radius:12px; padding:18px; background:
     linear-gradient(rgba(0,0,0,.028) 1px,transparent 1px),
     linear-gradient(90deg,rgba(0,0,0,.028) 1px,transparent 1px) #fcfcfa; background-size:18px 18px}
-.demo-fig img{display:block; width:100%; max-height:220px; object-fit:contain; margin:0 auto}
+.demo-fig img{display:block; width:100%; height:200px; object-fit:contain; margin:0 auto}
 .demo-fig figcaption{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted);
   margin-top:8px; text-transform:uppercase; letter-spacing:.06em}
 .demo-prompt{position:relative; max-width:200px; margin:0 auto}
@@ -1021,7 +1021,8 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .demo-prompt::before,.demo-prompt::after{content:"→"; position:absolute; top:50%;
   transform:translateY(-50%); color:var(--otorange); font-size:1.1rem}
 .demo-prompt::before{left:-15px} .demo-prompt::after{right:-15px}
-.demo-changed{color:var(--muted); font-size:.85rem; margin:16px auto 0; max-width:62ch}
+.demo-changed{color:var(--muted); font-size:.85rem; margin:16px auto 0; max-width:62ch;
+  min-height:2.8em}
 .car-nav{flex:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.05rem;
   background:#fff; border:1.5px solid var(--line-strong); color:var(--ink); transition:.15s}
 .car-nav:hover{border-color:var(--otblue); color:var(--otblue)}
