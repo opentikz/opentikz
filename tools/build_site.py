@@ -333,6 +333,31 @@ def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
 
 
 
+def hero_carousel(items: list[dict]) -> str:
+    """Auto-rotating showcase of large figures in the hero (one figure per slide).
+    Reuses the generic .carousel machinery; slides/dots use .hero-slide/.hero-dot."""
+    slides, dots = "", ""
+    for i, it in enumerate(items):
+        name = html.escape(it["name"])
+        active = " active" if i == 0 else ""
+        slides += f"""        <div class="hero-slide{active}" data-slide="{i}">
+          <figure class="hero-fig">
+            <img src="previews/{html.escape(it['id'])}.svg" alt="{name}" loading="lazy">
+            <figcaption class="hero-cap">{badge(it['type'])}<a href="item/{html.escape(it['id'])}.html">{name}</a></figcaption>
+          </figure>
+        </div>
+"""
+        dots += f'<button class="hero-dot{active}" data-dot="{i}" aria-label="Show {name}"></button>'
+    return f"""    <div class="carousel hero-carousel" id="hero-carousel" tabindex="0" data-autoplay data-interval="5000" aria-roledescription="carousel" aria-label="Featured figures">
+      <button class="car-nav car-prev" aria-label="Previous">&larr;</button>
+      <div class="car-track">
+{slides}      </div>
+      <button class="car-nav car-next" aria-label="Next">&rarr;</button>
+    </div>
+    <div class="car-dots">{dots}</div>
+"""
+
+
 def why_tikz_band() -> str:
     """Foundational reassurance, slimmed to a 3-point inline strip."""
     return r"""
@@ -379,19 +404,6 @@ def why_opentikz_band() -> str:
 """
 
 
-def gallery_grid(items: list[dict]) -> str:
-    """Thumbnail grid of figures linking to their item pages (used in the hero)."""
-    thumbs = ""
-    for it in items:
-        name = html.escape(it["name"])
-        thumbs += f"""      <a class="lib-thumb" href="item/{html.escape(it['id'])}.html">
-        <img src="previews/{html.escape(it['id'])}.svg" alt="{name}" loading="lazy">
-        <span>{name}</span>
-      </a>
-"""
-    return f'    <div class="lib-grid">\n{thumbs}    </div>\n'
-
-
 def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], css_href: str) -> str:
     """Marketing Home — no content grid, no search box (per spec)."""
     demos_section = demos_carousel(demos, by_id)
@@ -413,7 +425,7 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     <a class="hero-logo" href="index.html" aria-label="OpenTikZ home">Open<span class="tik">TikZ</span><span class="caret">&#9475;</span></a>
     <h1>Describe your figure. Get it, paper-ready.</h1>
     <p class="show-lede">Your AI agent edits a real TikZ template &mdash; you never write TikZ yourself.</p>
-{gallery_grid(showcase_items)}    <div class="cta-row">
+{hero_carousel(showcase_items)}    <div class="cta-row">
       <a class="btn btn-primary" href="skills/">Get started</a>
       <a class="btn btn-ghost" href="browse/">Browse the library &rarr;</a>
     </div>
@@ -1019,6 +1031,20 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .demo-dot:hover{border-color:var(--otblue)}
 .demo-dot.active{background:var(--ink); color:var(--paper); border-color:var(--ink)}
 
+/* hero figure carousel */
+.hero-carousel{margin:26px auto 0; max-width:760px}
+.hero-slide{display:none}
+.hero-slide.active{display:block; animation:fade .25s both}
+.hero-fig{margin:0; display:flex; flex-direction:column; align-items:center; gap:14px}
+.hero-fig img{max-width:100%; max-height:320px; object-fit:contain}
+.hero-cap{display:flex; align-items:center; gap:10px; font:.95rem "IBM Plex Sans",sans-serif}
+.hero-cap a{color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line-strong)}
+.hero-cap a:hover{color:var(--otblue); border-color:var(--otblue)}
+.hero-dot{width:9px; height:9px; padding:0; border-radius:50%; cursor:pointer;
+  background:transparent; border:1.5px solid var(--line-strong)}
+.hero-dot:hover{border-color:var(--otblue)}
+.hero-dot.active{background:var(--ink); border-color:var(--ink)}
+
 /* roadmap teaser */
 .roadmap{padding:42px 0; border-top:1px solid var(--line)}
 .roadmap h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.4rem; margin:0 0 16px;
@@ -1098,14 +1124,6 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   .car-nav{width:34px; height:34px}
 }
 
-/* ---------- library gallery (hero) ---------- */
-.lib-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; margin:22px 0}
-.lib-thumb{display:flex; flex-direction:column; gap:6px; text-decoration:none; color:inherit;
-  border:1px solid var(--line-strong); border-radius:10px; padding:12px; background:rgba(255,255,255,.02);
-  transition:border-color .15s, transform .15s}
-.lib-thumb:hover{border-color:var(--otblue); transform:translateY(-2px)}
-.lib-thumb img{width:100%; height:90px; object-fit:contain}
-.lib-thumb span{font:.78rem system-ui; opacity:.8}
 """
 
 APP_JS = r"""(function () {
@@ -1286,14 +1304,14 @@ APP_JS = r"""(function () {
   var carousels = Array.prototype.slice.call(document.querySelectorAll('.carousel'));
   carousels.forEach(function (car) {
     var slides = Array.prototype.slice.call(
-      car.querySelectorAll('.demo-slide'));
+      car.querySelectorAll('.demo-slide, .hero-slide'));
     if (!slides.length) return;
     // dots live in a sibling .car-dots (or any node with [data-dots-for=id])
     var dotWrap = car.parentNode
       ? car.parentNode.querySelector('.car-dots')
       : null;
     var dots = dotWrap
-      ? Array.prototype.slice.call(dotWrap.querySelectorAll('.demo-dot'))
+      ? Array.prototype.slice.call(dotWrap.querySelectorAll('.demo-dot, .hero-dot'))
       : [];
     var idx = 0;
     function show(n) {
