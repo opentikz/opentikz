@@ -168,5 +168,35 @@ click-to-enlarge; otherwise the lightbox is removed from Home.
 ## Open questions
 
 1. ~~Primary CTA destination~~ — **Decided:** primary "Get started" → `skills/`.
-2. Keep the lightbox (wired to the library gallery) or drop it entirely? Default:
-   wire it to the gallery if cheap; otherwise drop.
+2. ~~Keep the lightbox~~ — **Decided:** dropped entirely; gallery thumbs link to item pages.
+
+## Revision 2026-06-22 — hero is the figure gallery, slider removed
+
+After previewing the built page, the user reversed the hero direction:
+
+- **Hero = the figure gallery** (the "library you're drawing from"), not the
+  before/after compare slider. The AI-workflow **headline is kept** ("Describe
+  your figure. Get it, paper-ready." + lede); the gallery sits beneath it with the
+  CTAs (primary "Get started" → `skills/`, ghost "Browse the library →" → `browse/`)
+  and the counts line.
+- **The before/after compare slider is removed entirely** — helper, CSS (`.ba*`),
+  and JS (`[data-ba]`) deleted. The "you said" prompt chip and the "view TikZ
+  source" `<details>` are removed too, so `render_tex_excerpt` and the
+  `.hero-prompt*`/`.hero-src*`/`.magic-code`/`.ml-*` CSS become dead and are
+  deleted. The AI-edit story is now carried by the headline + the "See it on real
+  templates" before/after carousel below (unchanged).
+- **The standalone "library" section is folded into the hero.**
+- **Hero showcase is an auto-rotating carousel of large figures** (one figure per
+  slide), not a thumbnail grid — per the user's follow-up ("作为轮播的展示区域，不要
+  小图展示"). Implemented by reinstating a `hero_carousel(items)` helper that reuses
+  the generic `.carousel` machinery; the carousel JS re-recognizes `.hero-slide`/
+  `.hero-dot` (restoring what Task 5 narrowed). The earlier `gallery_grid` helper
+  and `.lib-grid`/`.lib-thumb` CSS are removed.
+- **Hero showcase feed:** the 3 featured examples **plus the 8 templates** (flagship
+  examples first in the rotation). Browse covers the rest.
+- **`encdec-before.svg` canvas edit reverted** — it only existed to align the
+  slider wipe; the demos carousel shows the pair side-by-side at natural size.
+
+**Revised page order:** hero (gallery) → See it on real templates → Why not just
+ask ChatGPT? → Why TikZ (slim) → roadmap → final CTA. (6 sections; the separate
+library section is gone.)
