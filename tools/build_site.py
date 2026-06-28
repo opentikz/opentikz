@@ -1201,8 +1201,8 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .howto-term-bar span:nth-child(1){background:var(--otorange)}
 .howto-term-bar span:nth-child(2){background:var(--otblue)}
 .howto-term-bar span:nth-child(3){background:var(--otteal)}
-.howto-term-cmd{display:block; color:var(--otteal); font-size:.78rem; margin-bottom:7px}
-.howto-term-text{display:block; color:var(--paper); font-size:.86rem; line-height:1.55; white-space:normal; overflow-wrap:anywhere}
+.howto-term-cmd{display:block; background:none; border:none; padding:0; color:var(--otteal); font-size:.78rem; margin-bottom:7px}
+.howto-term-text{display:block; background:none; border:none; padding:0; color:var(--paper); font-size:.86rem; line-height:1.55; white-space:normal; overflow-wrap:anywhere}
 .howto-ph{color:var(--muted); font-family:"IBM Plex Mono",monospace; font-size:.8rem;
   border-style:dashed}
 .howto-arrow{display:grid; gap:6px; justify-items:center; color:var(--muted)}
