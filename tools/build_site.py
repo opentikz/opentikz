@@ -330,6 +330,75 @@ def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
 """
 
 
+def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
+    """Landing 'How to use' carousel; one slide per usage scenario. Empty -> ''.
+    Reuses the .demo-slide/.demo-dot classes so app.js drives it unchanged.
+    Two layouts: 'steps' (a 1-2-3 workflow) and 'inout' (input -> output).
+    ``prefix`` adjusts the howto/ asset path for surface depth ('' on Home)."""
+    if not scenarios:
+        return ""
+    slides, dots = "", ""
+    for i, s in enumerate(scenarios):
+        label = html.escape(s.get("tab_label", ""))
+        active = " active" if i == 0 else ""
+        caption = (f'<p class="howto-cap">{html.escape(s["caption"])}</p>'
+                   if s.get("caption") else "")
+        if s.get("layout") == "steps":
+            cells = ""
+            for n, st in enumerate(s.get("steps", []), start=1):
+                if st.get("img"):
+                    vis = (f'<img src="{prefix}howto/{html.escape(st["img"])}" '
+                           f'alt="" loading="lazy">')
+                else:
+                    vis = f'<code>{html.escape(st.get("code", ""))}</code>'
+                cells += (f'<div class="howto-step"><span class="howto-step-n">{n}</span>'
+                          f'<div class="howto-step-vis">{vis}</div>'
+                          f'<p class="howto-step-cap">{html.escape(st.get("text", ""))}</p></div>')
+            body = f'<div class="howto-steps">{cells}</div>'
+        else:  # inout
+            if s.get("placeholder"):
+                in_cell = '<div class="howto-cell howto-ph">sample coming</div>'
+                out_cell = '<div class="howto-cell howto-ph">preview coming</div>'
+            elif s.get("input_img"):
+                in_cell = (f'<figure class="howto-cell"><img src="{prefix}howto/'
+                           f'{html.escape(s["input_img"])}" alt="input" loading="lazy">'
+                           f'<figcaption>input</figcaption></figure>')
+                out_cell = (f'<figure class="howto-cell"><img src="{prefix}howto/'
+                            f'{html.escape(s["output_img"])}" alt="output" loading="lazy">'
+                            f'<figcaption>editable TikZ</figcaption></figure>')
+            else:
+                in_cell = (f'<div class="howto-cell howto-intext">'
+                           f'<code>&ldquo;{html.escape(s.get("input_text", ""))}&rdquo;</code>'
+                           f'<figcaption>describe</figcaption></div>')
+                out_cell = (f'<figure class="howto-cell"><img src="{prefix}howto/'
+                            f'{html.escape(s["output_img"])}" alt="output" loading="lazy">'
+                            f'<figcaption>editable TikZ</figcaption></figure>')
+            prompt_lbl = (f'<span class="howto-prompt">&ldquo;{html.escape(s["prompt"])}&rdquo;</span>'
+                          if s.get("prompt") else "")
+            body = (f'<div class="howto-flow">{in_cell}'
+                    f'<div class="howto-arrow">{prompt_lbl}<span>&rarr;</span></div>'
+                    f'{out_cell}</div>')
+        slides += f"""      <div class="demo-slide{active}" data-slide="{i}">
+        <div class="howto-head"><span class="howto-label">{label}</span></div>
+        {body}
+        {caption}
+      </div>
+"""
+        dots += (f'<button class="demo-dot{active}" data-dot="{i}" aria-label="{label}">'
+                 f'<span>{label}</span></button>')
+    return f"""
+  <section class="howto">
+    <h2>How to use it</h2>
+    <p class="skills-sub">Four ways in &mdash; from copying one icon to describing a whole figure.</p>
+    <div class="carousel howto-carousel" id="howto-carousel" tabindex="0" data-autoplay data-interval="5000" aria-roledescription="carousel" aria-label="How to use OpenTikZ">
+      <button class="car-nav car-prev" aria-label="Previous">&larr;</button>
+      <div class="car-track">
+{slides}      </div>
+      <button class="car-nav car-next" aria-label="Next">&rarr;</button>
+    </div>
+    <div class="car-dots">{dots}</div>
+  </section>
+"""
 
 
 
@@ -404,9 +473,10 @@ def why_opentikz_band() -> str:
 """
 
 
-def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], css_href: str) -> str:
+def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], howto: list[dict], css_href: str) -> str:
     """Marketing Home — no content grid, no search box (per spec)."""
     demos_section = demos_carousel(demos, by_id)
+    howto_section = howto_carousel(howto)
     why_tikz = why_tikz_band()
     why_opentikz = why_opentikz_band()
 
@@ -430,6 +500,7 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
       <a class="btn btn-ghost" href="browse/">Browse the library &rarr;</a>
     </div>
   </section>
+{howto_section}
 {demos_section}
 {why_opentikz}
 {why_tikz}
@@ -727,6 +798,21 @@ def build(root: Path) -> int:
                 if src.exists():
                     shutil.copyfile(src, site / "demos" / g[key])
 
+    # Landing 'How to use' scenarios (content-driven). Copy referenced assets
+    # into site/howto/; the section auto-hides if the manifest is absent/empty.
+    howto: list[dict] = []
+    howto_json = root / "skills-demos" / "landing-howto.json"
+    if howto_json.exists():
+        howto = json.loads(howto_json.read_text(encoding="utf-8"))
+        (site / "howto").mkdir(exist_ok=True)
+        for s in howto:
+            names = [st.get("img") for st in s.get("steps", [])]
+            names += [s.get("input_img"), s.get("output_img")]
+            for name in filter(None, names):
+                src = root / "skills-demos" / name
+                if src.exists():
+                    shutil.copyfile(src, site / "howto" / name)
+
     # Home surface (marketing). The hero showcase is examples-only: a flagship
     # paper-grade figure, never a bare icon/template. Prefer the example items
     # flagged featured (flagship first); fall back to all examples so the page
@@ -740,7 +826,7 @@ def build(root: Path) -> int:
     if not featured:
         featured = [it for it in catalog if it["type"] == "example"]
     (site / "index.html").write_text(
-        home_page(featured, by_id, counts, demos, "assets/style.css"), encoding="utf-8")
+        home_page(featured, by_id, counts, demos, howto, "assets/style.css"), encoding="utf-8")
 
     # Skills surface.
     (site / "skills" / "index.html").write_text(

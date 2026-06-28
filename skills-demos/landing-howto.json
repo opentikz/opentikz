@@ -1,0 +1,38 @@
+[
+  {
+    "id": "use-icons",
+    "tab_label": "Use icons",
+    "layout": "steps",
+    "steps": [
+      {"img": "howto-icon.svg", "text": "Browse to find an icon"},
+      {"code": ".tex · SVG · PNG", "text": "Copy the .tex (or download SVG/PNG)"},
+      {"img": "howto-icon.svg", "text": "\\input it into your figure"}
+    ],
+    "caption": "Grab a single icon — no AI needed."
+  },
+  {
+    "id": "edit-template",
+    "tab_label": "Edit a template",
+    "layout": "inout",
+    "input_img": "encdec-before.svg",
+    "prompt": "add a cross-attention block and make it blue",
+    "output_img": "encdec-xattn.svg",
+    "caption": "Tell the agent the change; it edits the template and verifies it compiles."
+  },
+  {
+    "id": "png-to-tikz",
+    "tab_label": "PNG → TikZ",
+    "layout": "inout",
+    "placeholder": true,
+    "prompt": "turn this figure into editable TikZ",
+    "caption": "Hand the agent a figure image; get editable TikZ back. (sample coming)"
+  },
+  {
+    "id": "describe-to-tikz",
+    "tab_label": "Describe → TikZ",
+    "layout": "inout",
+    "input_text": "draw a training pipeline: dataset → model → loss → optimizer",
+    "output_img": "howto-describe.svg",
+    "caption": "Describe a figure in words; the agent drafts it from the library."
+  }
+]
