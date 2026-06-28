@@ -375,7 +375,7 @@ def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
                            f'<code class="howto-term-cmd">/opentikz:using-opentikz</code>'
                            f'<code class="howto-term-text">&ldquo;{html.escape(s.get("input_text", ""))}&rdquo;</code>'
                            f'</div>'
-                           f'<figcaption>describe</figcaption></figure>')
+                           f'<figcaption>prompt</figcaption></figure>')
                 out_cell = (f'<figure class="howto-cell"><img src="{prefix}howto/'
                             f'{html.escape(s["output_img"])}" alt="output" loading="lazy">'
                             f'<figcaption>editable TikZ</figcaption></figure>')
@@ -1195,14 +1195,14 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .howto-codes code{display:block; padding:3px 10px; border:1px solid var(--line-strong); border-radius:5px}
 /* describe cell as a mini terminal showing the skill command */
 .howto-term{border:none}
-.howto-term-box{width:100%; max-width:30ch; background:var(--ink); border-radius:8px; padding:11px 13px; text-align:left; font-family:"IBM Plex Mono",monospace}
+.howto-term-box{width:100%; max-width:30ch; background:var(--paper); border:1px solid var(--line-strong); box-shadow:0 1px 0 var(--line-strong); border-radius:8px; padding:11px 13px; text-align:left; font-family:"IBM Plex Mono",monospace}
 .howto-term-bar{display:flex; gap:6px; margin-bottom:9px}
 .howto-term-bar span{width:9px; height:9px; border-radius:999px}
 .howto-term-bar span:nth-child(1){background:var(--otorange)}
 .howto-term-bar span:nth-child(2){background:var(--otblue)}
 .howto-term-bar span:nth-child(3){background:var(--otteal)}
 .howto-term-cmd{display:block; background:none; border:none; padding:0; color:var(--otteal); font-size:.78rem; margin-bottom:7px}
-.howto-term-text{display:block; background:none; border:none; padding:0; color:var(--paper); font-size:.86rem; line-height:1.55; white-space:normal; overflow-wrap:anywhere}
+.howto-term-text{display:block; background:none; border:none; padding:0; color:var(--ink); font-size:.86rem; line-height:1.55; white-space:normal; overflow-wrap:anywhere}
 .howto-ph{color:var(--muted); font-family:"IBM Plex Mono",monospace; font-size:.8rem;
   border-style:dashed}
 .howto-arrow{display:grid; gap:6px; justify-items:center; color:var(--muted)}
