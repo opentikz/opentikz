@@ -139,6 +139,11 @@ opentikz/
 - After editing a `.tex`, regenerate its `.svg` preview (`render_preview.py`);
   CI rejects a PR whose source changed without a regenerated preview.
 - Prefer many small, well-named files over large monolithic ones.
+- When you change any content shipped inside the plugin (the `using-opentikz`
+  skill, the bundled library, or `.claude-plugin/`), **bump `version` in
+  `.claude-plugin/plugin.json`**. Claude Code will not refresh an installed plugin
+  whose version is unchanged (`plugin update` reports "already at latest"); without
+  a bump, existing installs keep the stale files.
 
 ## Current status
 
