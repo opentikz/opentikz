@@ -429,8 +429,6 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
       <a class="btn btn-primary" href="skills/">Get started</a>
       <a class="btn btn-ghost" href="browse/">Browse the library &rarr;</a>
     </div>
-    <p class="cta-sub">{counts.get('icon',0)} icons &middot; {counts.get('template',0)} templates &middot; {counts.get('example',0)} examples &middot; content <code>CC0&nbsp;1.0</code></p>
-    <p class="show-alt">Prefer no AI? <a href="browse/">Browse the library</a> and copy any figure&rsquo;s <code>.tex</code> by hand.</p>
   </section>
 {demos_section}
 {why_opentikz}
@@ -456,7 +454,6 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
   <section class="cta-band">
     <h2>Build your next figure faster.</h2>
     <a class="btn btn-primary" href="browse/">Browse the library →</a>
-    <p class="cta-sub">{counts.get('icon', 0)} icons · {counts.get('template', 0)} templates · {counts.get('example', 0)} examples · content <code>CC0&nbsp;1.0</code></p>
   </section>
 </main>
 """
@@ -1050,7 +1047,6 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .cta-band h2{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
   font-size:clamp(1.6rem,3.4vw,2.4rem); margin:0 0 .6em}
 .cta-sub{color:var(--muted); font-size:.85rem; margin:1.1em 0 0; font-family:"IBM Plex Mono",monospace}
-.show-alt{color:var(--muted); font-size:.82rem; margin:.8em 0 0}
 
 /* skills-in-action carousel */
 .skills-demo{padding:42px 0; border-top:1px solid var(--line); text-align:center}
