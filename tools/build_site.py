@@ -379,21 +379,19 @@ def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
                     f'<div class="howto-arrow">{prompt_lbl}<span>&rarr;</span></div>'
                     f'{out_cell}</div>')
         slides += f"""      <div class="demo-slide{active}" data-slide="{i}">
-        {body}
         {caption}
+        {body}
       </div>
 """
         dots += (f'<button class="demo-dot{active}" data-dot="{i}" aria-label="{label}">'
                  f'<span>{label}</span></button>')
     return f"""
   <section class="howto">
-    <h2>Four ways to a paper-ready figure</h2>
+    <h2>4 ways to use OpenTikZ</h2>
     <div class="car-dots howto-tabs">{dots}</div>
     <div class="carousel howto-carousel" id="howto-carousel" tabindex="0" data-autoplay data-interval="5000" aria-roledescription="carousel" aria-label="How to use OpenTikZ">
-      <button class="car-nav car-prev" aria-label="Previous">&larr;</button>
       <div class="car-track">
 {slides}      </div>
-      <button class="car-nav car-next" aria-label="Next">&rarr;</button>
     </div>
   </section>
 """
@@ -1169,7 +1167,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .demo-dot.active{background:var(--ink); color:var(--paper); border-color:var(--ink)}
 
 /* how-to-use section */
-.howto{margin:30px 0 0; text-align:center}
+.howto{margin:36px 0 0; padding-top:36px; border-top:1px solid var(--line); text-align:center}
 .howto h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .2em; letter-spacing:-.01em}
 .howto-tabs{margin:6px 0 18px}
 .howto-carousel .demo-slide{min-height:420px}            /* fixed height: no section jump */
@@ -1179,20 +1177,20 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .howto-step-n{display:inline-grid; place-items:center; width:24px; height:24px; border-radius:999px;
   background:var(--otblue); color:#fff; font:600 .8rem/1 "IBM Plex Mono",monospace}
 .howto-step-vis{min-height:104px; display:grid; place-items:center; margin:10px 0}
-.howto-step-vis img{max-height:104px; width:auto}
+.howto-step-vis img{max-height:104px; max-width:100%; width:auto; height:auto}
 .howto-step-cap{margin:0; color:var(--muted); font-size:.85rem}
 /* inout layout */
 .howto-flow{display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:center}
 .howto-cell{margin:0; border:1px solid var(--line); border-radius:8px; padding:12px;
   display:grid; place-items:center; min-height:280px}
-.howto-cell img{max-height:260px; width:auto}
+.howto-cell img{max-height:260px; max-width:100%; width:auto; height:auto}
 .howto-cell figcaption{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted); margin-top:6px}
 .howto-intext code{display:block; max-width:26ch; font-size:.92rem; line-height:1.5; color:var(--ink); white-space:normal; overflow-wrap:anywhere; text-align:center}
 .howto-ph{color:var(--muted); font-family:"IBM Plex Mono",monospace; font-size:.8rem;
   border-style:dashed}
 .howto-arrow{display:grid; gap:6px; justify-items:center; color:var(--muted)}
 .howto-prompt{font-family:"IBM Plex Mono",monospace; font-size:.72rem; color:var(--otblue); max-width:18ch}
-.howto-cap{margin:14px auto 0; max-width:60ch; color:var(--muted); font-size:.9rem}
+.howto-cap{margin:0 auto 18px; max-width:60ch; color:var(--muted); font-size:.9rem}
 
 /* hero figure carousel */
 .hero-carousel{margin:26px auto 0; max-width:760px}
