@@ -14,6 +14,29 @@ There is **one** skill (this file). Per-template knowledge lives in each
 template's `edit_contract` (inside its `meta.json`), which you read at edit time.
 Do not look for per-template `skill.md` files; they no longer exist.
 
+## 0. First: which mode are you in, and where is the library?
+
+**Pick the mode:**
+- **Mode A — produce a figure for the user's own project** (the default). The
+  OpenTikZ library is read-only and lives elsewhere; the user is working in their
+  own paper/LaTeX project. You will *copy* a figure out of the library and edit the
+  copy in their project. Never modify the library.
+- **Mode B — contribute back to the OpenTikZ repo itself.** The user is editing the
+  library: their working directory *is* the repo. Edit in place and run the repo
+  tooling (see §6).
+
+**Locate the library root (`OTROOT`) for Mode A:**
+1. If the environment variable `${CLAUDE_PLUGIN_ROOT}` is set, you were installed as
+   a Claude Code plugin: `OTROOT = ${CLAUDE_PLUGIN_ROOT}`.
+2. Otherwise (cloned repo / another agent), `OTROOT` is the OpenTikZ repo root — the
+   directory two levels above this `SKILL.md` (`skills/using-opentikz/SKILL.md` →
+   `../../`).
+3. If you can only read the repo remotely (e.g. over GitHub, no local clone), treat
+   the GitHub repo as `OTROOT` and fetch raw file contents on demand.
+
+Confirm `OTROOT` once (e.g. list `OTROOT`/catalog.json) before relying on it. The
+**output target is always the user's current working directory**, never `OTROOT`.
+
 ## 1. Communicate precisely (do this first, throughout)
 
 Your job is to produce the figure the user actually wants, not a plausible guess.
@@ -55,18 +78,21 @@ say the word to change any."*
    clearly fits, name it and proceed.
 3. **Select & confirm.** Confirm the chosen base plus the material parameters
    (e.g. layer counts, labels, which part is highlighted).
-4. **Edit.** Open the chosen item's `.tex`. For a **template**, read its
-   `edit_contract` from `catalog.json` (or its `meta.json`) and:
-   - edit only the contract's `parameters` and use its `operations` as the recipe;
-   - keep every `invariant`; preserve the `node_naming` scheme;
-   - colors via palette names only (see `reference/color-palettes/`).
-   For an **icon** or **example** (no contract), edit the `.tex` directly under the
-   same hard rules.
-5. **Verify.** Compile the edited standalone `.tex` with the user's LaTeX
-   (`latexmk -pdf <file>.tex`, or `pdflatex`). If it fails, fix it before
-   returning — never hand back a figure you didn't compile. (Regenerating `.svg`
-   previews and `catalog.json` is a *contributor* task, not part of producing a
-   figure for a user — skip it unless the user is contributing back to the repo.)
+4. **Copy, then edit (Mode A) / edit in place (Mode B).**
+   - **Mode A:** copy the chosen item's `.tex` from `OTROOT` into the user's project
+     (a sensible path like `figures/<name>.tex`); tell the user where you put it.
+     Edit *that copy*, never the file under `OTROOT`. If the figure is already in
+     the user's project, edit it there. For a **template**, read its `edit_contract`
+     from `OTROOT`'s `catalog.json` (or the item's `meta.json`) and: edit only the
+     contract's `parameters`; follow its `operations` as the recipe; keep every
+     `invariant`; preserve the `node_naming` scheme; colours via palette names only.
+     For an **icon/example** (no contract), edit under the same hard rules.
+   - **Mode B:** edit the item in place inside the repo, under the same rules.
+5. **Verify by compiling — in the user's project (Mode A).** Run the user's LaTeX on
+   the copied/edited file (`latexmk -pdf <file>.tex`, or `pdflatex`). Fix failures
+   before returning — never hand back a figure you didn't compile. (Regenerating
+   `.svg` previews and `catalog.json` is a *Mode B / contributor* task — skip it
+   when producing a figure for a user.)
 6. **Deliver.** Return the edited `.tex` and the one-line assumptions summary.
 
 ## 3. Hard rules (never violate)
@@ -115,7 +141,7 @@ reduce content/spacing (the template's spacing parameters) and resize the rest.
 - `reference/layout/` — positioning, alignment, and spacing patterns.
 - `docs/DESIGN_GUIDE.md` — global conventions (line width, node naming, metadata).
 
-## 6. Contributing back (only when the user is editing the repo itself)
+## 6. Mode B procedure — contributing back (editing the repo itself)
 
 If the user is adding/changing library content (not just producing a figure for
 their paper), the repo tooling applies:
