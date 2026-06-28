@@ -72,7 +72,7 @@ say the word to change any."*
 
 1. **Understand & classify.** Restate the goal in one sentence; classify
    ambiguity per §1; ask the (few) material questions, batched.
-2. **Discover.** Read `catalog.json` at the repo root. Match the request to
+2. **Discover.** Read `catalog.json` at `${OTROOT}` (see §0). Match the request to
    icons / templates / examples by `name`, `tags`, `domain`. If several fit,
    present the candidates (with their `id`s) and let the user choose; if one
    clearly fits, name it and proceed.

@@ -1153,7 +1153,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .skills-install{margin:34px 0 0; max-width:78ch}
 .install-cards,.scenario-cards{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); margin-top:1em}
 .install-card,.scenario-card{border:1px solid var(--line); border-radius:8px; padding:16px}
-.install-rec{border-color:var(--accent,#3b6ea5)}
+.install-rec{border-color:var(--otblue)}
 .install-tag{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.04em}
 .install-card h3,.scenario-card h3{font-family:"Fraunces",serif; font-size:1.05rem; margin:.4em 0}
 .scenario-card h3 span{font-family:"IBM Plex Mono",monospace; font-size:.65rem; color:var(--muted); margin-left:.4em}
