@@ -6,7 +6,7 @@
     "steps": [
       {"img": "howto-icon.svg", "text": "Browse to find an icon"},
       {"code": ".tex · SVG · PNG", "text": "Copy the .tex (or download SVG/PNG)"},
-      {"img": "howto-icon.svg", "text": "\\input it into your figure"}
+      {"img": "howto-icon.svg", "text": "\\input — now it's in your LaTeX figure"}
     ],
     "caption": "Grab a single icon — no AI needed."
   },
@@ -23,9 +23,10 @@
     "id": "png-to-tikz",
     "tab_label": "PNG → TikZ",
     "layout": "inout",
-    "placeholder": true,
+    "input_img": "howto-fa-input.png",
     "prompt": "turn this figure into editable TikZ",
-    "caption": "Hand the agent a figure image; get editable TikZ back. (sample coming)"
+    "output_img": "howto-fa-output.svg",
+    "caption": "Hand the agent a figure image; get editable TikZ back."
   },
   {
     "id": "describe-to-tikz",

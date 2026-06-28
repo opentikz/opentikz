@@ -379,7 +379,6 @@ def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
                     f'<div class="howto-arrow">{prompt_lbl}<span>&rarr;</span></div>'
                     f'{out_cell}</div>')
         slides += f"""      <div class="demo-slide{active}" data-slide="{i}">
-        <div class="howto-head"><span class="howto-label">{label}</span></div>
         {body}
         {caption}
       </div>
@@ -388,15 +387,14 @@ def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
                  f'<span>{label}</span></button>')
     return f"""
   <section class="howto">
-    <h2>How to use it</h2>
-    <p class="skills-sub">Four ways in &mdash; from copying one icon to describing a whole figure.</p>
+    <h2>Four ways to a paper-ready figure</h2>
+    <div class="car-dots howto-tabs">{dots}</div>
     <div class="carousel howto-carousel" id="howto-carousel" tabindex="0" data-autoplay data-interval="5000" aria-roledescription="carousel" aria-label="How to use OpenTikZ">
       <button class="car-nav car-prev" aria-label="Previous">&larr;</button>
       <div class="car-track">
 {slides}      </div>
       <button class="car-nav car-next" aria-label="Next">&rarr;</button>
     </div>
-    <div class="car-dots">{dots}</div>
   </section>
 """
 
@@ -474,7 +472,6 @@ def why_opentikz_band() -> str:
 
 def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], howto: list[dict], css_href: str) -> str:
     """Marketing Home — no content grid, no search box (per spec)."""
-    demos_section = demos_carousel(demos, by_id)
     howto_section = howto_carousel(howto)
     why_tikz = why_tikz_band()
     why_opentikz = why_opentikz_band()
@@ -500,7 +497,6 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     </div>
   </section>
 {howto_section}
-{demos_section}
 {why_opentikz}
 {why_tikz}
   <section class="roadmap">
@@ -1174,26 +1170,24 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 
 /* how-to-use section */
 .howto{margin:30px 0 0; text-align:center}
-.howto h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.5rem; margin:0 0 .2em}
-.howto-carousel .demo-slide{min-height:300px}            /* fixed height: no section jump */
-.howto-head{margin:0 0 12px}
-.howto-label{font:500 .82rem/1 "IBM Plex Mono",monospace; color:var(--otblue);
-  border:1px solid var(--line-strong); border-radius:999px; padding:5px 12px}
+.howto h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .2em; letter-spacing:-.01em}
+.howto-tabs{margin:6px 0 18px}
+.howto-carousel .demo-slide{min-height:420px}            /* fixed height: no section jump */
 /* steps layout */
 .howto-steps{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start}
 .howto-step{border:1px solid var(--line); border-radius:8px; padding:14px}
 .howto-step-n{display:inline-grid; place-items:center; width:24px; height:24px; border-radius:999px;
   background:var(--otblue); color:#fff; font:600 .8rem/1 "IBM Plex Mono",monospace}
-.howto-step-vis{min-height:64px; display:grid; place-items:center; margin:10px 0}
-.howto-step-vis img{max-height:64px; width:auto}
+.howto-step-vis{min-height:104px; display:grid; place-items:center; margin:10px 0}
+.howto-step-vis img{max-height:104px; width:auto}
 .howto-step-cap{margin:0; color:var(--muted); font-size:.85rem}
 /* inout layout */
 .howto-flow{display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:center}
 .howto-cell{margin:0; border:1px solid var(--line); border-radius:8px; padding:12px;
-  display:grid; place-items:center; min-height:150px}
-.howto-cell img{max-height:130px; width:auto}
+  display:grid; place-items:center; min-height:280px}
+.howto-cell img{max-height:260px; width:auto}
 .howto-cell figcaption{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted); margin-top:6px}
-.howto-intext code{font-size:.85rem; color:var(--ink)}
+.howto-intext code{display:block; max-width:26ch; font-size:.92rem; line-height:1.5; color:var(--ink); white-space:normal; overflow-wrap:anywhere; text-align:center}
 .howto-ph{color:var(--muted); font-family:"IBM Plex Mono",monospace; font-size:.8rem;
   border-style:dashed}
 .howto-arrow{display:grid; gap:6px; justify-items:center; color:var(--muted)}
