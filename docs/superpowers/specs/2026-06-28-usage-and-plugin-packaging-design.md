@@ -120,37 +120,50 @@ These collapse into **two operating modes**:
 
 - Add an opening **"first decide: Mode A or Mode B"** classifier.
 - **Mode A (default):**
-  - **Step 0 — locate the read-only library and set the output target.** Library
-    is the OpenTikZ install: the plugin root when plugin-installed,
-    `~/.claude/skills/opentikz` when manually installed, or the repo the agent was
-    pointed at (3a local / 3b remote). Output target is the user's current project
-    (CWD).
-  - Discover via `catalog.json` in the library → **copy the chosen `.tex` into the
-    user's project** → edit the copy (read `edit_contract` from the library; keep
-    every invariant; preserve `node_naming`; colours via palette names only) →
-    **compile in the user's project**.
+  - **Step 0 — locate the read-only library and set the output target.** Resolve
+    the library root (`OTROOT`) by this rule:
+    1. If `${CLAUDE_PLUGIN_ROOT}` is set (plugin install) → `OTROOT = ${CLAUDE_PLUGIN_ROOT}`.
+    2. Otherwise (clone / other agent) → `OTROOT` = the OpenTikZ repo root, i.e.
+       the directory two levels above this `SKILL.md` (`skills/using-opentikz/SKILL.md`
+       → `../../`).
+
+    Output target is always the user's current project (CWD), never `OTROOT`.
+  - Discover via `${OTROOT}/catalog.json` → **copy the chosen `.tex` from
+    `${OTROOT}/...` into the user's project** → edit the copy (read `edit_contract`
+    from the library; keep every invariant; preserve `node_naming`; colours via
+    palette names only) → **compile in the user's project**.
   - Handle "edit a figure already in my project" (the copy is already local; still
-    read `edit_contract` from the library) and 3b (fetch raw `.tex` content from
-    GitHub, write it into the project, then edit).
+    read `edit_contract` from `${OTROOT}`) and 3b (no local `OTROOT`: fetch raw
+    `.tex`/`catalog.json` from the GitHub repo, write the `.tex` into the project,
+    then edit).
 - **Mode B (contribute back):** library == CWD; edit in place; run
   `render_preview.py` / `build_catalog.py` / `validate.py`. This is the current §6
   content, relabelled as a mode.
-- ⚙️ **Open implementation detail (pin down in the plan):** the exact mechanism by
-  which the skill resolves the plugin root when plugin-installed (e.g.
-  `${CLAUDE_PLUGIN_ROOT}` vs. paths relative to `SKILL.md`). Verify against a real
-  install before finalising the wording.
+- **Resolved (was open):** `${CLAUDE_PLUGIN_ROOT}` is available inside SKILL.md
+  content and points to the install cache (`~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/`).
+  Installed plugins are **copied** to cache and **cannot reference files outside
+  the plugin dir** (so `../catalog.json` fails) — which is exactly why the full
+  library must be bundled at the plugin root. The fallback (rule 2 above) covers
+  every non-plugin agent. Confirm `${CLAUDE_PLUGIN_ROOT}` resolves against a real
+  install during the packaging task.
 
 ### ③ Website: repurpose `/skills/` into a "How to use" tutorial
 
-- **Install (three entries, mirroring the frontend-slides layout):**
-  1. **Claude Code marketplace source** — `/plugin marketplace add <https-url>`
+- **Install (three entries — adapted to a library-backed skill).** Note: the
+  frontend-slides "copy the skill into `~/.claude/skills/`" path does **not** work
+  for OpenTikZ — our skill needs the whole library beside it, and a plugin in cache
+  cannot read files outside its dir. So the entries are:
+  1. **Claude Code plugin (recommended)** — `/plugin marketplace add <https-url>`
      then `/plugin install opentikz@opentikz`; use the HTTPS URL; the two commands
-     are separate messages.
-  2. **Manual install** — copy/clone into `~/.claude/skills/opentikz`; then
-     `/using-opentikz` (standalone skills are not namespaced).
-  3. **Other agents** (Codex/Gemini/Cursor/…) — point the agent at the GitHub repo
-     or `SKILL.md`; it starts from `SKILL.md` and loads only the support files it
-     needs.
+     are separate messages. Invoked as `/opentikz:using-opentikz`. The plugin
+     bundles the full library and resolves it via `${CLAUDE_PLUGIN_ROOT}`.
+  2. **Clone & point your agent at it** (Claude Code or any agent) — `git clone`
+     the repo, then tell the agent to use `skills/using-opentikz/SKILL.md`. The
+     library is the repo root, resolved relative to `SKILL.md` (covers scenarios
+     3a/4).
+  3. **Remote, no clone** (agents that can read GitHub) — point the agent at the
+     repo URL; it starts from `SKILL.md` and fetches only the files it needs
+     (scenario 3b).
 - **Three scenarios:**
   - **A — manual copy** (no AI): browse → **Copy `.tex`** → paste. Given a
     first-class place.
@@ -180,10 +193,24 @@ These collapse into **two operating modes**:
 
 ## Risks / things to verify
 
-- **Plugin-root resolution** for an installed skill must be confirmed empirically;
-  the SKILL.md wording depends on it.
-- **Manual-install command surface** (`/using-opentikz` vs `/opentikz:using-opentikz`)
-  differs between plugin and standalone installs — the docs must state both
-  correctly, exactly as the frontend-slides reference does.
 - **Repo owner/URL** in the marketplace command must be the real public repo URL
-  (HTTPS form) before the site copy is finalised.
+  (HTTPS form) before the site copy is finalised. *(Still open — needs the owner.)*
+- **`${CLAUDE_PLUGIN_ROOT}` resolution** — mechanism is confirmed by the docs
+  (below); still verify it resolves correctly against one real install during the
+  packaging task.
+- **Non-plugin library resolution** relies on the agent locating the repo root two
+  levels above `SKILL.md`; verify the clone-and-point path works end to end with at
+  least one agent.
+
+## Reference (Claude Code plugin format, verified 2026-06-28)
+
+- Marketplace schema: https://code.claude.com/docs/en/plugin-marketplaces.md#marketplace-schema
+  — `.claude-plugin/marketplace.json` with `name`, `owner{name,email?}`, `plugins[]`;
+  a plugin entry may use `source: "./"` to point at the repo root.
+- Plugin manifest: https://code.claude.com/docs/en/plugins-reference.md#plugin-manifest-schema
+  — `.claude-plugin/plugin.json`, `name` required (kebab-case), `version`/`description`/`author` optional.
+- Skills in plugins: https://code.claude.com/docs/en/plugins-reference.md#skills
+  — `skills/<name>/SKILL.md`; invoked `/<plugin>:<skill>`.
+- Env vars / file resolution: https://code.claude.com/docs/en/plugins-reference.md#environment-variables
+  — `${CLAUDE_PLUGIN_ROOT}` usable in SKILL.md content; plugins are copied to cache
+  and cannot reference files outside the plugin dir.
