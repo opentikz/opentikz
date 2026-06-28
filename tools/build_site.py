@@ -367,9 +367,9 @@ def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
                             f'{html.escape(s["output_img"])}" alt="output" loading="lazy">'
                             f'<figcaption>editable TikZ</figcaption></figure>')
             else:
-                in_cell = (f'<div class="howto-cell howto-intext">'
+                in_cell = (f'<figure class="howto-cell howto-intext">'
                            f'<code>&ldquo;{html.escape(s.get("input_text", ""))}&rdquo;</code>'
-                           f'<figcaption>describe</figcaption></div>')
+                           f'<figcaption>describe</figcaption></figure>')
                 out_cell = (f'<figure class="howto-cell"><img src="{prefix}howto/'
                             f'{html.escape(s["output_img"])}" alt="output" loading="lazy">'
                             f'<figcaption>editable TikZ</figcaption></figure>')
@@ -399,7 +399,6 @@ def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
     <div class="car-dots">{dots}</div>
   </section>
 """
-
 
 
 def hero_carousel(items: list[dict]) -> str:
