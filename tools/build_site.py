@@ -350,7 +350,9 @@ def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
                     vis = (f'<img src="{prefix}howto/{html.escape(st["img"])}" '
                            f'alt="" loading="lazy">')
                 else:
-                    vis = f'<code>{html.escape(st.get("code", ""))}</code>'
+                    parts = [p.strip() for p in st.get("code", "").split("·")]
+                    chips = "".join(f'<code>{html.escape(p)}</code>' for p in parts)
+                    vis = f'<div class="howto-codes">{chips}</div>'
                 cells += (f'<div class="howto-step"><span class="howto-step-n">{n}</span>'
                           f'<div class="howto-step-vis">{vis}</div>'
                           f'<p class="howto-step-cap">{html.escape(st.get("text", ""))}</p></div>')
@@ -367,8 +369,12 @@ def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
                             f'{html.escape(s["output_img"])}" alt="output" loading="lazy">'
                             f'<figcaption>editable TikZ</figcaption></figure>')
             else:
-                in_cell = (f'<figure class="howto-cell howto-intext">'
-                           f'<code>&ldquo;{html.escape(s.get("input_text", ""))}&rdquo;</code>'
+                in_cell = (f'<figure class="howto-cell howto-term">'
+                           f'<div class="howto-term-box">'
+                           f'<div class="howto-term-bar"><span></span><span></span><span></span></div>'
+                           f'<code class="howto-term-cmd">/opentikz:using-opentikz</code>'
+                           f'<code class="howto-term-text">&ldquo;{html.escape(s.get("input_text", ""))}&rdquo;</code>'
+                           f'</div>'
                            f'<figcaption>describe</figcaption></figure>')
                 out_cell = (f'<figure class="howto-cell"><img src="{prefix}howto/'
                             f'{html.escape(s["output_img"])}" alt="output" loading="lazy">'
@@ -1185,7 +1191,18 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   display:grid; place-items:center; min-height:280px}
 .howto-cell img{max-height:260px; max-width:100%; width:auto; height:auto}
 .howto-cell figcaption{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted); margin-top:6px}
-.howto-intext code{display:block; max-width:26ch; font-size:.92rem; line-height:1.5; color:var(--ink); white-space:normal; overflow-wrap:anywhere; text-align:center}
+.howto-codes{display:grid; gap:7px; justify-items:center}
+.howto-codes code{display:block; padding:3px 10px; border:1px solid var(--line-strong); border-radius:5px}
+/* describe cell as a mini terminal showing the skill command */
+.howto-term{border:none}
+.howto-term-box{width:100%; max-width:30ch; background:var(--ink); border-radius:8px; padding:11px 13px; text-align:left; font-family:"IBM Plex Mono",monospace}
+.howto-term-bar{display:flex; gap:6px; margin-bottom:9px}
+.howto-term-bar span{width:9px; height:9px; border-radius:999px}
+.howto-term-bar span:nth-child(1){background:var(--otorange)}
+.howto-term-bar span:nth-child(2){background:var(--otblue)}
+.howto-term-bar span:nth-child(3){background:var(--otteal)}
+.howto-term-cmd{display:block; color:var(--otteal); font-size:.78rem; margin-bottom:7px}
+.howto-term-text{display:block; color:var(--paper); font-size:.86rem; line-height:1.55; white-space:normal; overflow-wrap:anywhere}
 .howto-ph{color:var(--muted); font-family:"IBM Plex Mono",monospace; font-size:.8rem;
   border-style:dashed}
 .howto-arrow{display:grid; gap:6px; justify-items:center; color:var(--muted)}
