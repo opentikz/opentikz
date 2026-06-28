@@ -1542,6 +1542,10 @@ APP_JS = r"""(function () {
       car.addEventListener('focusout', function () { focused = false; });
       car.addEventListener('click', start);    // manual nav resets the cadence
       car.addEventListener('keydown', start);
+      if (dotWrap) {                            // tabs/dots live outside .carousel
+        dotWrap.addEventListener('click', start);
+        dotWrap.addEventListener('keydown', start);
+      }
       document.addEventListener('visibilitychange', function () {
         if (!document.hidden) start();         // realign cadence when the tab returns
       });
