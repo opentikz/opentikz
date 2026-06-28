@@ -1,0 +1,12 @@
+{
+  "name": "opentikz",
+  "owner": { "name": "OpenTikZ contributors" },
+  "description": "TikZ resources for academic conceptual diagrams.",
+  "plugins": [
+    {
+      "name": "opentikz",
+      "source": "./",
+      "description": "Find, edit, and verify academic TikZ figures (icons, templates, examples) with the using-opentikz skill."
+    }
+  ]
+}

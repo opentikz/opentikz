@@ -1,0 +1,9 @@
+{
+  "name": "opentikz",
+  "version": "0.1.0",
+  "description": "Find, edit, and verify academic TikZ figures (icons, templates, examples) with the using-opentikz skill.",
+  "author": { "name": "OpenTikZ contributors" },
+  "homepage": "https://opentikz.org",
+  "repository": "https://github.com/opentikz/opentikz",
+  "license": "MIT"
+}
