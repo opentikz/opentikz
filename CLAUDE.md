@@ -91,6 +91,7 @@ opentikz/
 ├── LICENSE-CONTENT           # CC0
 ├── meta.schema.json          # JSON Schema for all .meta.json
 ├── catalog.json              # AUTO-GENERATED, do not hand-edit
+├── .claude-plugin/           # marketplace.json + plugin.json (Claude Code plugin)
 ├── docs/
 │   ├── DESIGN_GUIDE.md       # line width, colors, node naming
 │   ├── PRODUCT_SPEC.md       # full product spec

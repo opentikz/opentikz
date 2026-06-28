@@ -11,20 +11,26 @@ flowcharts. **Data plots are out of scope** (use pgfplots/matplotlib).
 
 ## Quick start
 
-The fastest path is to let an AI agent do the TikZ for you:
+**Use it with your AI agent (recommended).** Install the Claude Code plugin —
+run these as two separate Claude Code messages:
 
-1. **Clone OpenTikZ into your project** — the icons, templates, and the
-   `using-opentikz` skill come with it.
-2. **Tell Claude Code the figure or edit you want** — *"draw an encoder–decoder
-   with a cross-attention block,"* or, pointing at a template, *"add a hidden
-   layer / recolor this blue / fit it to a CVPR column."* The skill plus each
-   template's `edit_contract` guide the agent to edit real TikZ correctly.
-3. **Get editable TikZ that compiles** — every file is
-   `\documentclass{standalone}`, so it builds with `pdflatex`, `lualatex`, or
-   `xelatex`, no extra setup.
+```text
+/plugin marketplace add https://github.com/opentikz/opentikz
+/plugin install opentikz@opentikz
+```
 
-Prefer to grab one by hand? **[Browse the gallery](#gallery)**, copy its `.tex`,
-and you're done — no AI required.
+Then describe the figure or edit you want — *"draw an encoder–decoder with a
+cross-attention block,"* or, pointing at a template, *"add a hidden layer / recolor
+this blue / fit it to a CVPR column."* The skill finds the figure, copies it into
+your project, edits it via each template's `edit_contract`, and compiles it before
+handing it back. Invoke it as `/opentikz:using-opentikz`.
+
+**Other agents (Codex, Cursor, Gemini CLI…).** `git clone` this repo and tell the
+agent to use `skills/using-opentikz/SKILL.md`, or just point a GitHub-reading agent
+at the repo URL.
+
+**Prefer no AI?** [Browse the gallery](#gallery), copy a figure's `.tex`, and paste
+it in — every file is `\documentclass{standalone}` and compiles as-is.
 
 ## Why TikZ, and why OpenTikZ
 
