@@ -1173,6 +1173,34 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .demo-dot:hover{border-color:var(--otblue)}
 .demo-dot.active{background:var(--ink); color:var(--paper); border-color:var(--ink)}
 
+/* how-to-use section */
+.howto{margin:30px 0 0; text-align:center}
+.howto h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.5rem; margin:0 0 .2em}
+.howto-carousel .demo-slide{min-height:300px}            /* fixed height: no section jump */
+.howto-head{margin:0 0 12px}
+.howto-label{font:500 .82rem/1 "IBM Plex Mono",monospace; color:var(--otblue);
+  border:1px solid var(--line-strong); border-radius:999px; padding:5px 12px}
+/* steps layout */
+.howto-steps{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; align-items:start}
+.howto-step{border:1px solid var(--line); border-radius:8px; padding:14px}
+.howto-step-n{display:inline-grid; place-items:center; width:24px; height:24px; border-radius:999px;
+  background:var(--otblue); color:#fff; font:600 .8rem/1 "IBM Plex Mono",monospace}
+.howto-step-vis{min-height:64px; display:grid; place-items:center; margin:10px 0}
+.howto-step-vis img{max-height:64px; width:auto}
+.howto-step-cap{margin:0; color:var(--muted); font-size:.85rem}
+/* inout layout */
+.howto-flow{display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:center}
+.howto-cell{margin:0; border:1px solid var(--line); border-radius:8px; padding:12px;
+  display:grid; place-items:center; min-height:150px}
+.howto-cell img{max-height:130px; width:auto}
+.howto-cell figcaption{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted); margin-top:6px}
+.howto-intext code{font-size:.85rem; color:var(--ink)}
+.howto-ph{color:var(--muted); font-family:"IBM Plex Mono",monospace; font-size:.8rem;
+  border-style:dashed}
+.howto-arrow{display:grid; gap:6px; justify-items:center; color:var(--muted)}
+.howto-prompt{font-family:"IBM Plex Mono",monospace; font-size:.72rem; color:var(--otblue); max-width:18ch}
+.howto-cap{margin:14px auto 0; max-width:60ch; color:var(--muted); font-size:.9rem}
+
 /* hero figure carousel */
 .hero-carousel{margin:26px auto 0; max-width:760px}
 .hero-slide{display:none}
@@ -1270,6 +1298,8 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   .showcase{padding:32px 0 26px}
   .steps{grid-template-columns:1fr}
   .demo-trip{grid-template-columns:1fr; gap:12px}
+  .howto-steps,.howto-flow{grid-template-columns:1fr}
+  .howto-arrow span{transform:rotate(90deg); display:inline-block}
   .demo-prompt{max-width:none}
   .demo-prompt::before,.demo-prompt::after{display:none}
   .carousel{gap:6px}
