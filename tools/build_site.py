@@ -119,7 +119,7 @@ def navbar(surface: str) -> str:
       <a href="{sec}#icons" data-nav="icons">Icons</a>
       <a href="{sec}#templates" data-nav="templates">Templates</a>
       <a href="{sec}#examples" data-nav="examples">Examples</a>
-      <a class="nav-skills{skills_active}" href="{skills}" data-nav="skills">Skills</a>
+      <a class="nav-skills{skills_active}" href="{skills}" data-nav="skills">How to use</a>
       <a href="{REPO_URL}#readme">Docs</a>
       <a class="nav-gh" href="{REPO_URL}" target="_blank" rel="noopener">GitHub <span class="star">★</span></a>
     </nav>
@@ -555,6 +555,63 @@ def skills_page(demos: list[dict], by_id: dict, css_href: str) -> str:
       <a href="{REPO_URL}/blob/main/skills/using-opentikz/SKILL.md" target="_blank" rel="noopener"><code>using-opentikz</code></a>:
       it takes an AI agent from a plain-language request to a finished, compiling figure —
       and confirms the ambiguous details with you instead of guessing.</p>
+  </section>
+
+  <section class="skills-install">
+    <h2>Install</h2>
+    <div class="install-cards">
+      <article class="install-card install-rec">
+        <span class="install-tag">recommended · Claude Code</span>
+        <h3>Claude Code plugin</h3>
+        <p>Run these as <strong>two separate</strong> Claude Code messages:</p>
+        <pre><code>/plugin marketplace add https://github.com/opentikz/opentikz</code></pre>
+        <pre><code>/plugin install opentikz@opentikz</code></pre>
+        <p>Then use it by typing <code>/opentikz:using-opentikz</code>. The plugin
+           bundles the whole library, so the skill can find every icon and template.</p>
+      </article>
+      <article class="install-card">
+        <span class="install-tag">any agent</span>
+        <h3>Clone &amp; point your agent at it</h3>
+        <pre><code>git clone https://github.com/opentikz/opentikz</code></pre>
+        <p>Then tell your agent (Claude Code, Codex, Cursor, Gemini CLI…) to use
+           <code>skills/using-opentikz/SKILL.md</code> from the clone. The library is
+           the cloned repo, right beside the skill.</p>
+      </article>
+      <article class="install-card">
+        <span class="install-tag">other agents · no clone</span>
+        <h3>Point a GitHub-reading agent at the repo</h3>
+        <p>Send the agent this repo and ask it to use the OpenTikZ skill:</p>
+        <pre><code>https://github.com/opentikz/opentikz</code></pre>
+        <p>It starts from <code>SKILL.md</code> and fetches only the files it needs.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="skills-scenarios">
+    <h2>Three ways to use it</h2>
+    <div class="scenario-cards">
+      <article class="scenario-card">
+        <h3>1 · Copy a figure by hand <span>no AI</span></h3>
+        <p><a href="../browse/">Browse the library</a>, open any item, hit
+           <strong>Copy .tex</strong>, and paste it into your paper. Every file is
+           <code>\\documentclass{{standalone}}</code> and compiles as-is.</p>
+      </article>
+      <article class="scenario-card">
+        <h3>2 · Edit with your AI agent <span>the main flow</span></h3>
+        <p>After installing, just describe the change:</p>
+        <pre><code>/opentikz:using-opentikz
+&ldquo;add a cross-attention block to the encoder-decoder and make it blue&rdquo;</code></pre>
+        <p>The agent finds the figure, copies it into <em>your</em> project, edits it
+           via the template&rsquo;s <code>edit_contract</code>, and compiles it before
+           handing it back.</p>
+      </article>
+      <article class="scenario-card">
+        <h3>3 · Generate from scratch <span>roadmap</span></h3>
+        <p>Describe a figure with no starting template, or hand over a node–edge spec.
+           Prompt-to-diagram and graph-to-diagram are
+           <a href="../index.html#roadmap">on the roadmap</a>.</p>
+      </article>
+    </div>
   </section>
 {carousel}
   <section class="skills-how">
@@ -1089,6 +1146,16 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   color:var(--ink); display:flex; justify-content:space-between; align-items:center; gap:8px}
 .skill-link h3 span{color:var(--otblue); font-family:"IBM Plex Sans",sans-serif; font-weight:600}
 .skill-link p{margin:0; color:#4a473f; font-size:.9rem}
+
+/* install + scenarios cards (skills / how-to-use page) */
+.skills-install{margin:34px 0 0; max-width:78ch}
+.install-cards,.scenario-cards{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); margin-top:1em}
+.install-card,.scenario-card{border:1px solid var(--line); border-radius:8px; padding:16px}
+.install-rec{border-color:var(--accent,#3b6ea5)}
+.install-tag{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.04em}
+.install-card h3,.scenario-card h3{font-family:"Fraunces",serif; font-size:1.05rem; margin:.4em 0}
+.scenario-card h3 span{font-family:"IBM Plex Mono",monospace; font-size:.65rem; color:var(--muted); margin-left:.4em}
+.install-card pre,.scenario-card pre{overflow-x:auto}
 
 /* Browse tool-surface header */
 .hero-browse{padding-top:40px}
