@@ -1,0 +1,66 @@
+\documentclass[border=6pt]{standalone}
+
+% --- packages (mirror these in template.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+
+% --- palette (canonical source: reference/color-palettes/color-palettes.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+
+\begin{document}
+% ==== parameters (edit these) ============================================
+\def\nodesep{1.2}   % horizontal gap between forward stages (cm)
+\def\loopdrop{1.6}  % how far below the model the optimizer sits (cm)
+\def\boxminw{1.9}   % minimum stage width (cm)
+\def\boxminh{1.0}   % minimum stage height (cm)
+% labels
+\def\datalabel{Dataset}
+\def\modellabel{Model}
+\def\losslabel{Loss}
+\def\optlabel{Optimizer}
+\def\labelslabel{Labels $y$}
+\def\predlabel{$\hat{y}$}
+\def\gradlabel{gradients $\nabla\mathcal{L}$}
+\def\updatelabel{update $\theta$}
+% =========================================================================
+
+\begin{tikzpicture}[
+    node distance=\nodesep cm,
+    >={Stealth[length=2.4mm]},
+    stage/.style={
+      draw=otgray!55, line width=0.7pt, rounded corners=3pt, align=center,
+      minimum width=\boxminw cm, minimum height=\boxminh cm, font=\sffamily\small,
+    },
+    io/.style={stage, fill=otgray!12},
+    fwd/.style={draw=otgray!70, line width=0.9pt, ->},
+    back/.style={draw=otpurple!85!black, line width=1.0pt, ->},
+    elabel/.style={font=\sffamily\footnotesize, text=otgray},
+    blabel/.style={font=\sffamily\footnotesize, text=otpurple!85!black},
+  ]
+
+  % --- forward path: Dataset -> Model -> Loss, with Labels feeding the Loss ---
+  \node[io] (data) {\datalabel};
+  \node[stage, fill=otblue!18, right=of data] (model) {\modellabel};
+  \node[stage, fill=otorange!20, right=of model] (loss) {\losslabel};
+  \node[io, above=of loss] (labels) {\labelslabel};
+
+  % --- optimizer sits below the model on the return path ---
+  \node[stage, fill=otteal!18, below=\loopdrop cm of model] (opt) {\optlabel};
+
+  % forward arrows
+  \draw[fwd] (data) -- (model);
+  \draw[fwd] (model) -- (loss) node[midway, above, elabel] {\predlabel};
+  \draw[fwd] (labels) -- (loss);
+
+  % --- training loop: backprop gradients then the optimizer update ---
+  \draw[back] (loss.south) |- (opt.east)
+    node[pos=0.65, above, blabel] {\gradlabel};
+  \draw[back] (opt.north) -- (model.south)
+    node[midway, right, blabel] {\updatelabel};
+
+\end{tikzpicture}
+\end{document}
