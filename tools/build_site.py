@@ -419,10 +419,10 @@ def hero_carousel(items: list[dict]) -> str:
 """
         dots += f'<button class="hero-dot{active}" data-dot="{i}" aria-label="Show {name}"></button>'
     return f"""    <div class="carousel hero-carousel" id="hero-carousel" tabindex="0" data-autoplay data-interval="5000" aria-roledescription="carousel" aria-label="Featured figures">
-      <button class="car-nav car-prev" aria-label="Previous">&larr;</button>
+      <button class="car-nav car-prev" aria-label="Previous">&lsaquo;</button>
       <div class="car-track">
 {slides}      </div>
-      <button class="car-nav car-next" aria-label="Next">&rarr;</button>
+      <button class="car-nav car-next" aria-label="Next">&rsaquo;</button>
     </div>
     <div class="car-dots">{dots}</div>
 """
@@ -434,9 +434,9 @@ def why_tikz_band() -> str:
   <section class="why-tikz-slim">
     <h2>Why TikZ</h2>
     <div class="wts-strip">
-      <div class="wts-item"><b>Vector quality</b><span>Crisp at any zoom, sharp in print &mdash; no pixelated screenshots.</span></div>
-      <div class="wts-item"><b>Native to your paper</b><span>Same fonts, math, and <code>\ref</code>/<code>\cite</code> as the document.</span></div>
-      <div class="wts-item"><b>Text, so it's diffable</b><span>It's source &mdash; version it in git, tweak one number, recompile.</span></div>
+      <div class="wts-item"><span class="wts-num">01</span><b>Vector quality</b><span class="wts-desc">Crisp at any zoom, sharp in print &mdash; no pixelated screenshots.</span></div>
+      <div class="wts-item"><span class="wts-num">02</span><b>Native to your paper</b><span class="wts-desc">Same fonts, math, and <code>\ref</code>/<code>\cite</code> as the document.</span></div>
+      <div class="wts-item"><span class="wts-num">03</span><b>Text, so it's diffable</b><span class="wts-desc">It's source &mdash; version it in git, tweak one number, recompile.</span></div>
     </div>
   </section>
 """
@@ -447,7 +447,6 @@ def why_opentikz_band() -> str:
     return """
   <section class="why-ot">
     <h2>Why not just ask ChatGPT for TikZ?</h2>
-    <p class="why-ot-sub">You can &mdash; here's what changes when the edit is anchored to a real template.</p>
     <div class="cmp-cards">
       <article class="cmp-card cmp-bad">
         <h3>Raw LLM TikZ</h3>
@@ -474,11 +473,30 @@ def why_opentikz_band() -> str:
 """
 
 
+def getstarted_band() -> str:
+    """On-page install path: the two real Claude Code plugin commands (verbatim
+    from the How-to-use page's recommended card), with a link out to the README
+    for the other install methods."""
+    return f"""
+  <section class="getstarted" id="get-started">
+    <h2>Get started in two lines</h2>
+    <p class="gs-lede">Add OpenTikZ to Claude Code, then just describe the figure you want.</p>
+    <div class="gs-cmds">
+      <pre><code>/plugin marketplace add {REPO_URL}</code></pre>
+      <pre><code>/plugin install opentikz@opentikz</code></pre>
+    </div>
+    <p class="gs-note">Send them as two separate Claude Code messages, then use it with
+      <code>/opentikz:using-opentikz</code>. <a href="{REPO_URL}#readme">More ways to install &rarr;</a></p>
+  </section>
+"""
+
+
 def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], howto: list[dict], css_href: str) -> str:
     """Marketing Home — no content grid, no search box (per spec)."""
     howto_section = howto_carousel(howto)
     why_tikz = why_tikz_band()
     why_opentikz = why_opentikz_band()
+    getstarted = getstarted_band()
 
     templates = sorted((it for it in by_id.values() if it.get("type") == "template"),
                        key=lambda it: it["name"].lower())
@@ -496,31 +514,13 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
     <h1>Describe your figure. Get it, paper-ready.</h1>
     <p class="show-lede">Your AI agent edits a real TikZ template &mdash; you never write TikZ yourself.</p>
 {hero_carousel(showcase_items)}    <div class="cta-row">
-      <a class="btn btn-primary" href="skills/">Get started</a>
-      <a class="btn btn-ghost" href="browse/">Browse the library &rarr;</a>
+      <a class="btn btn-primary" href="browse/">Browse the library &rarr;</a>
     </div>
   </section>
+{getstarted}
 {howto_section}
-{why_opentikz}
 {why_tikz}
-  <section class="roadmap">
-    <h2>On the roadmap</h2>
-    <div class="roadmap-cards">
-      <article class="rm-card">
-        <span class="rm-tag">in development · next release</span>
-        <h3>Prompt-to-diagram <span>natural language → TikZ</span></h3>
-        <p>Describe the figure you want; get editable TikZ you can drop straight into
-           the library — assembled from templates and skills.</p>
-      </article>
-      <article class="rm-card">
-        <span class="rm-tag">in development · next release</span>
-        <h3>Graph-to-diagram <span>graph / spec → TikZ</span></h3>
-        <p>Give a node–edge spec (JSON · DOT · adjacency); get a laid-out, editable
-           figure you can refine like any template.</p>
-      </article>
-    </div>
-  </section>
-
+{why_opentikz}
   <section class="cta-band">
     <h2>Build your next figure faster.</h2>
     <a class="btn btn-primary" href="browse/">Browse the library →</a>
@@ -676,8 +676,7 @@ def skills_page(demos: list[dict], by_id: dict, css_href: str) -> str:
       <article class="scenario-card">
         <h3>3 · Generate from scratch <span>roadmap</span></h3>
         <p>Describe a figure with no starting template, or hand over a node–edge spec.
-           Prompt-to-diagram and graph-to-diagram are
-           <a href="../index.html#roadmap">on the roadmap</a>.</p>
+           Prompt-to-diagram and graph-to-diagram are on the roadmap.</p>
       </article>
     </div>
   </section>
