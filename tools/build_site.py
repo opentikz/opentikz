@@ -1100,19 +1100,31 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 
 .cta-band{padding:42px 0; border-top:1px solid var(--line)}
 
+/* ---------- get started (on-page install) ---------- */
+.getstarted{padding:42px 0; border-top:1px solid var(--line); text-align:center}
+.getstarted h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .25em; letter-spacing:-.01em}
+.gs-lede{color:var(--muted); margin:0 0 18px; font-size:1rem}
+.gs-cmds{display:grid; gap:10px; max-width:560px; margin:0 auto}
+.gs-cmds pre{margin:0}
+.gs-cmds code{display:block; text-align:left; padding:10px 14px; border:1px solid var(--line-strong); border-radius:6px; background:var(--paper); color:var(--ink); font:.9rem "IBM Plex Mono",monospace}
+.gs-note{color:var(--muted); margin:16px auto 0; max-width:54ch; font-size:.9rem; line-height:1.5}
+.gs-note a{color:var(--otblue); text-decoration:none; border-bottom:1px solid var(--otblue)}
+
 /* ---------- why-tikz (slim) ---------- */
-.why-tikz-slim{max-width:980px; margin:0 auto; padding:40px 28px; text-align:center}
-.wts-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:18px; text-align:left}
-.wts-item{display:flex; flex-direction:column; gap:4px}
-.wts-item b{font:600 .95rem system-ui; color:var(--otblue)}
-.wts-item span{font:.85rem/1.45 system-ui; opacity:.72}
+.why-tikz-slim{max-width:980px; margin:0 auto; padding:42px 28px 42px; border-top:1px solid var(--line); text-align:center}
+.why-tikz-slim h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .25em; letter-spacing:-.01em}
+.wts-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:22px; text-align:left}
+.wts-item{display:flex; flex-direction:column; gap:7px; padding:18px 18px 20px; border:1px solid var(--line-strong); border-radius:10px; background:var(--paper)}
+.wts-num{font:600 .8rem "IBM Plex Mono",monospace; color:var(--otorange); letter-spacing:.04em}
+.wts-item b{font:600 1rem "Fraunces",serif; color:var(--ink)}
+.wts-desc{font:.9rem/1.5 "IBM Plex Sans",sans-serif; color:var(--muted)}
 @media(max-width:680px){.wts-strip{grid-template-columns:1fr}}
 
 /* why-opentikz verdict cards */
-.why-ot{padding:42px 0; border-top:1px solid var(--line)}
+.why-ot{padding:42px 0; border-top:1px solid var(--line); text-align:center}
 .why-ot h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .25em; letter-spacing:-.01em}
 .why-ot-sub{color:var(--muted); margin:0 0 20px; font-size:.98rem}
-.cmp-cards{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+.cmp-cards{display:grid; grid-template-columns:1fr 1fr; gap:18px; text-align:left}
 .cmp-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 22px; box-shadow:var(--shadow)}
 .cmp-card h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.15rem; margin:0 0 .6em; display:flex; align-items:center; gap:.4em}
 .cmp-card ul{margin:0; padding-left:1.1em}
@@ -1165,6 +1177,9 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .car-nav{flex:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.05rem;
   background:#fff; border:1.5px solid var(--line-strong); color:var(--ink); transition:.15s}
 .car-nav:hover{border-color:var(--otblue); color:var(--otblue)}
+.hero-carousel .car-nav{width:34px; height:34px; padding:0; border:none; background:none;
+  font-size:1.9rem; line-height:1; color:var(--muted); box-shadow:none}
+.hero-carousel .car-nav:hover{color:var(--otblue); border:none; transform:none}
 .car-dots{display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:20px}
 .demo-dot{cursor:pointer; font:500 .76rem "IBM Plex Mono",monospace; color:var(--muted);
   background:#fff; border:1.5px solid var(--line-strong); border-radius:999px; padding:5px 11px; transition:.15s}
@@ -1221,19 +1236,6 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   background:transparent; border:1.5px solid var(--line-strong)}
 .hero-dot:hover{border-color:var(--otblue)}
 .hero-dot.active{background:var(--ink); border-color:var(--ink)}
-
-/* roadmap teaser */
-.roadmap{padding:42px 0; border-top:1px solid var(--line)}
-.roadmap h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.4rem; margin:0 0 16px;
-  letter-spacing:-.01em; color:var(--muted)}
-.roadmap-cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:18px}
-.rm-card{border:1.5px dashed var(--line-strong); border-radius:14px; padding:20px 22px; background:rgba(255,255,255,.5)}
-.rm-tag{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:.68rem; text-transform:uppercase;
-  letter-spacing:.06em; color:var(--otorange); background:#FFF8EC; border:1px solid #F0DDB6;
-  border-radius:999px; padding:4px 10px; margin-bottom:10px}
-.rm-card h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.2rem; margin:0 0 .3em}
-.rm-card h3 span{font-family:"IBM Plex Mono",monospace; font-weight:400; font-size:.8rem; color:var(--muted); margin-left:6px}
-.rm-card p{margin:0; color:#4a473f; font-size:.93rem}
 
 /* ---------- skills page ---------- */
 .skills-page{max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter)}
