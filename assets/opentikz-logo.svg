@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="150" viewBox="0 0 560 150" role="img" aria-label="OpenTikZ">
+  <title>OpenTikZ</title>
+  <defs>
+    <style>
+      @font-face{
+        font-family:'FrauncesEmbedded';
+        font-weight:900;
+        font-style:normal;
+        src:url(data:font/woff2;base64,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) format('woff2');
+      }
+      .wm{font-family:'FrauncesEmbedded','Fraunces',Georgia,'Times New Roman',serif;
+          font-weight:900;font-size:62px;letter-spacing:-1.6px}
+    </style>
+  </defs>
+  <!-- paper-white tile so the wordmark reads on both light and dark READMEs (mirrors the site) -->
+  <rect x="1" y="1" width="558" height="148" rx="18" fill="#FBFAF6" stroke="#E6E3D8" stroke-width="1.5"/>
+  <text class="wm" x="144.2" y="82" text-anchor="start"><tspan fill="#1B1A16">Open</tspan><tspan fill="#0072B2">TikZ</tspan></text>
+  <!-- caret: Fraunces has no box-drawing glyph, so the blinking bar is drawn as a rect (mirrors the site caret) -->
+  <rect x="410.3" y="38.6" width="5.5" height="43.4" rx="1" fill="#E69F00"/>
+  <text x="280" y="118" text-anchor="middle"
+        font-family="'IBM Plex Sans',-apple-system,Segoe UI,Helvetica,Arial,sans-serif"
+        font-size="16.5" letter-spacing="0.2" fill="#6F6C61">Paper-ready TikZ figures for academic papers</text>
+</svg>

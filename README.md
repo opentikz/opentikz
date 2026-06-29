@@ -1,9 +1,24 @@
-# OpenTikZ
+<div align="center">
 
-> A TikZ resource library for academic conceptual diagrams — copyable icons,
-> editable architecture templates, and one AI-consumable skill that lets Claude
-> Code modify those templates, so researchers produce paper figures fast without
-> writing TikZ from scratch.
+<a href="https://opentikz.org"><img src="assets/opentikz-logo.svg" alt="OpenTikZ" width="440"></a>
+
+### Describe your figure. Get it, paper-ready.
+
+An AI-agent skill for LaTeX TikZ figures — copyable icons, editable templates,
+and one skill that lets Claude Code modify them, so researchers produce paper
+figures fast without writing TikZ from scratch.
+
+[![CI](https://github.com/opentikz/opentikz/actions/workflows/ci.yml/badge.svg)](https://github.com/opentikz/opentikz/actions/workflows/ci.yml)
+[![Deploy site](https://github.com/opentikz/opentikz/actions/workflows/pages.yml/badge.svg)](https://github.com/opentikz/opentikz/actions/workflows/pages.yml)
+[![Website](https://img.shields.io/badge/website-opentikz.org-0072B2)](https://opentikz.org)
+[![Code: MIT](https://img.shields.io/badge/code-MIT-1B1A16)](LICENSE-CODE)
+[![Content: CC0 1.0](https://img.shields.io/badge/content-CC0%201.0-E69F00)](LICENSE-CONTENT)
+
+**[Website](https://opentikz.org)** · [Browse](https://opentikz.org/browse/) · [Templates](templates/) · [Icons](icons/) · [Examples](examples/) · [Quick start](#quick-start) · [Contributing](CONTRIBUTING.md)
+
+</div>
+
+---
 
 OpenTikZ is the "Flaticon for academic TikZ", focused on conceptual/overview
 figures — system block diagrams, neural-network architectures, pipelines, and
@@ -19,10 +34,10 @@ run these as two separate Claude Code messages:
 /plugin install opentikz@opentikz
 ```
 
-Then describe the figure or edit you want — *"draw an encoder–decoder with a
-cross-attention block,"* or, pointing at a template, *"add a hidden layer / recolor
-this blue / fit it to a CVPR column."* The skill finds the figure, copies it into
-your project, edits it via each template's `edit_contract`, and compiles it before
+Then describe the figure or edit you want
+-  *"draw an encoder–decoder with a cross-attention block,"* or, 
+- pointing at a template, *"add a hidden layer / recolor this blue / fit it to a CVPR column."*   
+The skill finds the figure, copies it into your project, edits it via each template's `edit_contract`, and compiles it before
 handing it back. Invoke it as `/opentikz:using-opentikz`.
 
 **Other agents (Codex, Cursor, Gemini CLI…).** `git clone` this repo and tell the
@@ -80,8 +95,8 @@ template's stable node names — it adds:
 ## Gallery
 
 A taste of the library below — every preview is rendered from the committed `.tex`
-source (no mockups). **The full, searchable catalog with copy-to-clipboard lives
-on the [website](#website)**; or browse [`examples/`](examples/),
+source (no mockups). **The full, searchable catalog with copy-to-clipboard lives on
+the [website](https://opentikz.org)**; or browse [`examples/`](examples/),
 [`templates/`](templates/), and [`icons/`](icons/) directly.
 
 ### Examples — paper-grade figures combining icons + templates
@@ -119,66 +134,51 @@ training, inference serving. See [`templates/`](templates/).</sub>
 </tr>
 </table>
 
-<sub>…and many more across <code>systems/</code> and <code>ml/</code>. See
-[`icons/`](icons/) or search the [website](#website).</sub>
+<sub>…and many more across <code>systems/</code> and <code>ml/</code>. Previews are
+transparent SVGs and read best on a light background; the live
+[website](https://opentikz.org) renders them on paper-white tiles.</sub>
 
-> Previews are transparent SVGs; labels read best on a light background. The live
-> [website](#website) renders them on paper-white tiles.
+## How it's organized
 
-## Three-layer content model
+Three layers, plus the skill that ties them together:
 
-- **`icons/`** — atomic, single-concept TikZ elements, each compiles standalone
+- **`icons/`** — atomic, single-concept TikZ elements; each compiles standalone
   and is independently copyable.
 - **`templates/`** — complete, editable conceptual figures (the core value); each
   carries an `edit_contract` in its `meta.json` describing how to edit it safely.
-- **`skills/using-opentikz/`** — the one repo-wide skill that lets an AI agent go
-  from a request to a finished figure (discover, edit, verify), backed by the
-  per-template `edit_contract`s and the `reference/` material below.
-
-## Repository layout
+- **`examples/`** — paper-grade figures combining icons + templates.
+- **`skills/using-opentikz/`** — the one repo-wide skill that takes an AI agent
+  from a request to a finished figure (discover → edit → verify), backed by the
+  per-template `edit_contract`s and the `reference/` palette/layout material.
 
 ```
 icons/<domain>/<name>/      <name>.tex + <name>.meta.json + <name>.svg
 templates/<name>/           template.tex + template.meta.json (+ edit_contract) + preview.svg
+examples/<name>/            paper-grade figures combining icons + templates
 skills/using-opentikz/      the one repo-wide skill (SKILL.md)
 reference/                  color-palettes/, annotations/, layout/
-examples/<name>/            paper-grade figures combining icons + templates
-skills-demos/               before/after SVGs for the website's "skills in action"
 tools/                      build_catalog.py, render_preview.py, build_site.py, validate.py
-meta.schema.json            JSON Schema for every .meta.json
-catalog.json                AUTO-GENERATED — do not hand-edit
 ```
 
-See [`CLAUDE.md`](CLAUDE.md) and [`docs/`](docs/) for the full product spec,
-design guide, and roadmap. Want to add a figure? See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+## Contributing & local build
 
-## Tooling
+Want to add a figure or fix one? See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the
+format rules, and [`CLAUDE.md`](CLAUDE.md) / [`docs/`](docs/) for the product spec
+and design guide. The toolchain (all stdlib + an optional LaTeX backend):
 
 ```bash
 python3 -m pip install -r requirements.txt   # installs jsonschema
 python3 tools/validate.py                     # validate metadata + compile .tex
-python3 tools/build_catalog.py                # regenerate catalog.json
+python3 tools/build_catalog.py                # regenerate catalog.json (never hand-edit it)
 python3 tools/render_preview.py <item>        # render a trimmed .svg preview
+python3 tools/build_site.py                   # build the static site/ locally
 ```
 
 `validate.py` and `render_preview.py` need a LaTeX toolchain (`latexmk`) plus an
-SVG backend (`dvisvgm`, or `pdf2svg` + `pdfcrop`). Without LaTeX installed,
-`validate.py` still checks metadata and skips the compile step.
-
-## Website
-
-A static gallery (search + per-item pages with copyable `.tex`) is generated from
-`catalog.json` and the committed `.svg` previews — no LaTeX needed:
-
-```bash
-python3 tools/build_catalog.py     # ensure catalog.json is current
-python3 tools/build_site.py        # generates site/ (gitignored)
-python3 -m http.server -d site     # preview at http://localhost:8000
-```
-
-It is live at **[opentikz.org](https://opentikz.org)**, deployed to GitHub Pages
-automatically via `.github/workflows/pages.yml` on push to `main`. Client-side
-search uses Fuse.js (CDN, pinned + SRI).
+SVG backend (`dvisvgm`, or `pdf2svg` + `pdfcrop`); without LaTeX, `validate.py`
+still checks metadata and skips the compile. The site ([opentikz.org](https://opentikz.org))
+deploys automatically from `catalog.json` + committed previews on every push to
+`main` via [`.github/workflows/pages.yml`](.github/workflows/pages.yml).
 
 ## Citing OpenTikZ
 
@@ -202,5 +202,4 @@ it is appreciated. Use the **"Cite this repository"** button on GitHub (powered 
 - **Graphic content** (`.tex` figures and previews): CC0 1.0 — see
   [`LICENSE-CONTENT`](LICENSE-CONTENT).
 
-By contributing graphic content you agree to release it under CC0 1.0. See
-[`CONTRIBUTING.md`](CONTRIBUTING.md).
+By contributing graphic content you agree to release it under CC0 1.0.
