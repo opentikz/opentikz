@@ -1111,9 +1111,9 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .gs-note a{color:var(--otblue); text-decoration:none; border-bottom:1px solid var(--otblue)}
 
 /* ---------- why-tikz (slim) ---------- */
-.why-tikz-slim{max-width:980px; margin:0 auto; padding:42px 28px 42px; border-top:1px solid var(--line); text-align:center}
+.why-tikz-slim{padding:42px 28px 42px; border-top:1px solid var(--line); text-align:center}
 .why-tikz-slim h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .25em; letter-spacing:-.01em}
-.wts-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:22px; text-align:left}
+.wts-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; max-width:980px; margin:22px auto 0; text-align:left}
 .wts-item{display:flex; flex-direction:column; gap:7px; padding:18px 18px 20px; border:1px solid var(--line-strong); border-radius:10px; background:var(--paper)}
 .wts-num{font:600 .8rem "IBM Plex Mono",monospace; color:var(--otorange); letter-spacing:.04em}
 .wts-item b{font:600 1rem "Fraunces",serif; color:var(--ink)}
@@ -1123,7 +1123,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 /* why-opentikz verdict cards */
 .why-ot{padding:42px 0; border-top:1px solid var(--line); text-align:center}
 .why-ot h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .25em; letter-spacing:-.01em}
-.why-ot-sub{color:var(--muted); margin:0 0 20px; font-size:.98rem}
+
 .cmp-cards{display:grid; grid-template-columns:1fr 1fr; gap:18px; text-align:left}
 .cmp-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 22px; box-shadow:var(--shadow)}
 .cmp-card h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.15rem; margin:0 0 .6em; display:flex; align-items:center; gap:.4em}
