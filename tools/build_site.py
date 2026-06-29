@@ -98,15 +98,12 @@ def navbar(surface: str) -> str:
     """Shared sticky header — identical on every surface except active state and
     relative hrefs. surface in {home, browse, item, skills}."""
     if surface == "home":
-        home, browse, sec, skills = "index.html", "browse/", "browse/", "skills/"
+        home, browse, sec = "index.html", "browse/", "browse/"
     elif surface == "browse":
-        home, browse, sec, skills = "../index.html", "index.html", "", "../skills/"
-    elif surface == "skills":
-        home, browse, sec, skills = "../index.html", "../browse/", "../browse/", "index.html"
+        home, browse, sec = "../index.html", "index.html", ""
     else:  # item
-        home, browse, sec, skills = "../index.html", "../browse/", "../browse/", "../skills/"
+        home, browse, sec = "../index.html", "../browse/", "../browse/"
     browse_active = " active" if surface in ("browse", "item") else ""
-    skills_active = " active" if surface == "skills" else ""
     return f"""<header class="navbar">
   <div class="nav-inner">
     <a class="wordmark" href="{home}">Open<span class="tik">TikZ</span><span class="caret">┃</span></a>
@@ -119,7 +116,6 @@ def navbar(surface: str) -> str:
       <a href="{sec}#icons" data-nav="icons">Icons</a>
       <a href="{sec}#templates" data-nav="templates">Templates</a>
       <a href="{sec}#examples" data-nav="examples">Examples</a>
-      <a class="nav-skills{skills_active}" href="{skills}" data-nav="skills">How to use</a>
       <a href="{REPO_URL}#readme">Docs</a>
       <a class="nav-gh" href="{REPO_URL}" target="_blank" rel="noopener">GitHub <span class="star">★</span></a>
     </nav>
@@ -221,10 +217,10 @@ def item_page(item: dict, code: str, tex_name: str, css_href: str) -> str:
         skill_note = (
             '<p class="skill-note">This template ships an <strong>edit contract</strong> '
             '(in its <code>meta.json</code>) that the repo-wide '
-            '<a href="../skills/">using-opentikz</a> skill reads to edit it reliably — '
+            f'<a href="{REPO_URL}/blob/main/skills/using-opentikz/SKILL.md" target="_blank" rel="noopener">using-opentikz</a> skill reads to edit it reliably — '
             'the parameters and safe operations are listed below.</p>'
         )
-        skill_section = edit_contract_html(contract, "../skills/")
+        skill_section = edit_contract_html(contract, f"{REPO_URL}/blob/main/skills/using-opentikz/SKILL.md")
     return (
         head(f"{item['name']} — OpenTikZ", css_href,
              description=item.get("description", TAGLINE), browse_href="../browse/")
@@ -290,44 +286,15 @@ def footer() -> str:
 SECTION_TITLES = {"icon": "Icons", "template": "Templates", "example": "Examples"}
 
 
-def demos_carousel(demos: list[dict], by_id: dict, prefix: str = "") -> str:
-    """Skills-in-action carousel; one slide per capability dimension. Empty -> ''.
-    ``prefix`` adjusts the demos/ path for the surface depth ('' Home, '../' skills)."""
-    if not demos:
-        return ""
-    slides, dots = "", ""
-    for i, g in enumerate(demos):
-        tmpl = by_id.get(g.get("template_id"), {})
-        tname = html.escape(tmpl.get("name", g.get("template_id", "")))
-        dim = html.escape(g.get("dimension_label", g.get("dimension", "")))
-        prompt = html.escape(g.get("prompt", ""))
-        active = " active" if i == 0 else ""
-        changed = (f'<p class="demo-changed">{html.escape(g["changed"])}</p>'
-                   if g.get("changed") else "")
-        slides += f"""      <div class="demo-slide{active}" data-slide="{i}">
-        <div class="demo-head"><span class="demo-dim">{dim}</span><span class="demo-tmpl">on {tname}</span></div>
-        <div class="demo-trip">
-          <figure class="demo-fig"><img src="{prefix}demos/{html.escape(g['before_svg'])}" alt="before" loading="lazy"><figcaption>before</figcaption></figure>
-          <div class="demo-prompt"><span class="demo-prompt-label">prompt</span><code>&ldquo;{prompt}&rdquo;</code></div>
-          <figure class="demo-fig"><img src="{prefix}demos/{html.escape(g['after_svg'])}" alt="after" loading="lazy"><figcaption>after</figcaption></figure>
-        </div>
-        {changed}
-      </div>
-"""
-        dots += f'<button class="demo-dot{active}" data-dot="{i}" aria-label="{dim}"><span>{dim}</span></button>'
-    return f"""
-  <section class="skills-demo">
-    <h2>See it on real templates</h2>
-    <p class="skills-sub">Every before/after is rendered from committed source — the same kind of edit, across different templates.</p>
-    <div class="carousel skills-carousel" id="skills-carousel" tabindex="0" data-autoplay data-interval="5000" aria-roledescription="carousel" aria-label="Skills in action">
-      <button class="car-nav car-prev" aria-label="Previous">←</button>
-      <div class="car-track">
-{slides}      </div>
-      <button class="car-nav car-next" aria-label="Next">→</button>
-    </div>
-    <div class="car-dots">{dots}</div>
-  </section>
-"""
+def _howto_term_box(text: str) -> str:
+    """Mini-terminal showing the skill command above a prompt — shared by the
+    'describe' input cell and the 'edit/png' middle prompt cell, so every prompt
+    in the carousel reads as the `/opentikz:using-opentikz` command you'd type."""
+    return ('<div class="howto-term-box">'
+            '<div class="howto-term-bar"><span></span><span></span><span></span></div>'
+            '<code class="howto-term-cmd">/opentikz:using-opentikz</code>'
+            f'<code class="howto-term-text">&ldquo;{html.escape(text)}&rdquo;</code>'
+            '</div>')
 
 
 def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
@@ -358,6 +325,8 @@ def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
                           f'<p class="howto-step-cap">{html.escape(st.get("text", ""))}</p></div>')
             body = f'<div class="howto-steps">{cells}</div>'
         else:  # inout
+            # default connector; overridden to a prompt terminal for img-input scenarios
+            mid = '<div class="howto-arrow"><span class="howto-arrow-glyph">&rarr;</span></div>'
             if s.get("placeholder"):
                 in_cell = '<div class="howto-cell howto-ph">sample coming</div>'
                 out_cell = '<div class="howto-cell howto-ph">preview coming</div>'
@@ -368,22 +337,18 @@ def howto_carousel(scenarios: list[dict], prefix: str = "") -> str:
                 out_cell = (f'<figure class="howto-cell"><img src="{prefix}howto/'
                             f'{html.escape(s["output_img"])}" alt="output" loading="lazy">'
                             f'<figcaption>editable TikZ</figcaption></figure>')
+                # the instruction shown as the skill command you'd actually type
+                mid = (f'<div class="howto-arrow howto-term">'
+                       f'{_howto_term_box(s.get("prompt", ""))}'
+                       f'<figcaption>prompt</figcaption></div>')
             else:
                 in_cell = (f'<figure class="howto-cell howto-term">'
-                           f'<div class="howto-term-box">'
-                           f'<div class="howto-term-bar"><span></span><span></span><span></span></div>'
-                           f'<code class="howto-term-cmd">/opentikz:using-opentikz</code>'
-                           f'<code class="howto-term-text">&ldquo;{html.escape(s.get("input_text", ""))}&rdquo;</code>'
-                           f'</div>'
+                           f'{_howto_term_box(s.get("input_text", ""))}'
                            f'<figcaption>prompt</figcaption></figure>')
                 out_cell = (f'<figure class="howto-cell"><img src="{prefix}howto/'
                             f'{html.escape(s["output_img"])}" alt="output" loading="lazy">'
                             f'<figcaption>editable TikZ</figcaption></figure>')
-            prompt_lbl = (f'<span class="howto-prompt">&ldquo;{html.escape(s["prompt"])}&rdquo;</span>'
-                          if s.get("prompt") else "")
-            body = (f'<div class="howto-flow">{in_cell}'
-                    f'<div class="howto-arrow">{prompt_lbl}<span>&rarr;</span></div>'
-                    f'{out_cell}</div>')
+            body = f'<div class="howto-flow">{in_cell}{mid}{out_cell}</div>'
         slides += f"""      <div class="demo-slide{active}" data-slide="{i}">
         {caption}
         {body}
@@ -447,27 +412,11 @@ def why_opentikz_band() -> str:
     return """
   <section class="why-ot">
     <h2>Why not just ask ChatGPT for TikZ?</h2>
-    <div class="cmp-cards">
-      <article class="cmp-card cmp-bad">
-        <h3>Raw LLM TikZ</h3>
-        <ul>
-          <li>Often won't compile on the first try</li>
-          <li>Invents packages and macros that don't exist</li>
-          <li>Picks random hex colors, inconsistent across figures</li>
-          <li>No stable structure &mdash; re-editing means re-describing everything</li>
-          <li>You burn time on compile-error round-trips</li>
-        </ul>
-      </article>
-      <article class="cmp-card cmp-good">
-        <h3>OpenTikZ + skill</h3>
-        <ul>
-          <li>Compiles standalone, first try</li>
-          <li>Starts from a real, parametric template</li>
-          <li>Shared palette &mdash; colors stay consistent</li>
-          <li>Stable node names, so the next edit is precise</li>
-          <li>An <code>edit_contract</code> tells the agent exactly how to change it</li>
-        </ul>
-      </article>
+    <div class="cmp-rows">
+      <div class="cmp-row cmp-head"><span class="cmp-h-x">Raw ChatGPT TikZ</span><span class="cmp-h-v">OpenTikZ + skill</span></div>
+      <div class="cmp-row"><span class="cmp-x">Often won't compile</span><span class="cmp-v">Compiles standalone, first try</span></div>
+      <div class="cmp-row"><span class="cmp-x">Re-describe it to re-edit</span><span class="cmp-v">Real template + <code>edit_contract</code> for precise edits</span></div>
+      <div class="cmp-row"><span class="cmp-x">Random, off-palette colors</span><span class="cmp-v">One shared, consistent palette</span></div>
     </div>
   </section>
 """
@@ -491,7 +440,7 @@ def getstarted_band() -> str:
 """
 
 
-def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict], howto: list[dict], css_href: str) -> str:
+def home_page(featured: list[dict], by_id: dict, counts: dict, howto: list[dict], css_href: str) -> str:
     """Marketing Home — no content grid, no search box (per spec)."""
     howto_section = howto_carousel(howto)
     why_tikz = why_tikz_band()
@@ -512,7 +461,7 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, demos: list[dict]
   <section class="showcase">
     <a class="hero-logo" href="index.html" aria-label="OpenTikZ home">Open<span class="tik">TikZ</span><span class="caret">&#9475;</span></a>
     <h1>Describe your figure. Get it, paper-ready.</h1>
-    <p class="show-lede">Your AI agent edits a real TikZ template &mdash; you never write TikZ yourself.</p>
+    <p class="show-lede">An AI-agent skill for LaTeX TikZ figures.</p>
 {hero_carousel(showcase_items)}    <div class="cta-row">
       <a class="btn btn-primary" href="browse/">Browse the library &rarr;</a>
     </div>
@@ -604,144 +553,6 @@ def browse_page(items: list[dict], css_href: str) -> str:
     )
 
 
-def skills_page(demos: list[dict], by_id: dict, css_href: str) -> str:
-    """The Skills surface — explains how to use the one repo-wide skill and why it
-    edits each figure accurately (the edit_contract), with the shared demo
-    carousel and the cross-cutting reference material. It does NOT enumerate the
-    editable templates — those are discovered by the agent in the catalog."""
-    carousel = demos_carousel(demos, by_id, prefix="../")
-    return (
-        head("Skills — OpenTikZ", css_href,
-             description=("One repo-wide skill lets an AI edit OpenTikZ figures precisely — "
-                          "ask in plain language, it edits via each template's edit_contract and verifies."),
-             browse_href="")
-        + navbar("skills")
-        + f"""<main class="skills-page">
-  <section class="skills-intro">
-    <h1>Edit figures with AI</h1>
-    <p class="lede">OpenTikZ ships <strong>one</strong> skill,
-      <a href="{REPO_URL}/blob/main/skills/using-opentikz/SKILL.md" target="_blank" rel="noopener"><code>using-opentikz</code></a>:
-      it takes an AI agent from a plain-language request to a finished, compiling figure —
-      and confirms the ambiguous details with you instead of guessing.</p>
-  </section>
-
-  <section class="skills-install">
-    <h2>Install</h2>
-    <div class="install-cards">
-      <article class="install-card install-rec">
-        <span class="install-tag">recommended · Claude Code</span>
-        <h3>Claude Code plugin</h3>
-        <p>Run these as <strong>two separate</strong> Claude Code messages:</p>
-        <pre><code>/plugin marketplace add https://github.com/opentikz/opentikz</code></pre>
-        <pre><code>/plugin install opentikz@opentikz</code></pre>
-        <p>Then use it by typing <code>/opentikz:using-opentikz</code>. The plugin
-           bundles the whole library, so the skill can find every icon and template.</p>
-      </article>
-      <article class="install-card">
-        <span class="install-tag">any agent</span>
-        <h3>Clone &amp; point your agent at it</h3>
-        <pre><code>git clone https://github.com/opentikz/opentikz</code></pre>
-        <p>Then tell your agent (Claude Code, Codex, Cursor, Gemini CLI…) to use
-           <code>skills/using-opentikz/SKILL.md</code> from the clone. The library is
-           the cloned repo, right beside the skill.</p>
-      </article>
-      <article class="install-card">
-        <span class="install-tag">other agents · no clone</span>
-        <h3>Point a GitHub-reading agent at the repo</h3>
-        <p>Send the agent this repo and ask it to use the OpenTikZ skill:</p>
-        <pre><code>https://github.com/opentikz/opentikz</code></pre>
-        <p>It starts from <code>SKILL.md</code> and fetches only the files it needs.</p>
-      </article>
-    </div>
-  </section>
-
-  <section class="skills-scenarios">
-    <h2>Three ways to use it</h2>
-    <div class="scenario-cards">
-      <article class="scenario-card">
-        <h3>1 · Copy a figure by hand <span>no AI</span></h3>
-        <p><a href="../browse/">Browse the library</a>, open any item, hit
-           <strong>Copy .tex</strong>, and paste it into your paper. Every file is
-           <code>\\documentclass{{standalone}}</code> and compiles as-is.</p>
-      </article>
-      <article class="scenario-card">
-        <h3>2 · Edit with your AI agent <span>the main flow</span></h3>
-        <p>After installing, just describe the change:</p>
-        <pre><code>/opentikz:using-opentikz
-&ldquo;add a cross-attention block to the encoder-decoder and make it blue&rdquo;</code></pre>
-        <p>The agent finds the figure, copies it into <em>your</em> project, edits it
-           via the template&rsquo;s <code>edit_contract</code>, and compiles it before
-           handing it back.</p>
-      </article>
-      <article class="scenario-card">
-        <h3>3 · Generate from scratch <span>roadmap</span></h3>
-        <p>Describe a figure with no starting template, or hand over a node–edge spec.
-           Prompt-to-diagram and graph-to-diagram are on the roadmap.</p>
-      </article>
-    </div>
-  </section>
-{carousel}
-  <section class="skills-how">
-    <h2>How to use it</h2>
-    <p class="skills-index-sub">Point any agent that can read this repo (Claude Code, or an assistant with the files) at the skill, then just describe the change you want.</p>
-    <ol class="skills-steps">
-      <li><strong>Ask in plain language.</strong> &ldquo;Add a cross-attention layer to the encoder-decoder and make it blue&rdquo;, &ldquo;recolor the database orange&rdquo;, &ldquo;give the net one more hidden layer&rdquo;. No TikZ required.</li>
-      <li><strong>The agent finds the figure.</strong> It matches your request against <code>catalog.json</code> and confirms which icon, template, or example to start from.</li>
-      <li><strong>It edits, then verifies.</strong> It applies the change, keeps the figure parametric and palette-correct, and compiles the standalone <code>.tex</code> before handing it back — never an uncompiled guess.</li>
-      <li><strong>You stay in control.</strong> On anything material it asks first; on safe defaults (palette, width) it proceeds and tells you what it assumed in one line.</li>
-    </ol>
-  </section>
-
-  <section class="skills-why">
-    <h2>Why it edits each figure accurately</h2>
-    <p class="skills-index-sub">The skill doesn&rsquo;t hand-parse TikZ and hope. Every template ships a structured <code>edit_contract</code> in its <code>meta.json</code> that tells the agent exactly how that figure is built — so edits land on the right parts.</p>
-    <div class="skill-links">
-      <div class="skill-link">
-        <h3>Named parameters</h3>
-        <p>Counts, sizes, spacing, and labels are driven by a <code>\\def</code> block the contract enumerates — so &ldquo;one more layer&rdquo; is a parameter change, not a redraw.</p>
-      </div>
-      <div class="skill-link">
-        <h3>Stable node names</h3>
-        <p>A documented naming scheme (e.g. <code>L2-3</code>, <code>(enc)</code>) lets the agent target a specific part and attach new arrows without breaking the layout.</p>
-      </div>
-      <div class="skill-link">
-        <h3>Safe operations &amp; invariants</h3>
-        <p>The contract lists the edits that are known-safe (recolor, add/remove a part, resize) and the rules an edit must never break — guardrails against plausible-but-wrong changes.</p>
-      </div>
-      <div class="skill-link">
-        <h3>One shared palette</h3>
-        <p>Colors are five named palette entries, never inline hex — so a recolor stays consistent and colour-blind-friendly across the whole figure.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="skills-libwide">
-    <h2>The shared conventions it draws on</h2>
-    <p class="skills-index-sub">Beyond each template&rsquo;s contract, the skill applies the library&rsquo;s common conventions — so colour, annotations, and layout stay consistent across every figure it touches, not just the one you asked about. These are the references it works from:</p>
-    <div class="skill-links">
-      <a class="skill-link" href="{REPO_URL}/blob/main/reference/color-palettes/color-palettes.md" target="_blank" rel="noopener">
-        <h3>Color palettes <span>&#8599;</span></h3>
-        <p>The shared, colour-blind-friendly palette it recolors from (light + dark variants) — so a tweak never introduces an off-palette hex.</p>
-      </a>
-      <a class="skill-link" href="{REPO_URL}/blob/main/reference/annotations/annotations.md" target="_blank" rel="noopener">
-        <h3>Annotations <span>&#8599;</span></h3>
-        <p>The patterns it follows when adding labels, callout leaders, grouping braces, highlight boxes, and step badges — drawn consistently from the palette.</p>
-      </a>
-      <a class="skill-link" href="{REPO_URL}/blob/main/reference/layout/layout.md" target="_blank" rel="noopener">
-        <h3>Layout <span>&#8599;</span></h3>
-        <p>The placement rules it keeps to — relative positioning, alignment, even distribution, and fitting a figure to a paper column width.</p>
-      </a>
-    </div>
-  </section>
-</main>
-"""
-        + footer()
-        + f'<script src="{css_href.replace("style.css", "app.js")}"></script>\n'
-        + "</body>\n</html>\n"
-    )
-
-
-# --------------------------------------------------------------------------- #
 def build(root: Path) -> int:
     catalog = json.loads((root / "catalog.json").read_text(encoding="utf-8"))
     catalog = [it for it in catalog if it.get("type") in ("icon", "template", "example")]
@@ -752,7 +563,6 @@ def build(root: Path) -> int:
         shutil.rmtree(site)
     (site / "item").mkdir(parents=True)
     (site / "browse").mkdir(parents=True)
-    (site / "skills").mkdir(parents=True)
     (site / "previews").mkdir(parents=True)
     (site / "assets").mkdir(parents=True)
 
@@ -783,19 +593,6 @@ def build(root: Path) -> int:
     (site / "browse" / "index.html").write_text(
         browse_page(catalog, "../assets/style.css"), encoding="utf-8")
 
-    # Skills-in-action demos (optional, content-driven). Copy the committed
-    # before/after SVGs into site/demos/; the section auto-hides if none exist.
-    demos: list[dict] = []
-    demos_json = root / "skills-demos" / "skills-demos.json"
-    if demos_json.exists():
-        demos = json.loads(demos_json.read_text(encoding="utf-8"))
-        (site / "demos").mkdir(exist_ok=True)
-        for g in demos:
-            for key in ("before_svg", "after_svg"):
-                src = root / "skills-demos" / g[key]
-                if src.exists():
-                    shutil.copyfile(src, site / "demos" / g[key])
-
     # Landing 'How to use' scenarios (content-driven). Copy referenced assets
     # into site/howto/; the section auto-hides if the manifest is absent/empty.
     howto: list[dict] = []
@@ -824,15 +621,11 @@ def build(root: Path) -> int:
     if not featured:
         featured = [it for it in catalog if it["type"] == "example"]
     (site / "index.html").write_text(
-        home_page(featured, by_id, counts, demos, howto, "assets/style.css"), encoding="utf-8")
-
-    # Skills surface.
-    (site / "skills" / "index.html").write_text(
-        skills_page(demos, by_id, "../assets/style.css"), encoding="utf-8")
+        home_page(featured, by_id, counts, howto, "assets/style.css"), encoding="utf-8")
 
     print(f"built site/ — {len(catalog)} items, {n_prev} previews, "
-          f"{len(catalog)+3} pages (home + browse + skills + items); "
-          f"featured={len(featured)}, demos={len(demos)}")
+          f"{len(catalog)+2} pages (home + browse + items); "
+          f"featured={len(featured)}")
     return 0
 
 
@@ -1124,20 +917,21 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .why-ot{padding:42px 0; border-top:1px solid var(--line); text-align:center}
 .why-ot h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .25em; letter-spacing:-.01em}
 
-.cmp-cards{display:grid; grid-template-columns:1fr 1fr; gap:18px; text-align:left}
-.cmp-card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 22px; box-shadow:var(--shadow)}
-.cmp-card h3{font-family:"Fraunces",serif; font-weight:600; font-size:1.15rem; margin:0 0 .6em; display:flex; align-items:center; gap:.4em}
-.cmp-card ul{margin:0; padding-left:1.1em}
-.cmp-card li{margin:.4em 0; font-size:.92rem; color:#4a473f}
-.cmp-card code{font-size:.82em}
-.cmp-bad{border-top:3px solid #C2554D}
-.cmp-bad h3::before{content:"\2717"; color:#C2554D}
-.cmp-good{border-top:3px solid var(--otteal)}
-.cmp-good h3::before{content:"\2713"; color:var(--otteal)}
+.cmp-rows{display:grid; gap:11px; max-width:780px; margin:6px auto 0; text-align:left}
+.cmp-row{display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start}
+.cmp-head{padding-bottom:5px; border-bottom:1px solid var(--line)}
+.cmp-head span{font-family:"IBM Plex Mono",monospace; font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); padding-left:1.6em}
+.cmp-x,.cmp-v{position:relative; padding-left:1.6em; font-size:.95rem; line-height:1.45}
+.cmp-x{color:var(--muted)}
+.cmp-x::before{content:"\2717"; position:absolute; left:0; top:0; color:var(--muted)}
+.cmp-v{color:var(--ink); font-weight:500}
+.cmp-v::before{content:"\2713"; position:absolute; left:0; top:0; color:var(--otteal); font-weight:700}
+.cmp-v code{font-size:.85em}
 
 /* stack the two-column sections on narrow screens */
 @media (max-width:720px){
-  .cmp-cards{grid-template-columns:1fr}
+  .cmp-row{grid-template-columns:1fr; gap:5px}
+  .cmp-head{display:none}
 }
 .cta-band{text-align:center; border-bottom:none}
 .cta-band h2{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
@@ -1204,7 +998,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .howto-cell{margin:0; border:1px solid var(--line); border-radius:8px; padding:12px;
   display:grid; place-items:center; min-height:280px}
 .howto-cell img{max-height:260px; max-width:100%; width:auto; height:auto}
-.howto-cell figcaption{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted); margin-top:6px}
+.howto-cell figcaption,.howto-arrow figcaption{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted); margin-top:6px}
 .howto-codes{display:grid; gap:7px; justify-items:center}
 .howto-codes code{display:block; padding:3px 10px; border:1px solid var(--line-strong); border-radius:5px}
 /* describe cell as a mini terminal showing the skill command */
@@ -1220,7 +1014,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .howto-ph{color:var(--muted); font-family:"IBM Plex Mono",monospace; font-size:.8rem;
   border-style:dashed}
 .howto-arrow{display:grid; gap:6px; justify-items:center; color:var(--muted)}
-.howto-prompt{font-family:"IBM Plex Mono",monospace; font-size:.72rem; color:var(--otblue); max-width:18ch}
+.howto-arrow-glyph{display:inline-block; font-size:1.5rem; line-height:1; color:var(--muted)}
 .howto-cap{margin:0 auto 18px; max-width:60ch; color:var(--muted); font-size:.9rem}
 
 /* hero figure carousel */
@@ -1308,7 +1102,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   .steps{grid-template-columns:1fr}
   .demo-trip{grid-template-columns:1fr; gap:12px}
   .howto-steps,.howto-flow{grid-template-columns:1fr}
-  .howto-arrow span{transform:rotate(90deg); display:inline-block}
+  .howto-arrow-glyph{transform:rotate(90deg)}
   .demo-prompt{max-width:none}
   .demo-prompt::before,.demo-prompt::after{display:none}
   .carousel{gap:6px}
