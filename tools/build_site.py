@@ -938,36 +938,12 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   font-size:clamp(1.6rem,3.4vw,2.4rem); margin:0 0 .6em}
 .cta-sub{color:var(--muted); font-size:.85rem; margin:1.1em 0 0; font-family:"IBM Plex Mono",monospace}
 
-/* skills-in-action carousel */
-.skills-demo{padding:42px 0; border-top:1px solid var(--line); text-align:center}
-.skills-demo h2{font-family:"Fraunces",serif; font-weight:600; font-size:1.7rem; margin:0 0 .2em; letter-spacing:-.01em}
-.skills-sub{color:var(--muted); margin:0 auto 22px; font-size:.95rem}
+/* shared carousel (hero + how-to-use) */
 .carousel{display:flex; align-items:center; gap:10px}
 .car-track{flex:1; min-width:0}
 .demo-slide{display:none}
 .demo-slide.active{display:block; animation:fade .25s both}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.demo-head{display:flex; align-items:baseline; justify-content:center; gap:10px; margin-bottom:14px}
-.demo-dim{font-family:"IBM Plex Mono",monospace; font-weight:500; font-size:.8rem; color:#fff;
-  background:var(--otblue); border-radius:999px; padding:4px 11px}
-.demo-tmpl{font-family:"IBM Plex Mono",monospace; font-size:.8rem; color:var(--muted)}
-.demo-trip{display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:center}
-.demo-fig{margin:0; border:1px solid var(--line); border-radius:12px; padding:18px; background:
-    linear-gradient(rgba(0,0,0,.028) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,0,0,.028) 1px,transparent 1px) #fcfcfa; background-size:18px 18px}
-.demo-fig img{display:block; width:100%; height:200px; object-fit:contain; margin:0 auto}
-.demo-fig figcaption{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted);
-  margin-top:8px; text-transform:uppercase; letter-spacing:.06em}
-.demo-prompt{position:relative; max-width:200px; margin:0 auto}
-.demo-prompt-label{display:block; font-family:"IBM Plex Mono",monospace; font-size:.68rem; color:var(--muted);
-  text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px}
-.demo-prompt code{display:block; background:#FFF8EC; border:1px solid #F0DDB6; border-radius:8px;
-  padding:10px 12px; color:#5b5341; font-size:.84rem; line-height:1.4}
-.demo-prompt::before,.demo-prompt::after{content:"→"; position:absolute; top:50%;
-  transform:translateY(-50%); color:var(--otorange); font-size:1.1rem}
-.demo-prompt::before{left:-15px} .demo-prompt::after{right:-15px}
-.demo-changed{color:var(--muted); font-size:.85rem; margin:16px auto 0; max-width:62ch;
-  min-height:2.8em}
 .car-nav{flex:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.05rem;
   background:#fff; border:1.5px solid var(--line-strong); color:var(--ink); transition:.15s}
 .car-nav:hover{border-color:var(--otblue); color:var(--otblue)}
@@ -1031,47 +1007,6 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
 .hero-dot:hover{border-color:var(--otblue)}
 .hero-dot.active{background:var(--ink); border-color:var(--ink)}
 
-/* ---------- skills page ---------- */
-.skills-page{max-width:var(--maxw); margin:0 auto; padding:0 var(--gutter)}
-.skills-intro{max-width:680px; margin:0 auto; padding:46px 0 8px; text-align:center}
-.skills-intro h1{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
-  font-size:clamp(2rem,4.5vw,2.8rem); margin:0 0 .25em}
-.skills-intro .lede{font-family:"Fraunces",serif; font-weight:400; color:#34322b;
-  font-size:clamp(1.02rem,1.8vw,1.2rem); margin:0 auto}
-.skills-intro .lede code{font-family:"IBM Plex Mono",monospace; font-size:.9em}
-.skills-libwide,.skills-how,.skills-why{padding:36px 0; border-top:1px solid var(--line)}
-.skills-libwide h2,.skills-how h2,.skills-why h2{font-family:"Fraunces",serif; font-weight:600;
-  font-size:1.5rem; margin:0 0 6px; letter-spacing:-.01em}
-.skills-index-sub{color:var(--muted); margin:0 0 20px; font-size:.92rem; max-width:620px}
-.skills-steps{margin:0; padding:0; list-style:none; counter-reset:step;
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px}
-.skills-steps li{counter-increment:step; position:relative; background:#fff;
-  border:1px solid var(--line); border-radius:12px; padding:18px 20px 18px 54px;
-  box-shadow:var(--shadow); color:#4a473f; font-size:.9rem; line-height:1.5}
-.skills-steps li::before{content:counter(step); position:absolute; left:18px; top:16px;
-  width:26px; height:26px; border-radius:50%; background:var(--otblue); color:#fff;
-  font:600 .9rem "IBM Plex Sans",sans-serif; display:flex; align-items:center; justify-content:center}
-.skills-steps strong{color:var(--ink)}
-.skill-links{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px}
-.skill-link{display:block; text-decoration:none; background:#fff; border:1px solid var(--line);
-  border-radius:12px; padding:18px 20px; box-shadow:var(--shadow);
-  transition:transform .16s, border-color .16s, box-shadow .16s}
-.skill-link:hover{transform:translateY(-3px); border-color:var(--line-strong)}
-.skill-link h3{margin:0 0 .3em; font-family:"Fraunces",serif; font-weight:600; font-size:1.12rem;
-  color:var(--ink); display:flex; justify-content:space-between; align-items:center; gap:8px}
-.skill-link h3 span{color:var(--otblue); font-family:"IBM Plex Sans",sans-serif; font-weight:600}
-.skill-link p{margin:0; color:#4a473f; font-size:.9rem}
-
-/* install + scenarios cards (skills / how-to-use page) */
-.skills-install{margin:34px 0 0; max-width:78ch}
-.install-cards,.scenario-cards{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); margin-top:1em}
-.install-card,.scenario-card{border:1px solid var(--line); border-radius:8px; padding:16px}
-.install-rec{border-color:var(--otblue)}
-.install-tag{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.04em}
-.install-card h3,.scenario-card h3{font-family:"Fraunces",serif; font-size:1.05rem; margin:.4em 0}
-.scenario-card h3 span{font-family:"IBM Plex Mono",monospace; font-size:.65rem; color:var(--muted); margin-left:.4em}
-.install-card pre,.scenario-card pre{overflow-x:auto}
-
 /* Browse tool-surface header */
 .hero-browse{padding-top:40px}
 .browse-title{font-family:"Fraunces",serif; font-weight:900; letter-spacing:-.02em;
@@ -1099,12 +1034,8 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.86em;
   .nav-toggle:checked ~ .nav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
   .hero{padding:34px 20px 8px}
   .showcase{padding:32px 0 26px}
-  .steps{grid-template-columns:1fr}
-  .demo-trip{grid-template-columns:1fr; gap:12px}
   .howto-steps,.howto-flow{grid-template-columns:1fr}
   .howto-arrow-glyph{transform:rotate(90deg)}
-  .demo-prompt{max-width:none}
-  .demo-prompt::before,.demo-prompt::after{display:none}
   .carousel{gap:6px}
   .car-nav{width:34px; height:34px}
 }
