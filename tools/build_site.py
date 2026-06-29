@@ -84,6 +84,9 @@ def head(title: str, css_href: str, *, description: str = TAGLINE, browse_href: 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description)}">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -97,12 +100,14 @@ def head(title: str, css_href: str, *, description: str = TAGLINE, browse_href: 
 def navbar(surface: str) -> str:
     """Shared sticky header — identical on every surface except active state and
     relative hrefs. surface in {home, browse, item, skills}."""
+    # Root-relative hrefs so the canonical URL stays clean ("/" not "/index.html",
+    # "/browse/" not "/browse/index.html") on every surface.
     if surface == "home":
-        home, browse, sec = "index.html", "browse/", "browse/"
+        home, browse, sec = "/", "/browse/", "/browse/"
     elif surface == "browse":
-        home, browse, sec = "../index.html", "index.html", ""
+        home, browse, sec = "/", "/browse/", ""
     else:  # item
-        home, browse, sec = "../index.html", "../browse/", "../browse/"
+        home, browse, sec = "/", "/browse/", "/browse/"
     browse_active = " active" if surface in ("browse", "item") else ""
     return f"""<header class="navbar">
   <div class="nav-inner">
@@ -459,7 +464,7 @@ def home_page(featured: list[dict], by_id: dict, counts: dict, howto: list[dict]
         + navbar("home")
         + f"""<main class="home">
   <section class="showcase">
-    <a class="hero-logo" href="index.html" aria-label="OpenTikZ home">Open<span class="tik">TikZ</span><span class="caret">&#9475;</span></a>
+    <a class="hero-logo" href="/" aria-label="OpenTikZ home">Open<span class="tik">TikZ</span><span class="caret">&#9475;</span></a>
     <h1>Describe your figure. Get it, paper-ready.</h1>
     <p class="show-lede">An AI-agent skill for LaTeX TikZ figures.</p>
 {hero_carousel(showcase_items)}    <div class="cta-row">
@@ -572,6 +577,13 @@ def build(root: Path) -> int:
     # Custom domain for GitHub Pages. site/ is rebuilt from scratch each run, so
     # the CNAME must be (re)written here rather than committed under site/.
     (site / "CNAME").write_text("opentikz.org\n", encoding="utf-8")
+    # Favicons live at the site root (head() links them with absolute paths so
+    # they resolve from every surface). Copied verbatim from assets/ — no TeX/raster
+    # tooling needed at build time.
+    for fav in ("favicon.ico", "favicon.svg", "apple-touch-icon.png"):
+        src = root / "assets" / fav
+        if src.exists():
+            shutil.copyfile(src, site / fav)
 
     n_prev = 0
     for it in catalog:

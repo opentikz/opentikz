@@ -11,6 +11,7 @@ name: Deploy site
       - "templates/**"
       - "examples/**"
       - "skills-demos/**"
+      - "assets/**"
       - "tools/build_site.py"
       - "tools/_common.py"
       - ".github/workflows/pages.yml"

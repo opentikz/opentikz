@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="OpenTikZ">
+  <title>OpenTikZ</title>
+  <rect x="1" y="1" width="62" height="62" rx="14" fill="#FBFAF6" stroke="#E6E3D8" stroke-width="2"/>
+  <!-- blue "T" (echoes the wordmark) -->
+  <rect x="13.1" y="16.3" width="24.3" height="7.7" fill="#0072B2"/>
+  <rect x="21.4" y="16.3" width="7.7" height="33.3" fill="#0072B2"/>
+  <!-- amber terminal caret -->
+  <rect x="41" y="15" width="5.8" height="25.9" rx="1.5" fill="#E69F00"/>
+</svg>
