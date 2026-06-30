@@ -1,0 +1,14 @@
+# Keep the "blank issue" option, but steer open-ended traffic to Discussions.
+# Bugs and concrete, closeable tasks stay as Issues; questions, ideas, and
+# show-and-tell go to Discussions.
+blank_issues_enabled: true
+contact_links:
+  - name: 🙋 Question — how do I use a template / icon / the skill?
+    url: https://github.com/opentikz/opentikz/discussions/categories/q-a
+    about: Ask in Discussions Q&A. Issues are for bugs and concrete tasks.
+  - name: 💡 Idea or request — a new icon, template, or parameter
+    url: https://github.com/opentikz/opentikz/discussions/categories/ideas
+    about: Propose it in Discussions Ideas so others can upvote and refine it.
+  - name: 🎨 Show & tell — a figure you built with OpenTikZ
+    url: https://github.com/opentikz/opentikz/discussions/categories/show-and-tell
+    about: Share what you made in Discussions Show & Tell.

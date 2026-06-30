@@ -4,8 +4,10 @@ Thanks for helping build the "Flaticon for academic TikZ". This guide covers how
 to add content, the rules that keep it consistent and AI-editable, and the local
 workflow to validate your work before opening a pull request.
 
-If anything here is unclear, open an issue — improving this guide is a welcome
-contribution too.
+If anything here is unclear, ask in [Discussions](https://github.com/opentikz/opentikz/discussions)
+— improving this guide is a welcome contribution too. Use **Issues** for bugs and
+concrete, closeable tasks; use **Discussions** for questions, ideas, and sharing
+figures you built.
 
 ## Licensing — read this first
 

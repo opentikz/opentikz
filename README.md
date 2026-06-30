@@ -164,6 +164,16 @@ reference/                  color-palettes/, annotations/, layout/
 tools/                      build_catalog.py, render_preview.py, build_site.py, validate.py
 ```
 
+## Community
+
+- 💬 **[Discussions](https://github.com/opentikz/opentikz/discussions)** — ask how
+  to use a template or the skill (Q&A), request a new icon/template (Ideas), or
+  show a figure you built (Show & tell).
+- 🐛 **[Issues](https://github.com/opentikz/opentikz/issues)** — report a bug or a
+  figure that won't compile, or file a concrete task.
+
+Rule of thumb: open-ended → Discussions, closeable → Issues.
+
 ## Contributing & local build
 
 Want to add a figure or fix one? See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the
