@@ -4,10 +4,9 @@
 
 ### Describe your figure. Get it, paper-ready.
 
-An AI-agent skill for LaTeX TikZ figures — copyable icons, editable templates,
-and one skill that lets Claude Code modify them, so researchers produce paper
-figures fast without writing TikZ from scratch.
+More than an AI-agent skill for LaTeX TikZ figures.
 
+[![Star OpenTikZ on GitHub](https://img.shields.io/github/stars/opentikz/opentikz?style=flat&label=%E2%98%85%20Star&color=E69F00)](https://github.com/opentikz/opentikz)
 [![CI](https://github.com/opentikz/opentikz/actions/workflows/ci.yml/badge.svg)](https://github.com/opentikz/opentikz/actions/workflows/ci.yml)
 [![Deploy site](https://github.com/opentikz/opentikz/actions/workflows/pages.yml/badge.svg)](https://github.com/opentikz/opentikz/actions/workflows/pages.yml)
 [![Website](https://img.shields.io/badge/website-opentikz.org-0072B2)](https://opentikz.org)
@@ -20,9 +19,14 @@ figures fast without writing TikZ from scratch.
 
 ---
 
-OpenTikZ is the "Flaticon for academic TikZ", focused on conceptual/overview
-figures — system block diagrams, neural-network architectures, pipelines, and
-flowcharts. **Data plots are out of scope** (use pgfplots/matplotlib).
+OpenTikZ is the "Flaticon for academic TikZ" — conceptual/overview figures
+(system block diagrams, neural-network architectures, pipelines, flowcharts) for
+your papers, made fast. Four ways to use it:
+
+- **Use icons** — grab a single icon, no AI needed: copy its `.tex` (or download SVG/PNG) and `\input` it.
+- **Edit a template** — tell the agent the change; it edits the template and verifies it compiles.
+- **PNG → TikZ** — hand the agent a figure image; get editable TikZ back.
+- **Describe → TikZ** — describe a figure in words; the agent drafts it from the library.
 
 ## Quick start
 
@@ -203,3 +207,16 @@ it is appreciated. Use the **"Cite this repository"** button on GitHub (powered 
   [`LICENSE-CONTENT`](LICENSE-CONTENT).
 
 By contributing graphic content you agree to release it under CC0 1.0.
+
+---
+
+<div align="center">
+
+### ⭐ Found OpenTikZ useful?
+
+[**Star us on GitHub**](https://github.com/opentikz/opentikz) — it helps more researchers
+discover the library and find these figures faster.
+
+[![Star OpenTikZ on GitHub](https://img.shields.io/github/stars/opentikz/opentikz?style=social)](https://github.com/opentikz/opentikz)
+
+</div>
