@@ -177,8 +177,8 @@ Rule of thumb: open-ended → Discussions, closeable → Issues.
 ## Contributing & local build
 
 Want to add a figure or fix one? See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the
-format rules, and [`CLAUDE.md`](CLAUDE.md) / [`docs/`](docs/) for the product spec
-and design guide. The toolchain (all stdlib + an optional LaTeX backend):
+format rules and [`docs/DESIGN_GUIDE.md`](docs/DESIGN_GUIDE.md) for the design
+guide. The toolchain (all stdlib + an optional LaTeX backend):
 
 ```bash
 python3 -m pip install -r requirements.txt   # installs jsonschema

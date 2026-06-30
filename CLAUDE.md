@@ -93,9 +93,7 @@ opentikz/
 ├── catalog.json              # AUTO-GENERATED, do not hand-edit
 ├── .claude-plugin/           # marketplace.json + plugin.json (Claude Code plugin)
 ├── docs/
-│   ├── DESIGN_GUIDE.md       # line width, colors, node naming
-│   ├── PRODUCT_SPEC.md       # full product spec
-│   └── ROADMAP.md            # MVP steps (with progress markers)
+│   └── DESIGN_GUIDE.md       # line width, colors, node naming
 ├── icons/<domain>/<name>/
 │   ├── <name>.tex
 │   ├── <name>.meta.json
@@ -151,5 +149,4 @@ Live. MVP Roadmap Steps 1–4 are complete: repo skeleton + CI, the cold-start
 content (31 catalog items — 20 icons, 8 templates, 3 examples), the skills layer (one
 repo-wide `using-opentikz` skill + per-template `edit_contract`s + `reference/`
 material), and the static website (built by `tools/build_site.py`, deployed to
-GitHub Pages). See `docs/ROADMAP.md` for per-step status and what remains
-(Step 5: launch + community).
+GitHub Pages). Remaining work centers on launch + community growth.
