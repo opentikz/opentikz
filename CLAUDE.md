@@ -148,7 +148,7 @@ opentikz/
 ## Current status
 
 Live. MVP Roadmap Steps 1–4 are complete: repo skeleton + CI, the cold-start
-content (72 catalog items — 61 icons, 8 templates, 3 examples), the skills layer (one
+content (74 catalog items — 61 icons, 10 templates, 3 examples), the skills layer (one
 repo-wide `using-opentikz` skill + per-template `edit_contract`s + `reference/`
 material), and the static website (built by `tools/build_site.py`, deployed to
 GitHub Pages). Remaining work centers on launch + community growth.

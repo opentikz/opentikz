@@ -1,0 +1,154 @@
+{
+  "id": "llm-serving-stack",
+  "name": "LLM Serving Stack",
+  "type": "template",
+  "domain": [
+    "systems",
+    "brands"
+  ],
+  "tags": [
+    "llm",
+    "serving",
+    "inference",
+    "vllm",
+    "gpu",
+    "deployment",
+    "models",
+    "brands",
+    "logo"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path",
+    "positioning",
+    "arrows.meta"
+  ],
+  "preview": "preview.svg",
+  "description": "LLM inference serving stack with brand logos: users to a vLLM engine on a GPU cluster, serving swappable model cards.",
+  "composed_of": [
+    "vllm",
+    "nvidia",
+    "deepseek",
+    "qwen",
+    "mistral"
+  ],
+  "edit_contract": {
+    "parameters": [
+      {
+        "name": "\\cardw",
+        "type": "length-cm",
+        "meaning": "card width",
+        "default": "2.5"
+      },
+      {
+        "name": "\\cardh",
+        "type": "length-cm",
+        "meaning": "logo-card height",
+        "default": "2.0"
+      },
+      {
+        "name": "\\modelgap",
+        "type": "length-cm",
+        "meaning": "vertical gap between model cards",
+        "default": "0.5"
+      },
+      {
+        "name": "\\userslabel",
+        "type": "text",
+        "meaning": "label of the client card",
+        "default": "Users"
+      },
+      {
+        "name": "\\enginelabel",
+        "type": "text",
+        "meaning": "label of the serving-engine card",
+        "default": "vLLM engine"
+      },
+      {
+        "name": "\\gpuslabel",
+        "type": "text",
+        "meaning": "label of the hardware card",
+        "default": "GPU cluster"
+      },
+      {
+        "name": "\\modelalabel",
+        "type": "text",
+        "meaning": "label of the top model card (m1)",
+        "default": "DeepSeek"
+      },
+      {
+        "name": "\\modelblabel",
+        "type": "text",
+        "meaning": "label of the middle model card (m2)",
+        "default": "Qwen"
+      },
+      {
+        "name": "\\modelclabel",
+        "type": "text",
+        "meaning": "label of the bottom model card (m3)",
+        "default": "Mistral"
+      },
+      {
+        "name": "\\reqlabel",
+        "type": "text",
+        "meaning": "upper request-edge label",
+        "default": "prompts /"
+      },
+      {
+        "name": "\\resplabel",
+        "type": "text",
+        "meaning": "lower request-edge label",
+        "default": "completions"
+      },
+      {
+        "name": "\\kernellabel",
+        "type": "text",
+        "meaning": "engine-to-GPU edge label",
+        "default": "PagedAttention"
+      },
+      {
+        "name": "\\weightslabel",
+        "type": "text",
+        "meaning": "model-to-engine edge label",
+        "default": "weights"
+      }
+    ],
+    "node_naming": "users, engine, gpus; model cards m1..m3 top-to-bottom; logos are pics named pic<brand>",
+    "styles": [
+      "card",
+      "cardlabel",
+      "flow",
+      "elabel"
+    ],
+    "operations": [
+      {
+        "id": "relabel-cards",
+        "summary": "Change any card or edge text via the label \\def parameters only."
+      },
+      {
+        "id": "swap-model-logo",
+        "summary": "Replace a model card's logo: swap the \\pic call's pic<brand> name and inline the new brand's \\definecolor + pic definition from icons/brands/<brand>/."
+      },
+      {
+        "id": "add-model-card",
+        "summary": "Duplicate the m3 block as m4 with yshift=-2*(\\cardh+\\modelgap), add a flow edge from m4.west to engine.south east side, and a \\modeldlabel parameter."
+      },
+      {
+        "id": "resize-cards",
+        "summary": "Scale all cards via \\cardw/\\cardh; keep pic scale ~0.28-0.3 so logos stay inside cards."
+      },
+      {
+        "id": "recolor-structure",
+        "summary": "Change card fills/arrows via the five palette names (tints allowed); never touch the brand\\* colors."
+      }
+    ],
+    "invariants": [
+      "Structural colors only via the five palette names; brand marks keep their official brand\\* colors (exception documented in icons/brands/README.md).",
+      "Node names users/engine/gpus/m1..m3 are stable API \u2014 never rename them.",
+      "svg.path ignores TikZ unit-vector options (x=, y=): position/size logo pics only via shift/scale.",
+      "The file must stay standalone-compilable."
+    ]
+  }
+}

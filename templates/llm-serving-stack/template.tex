@@ -1,0 +1,99 @@
+\documentclass[border=6pt]{standalone}
+
+% --- packages (mirror these in template.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path, positioning, arrows.meta}
+
+% --- palette (canonical source: reference/color-palettes/color-palettes.md; light variant) ---
+\definecolor{otblue}{HTML}{0072B2}
+\definecolor{otorange}{HTML}{E69F00}
+\definecolor{otteal}{HTML}{009E73}
+\definecolor{otpurple}{HTML}{CC79A7}
+\definecolor{otgray}{HTML}{5A5A5A}
+% --- brand colors (official; exception documented in icons/brands/README.md) ---
+\definecolor{brandvllmyellow}{HTML}{EBB431}
+\definecolor{brandvllmblue}{HTML}{63A1FC}
+\definecolor{brandnvidia}{HTML}{76B900}
+\definecolor{branddeepseek}{HTML}{5786FE}
+\definecolor{brandqwen}{HTML}{6950EF}
+\definecolor{brandmistral}{HTML}{FA520F}
+
+\begin{document}
+% Brand-logo pics (shape data inlined from icons/brands/, which derives from
+% the CC0 simple-icons project; marks remain trademarks of their owners).
+% NOTE: svg.path ignores TikZ unit-vector options (x=, y=) — position/size the
+% pics only via shift/scale, which are applied through the transform matrix.
+\tikzset{
+  picvllm/.pic={\begin{scope}[shift={(-36pt,-36pt)}]\fill[brandvllmyellow] svg {M 29.49 0 L 29.49 56.574 L 1.2 56.574 Z};\fill[brandvllmblue] svg {M 70.8 72 L 44.637 58.23 L 29.487 0 L 51.717 0 Z};\end{scope}},
+  picnvidia/.pic={\begin{scope}[shift={(-36pt,-36pt)}]\fill[brandnvidia] svg {M 26.844 45.606 L 26.844 49.896 C 27.2673 49.9274 27.6915 49.9454 28.116 49.95 C 39.882 50.322 47.595 39.828 47.595 39.828 C 47.595 39.828 39.273 28.275 30.345 28.275 C 29.151 28.275 27.984 28.461 26.871 28.83 L 26.871 41.868 C 31.455 41.313 32.382 39.297 35.112 34.713 L 41.232 39.855 C 41.232 39.855 36.756 45.711 29.232 45.711 C 28.4346 45.7288 27.6368 45.6937 26.844 45.606 M 26.844 59.811 L 26.844 53.397 L 28.116 53.478 C 44.466 54.033 55.146 40.068 55.146 40.068 C 55.146 40.068 42.906 25.176 30.156 25.176 C 29.046 25.176 27.957 25.281 26.871 25.467 L 26.871 21.492 C 27.771 21.387 28.701 21.306 29.601 21.306 C 41.472 21.306 50.061 27.375 58.38 34.53 C 59.757 33.417 65.4 30.741 66.57 29.574 C 58.671 22.95 40.254 17.622 29.811 17.622 C 28.806 17.622 27.852 17.676 26.898 17.781 L 26.898 12.189 L 72 12.189 L 72 59.811 Z M 26.844 28.833 L 26.844 25.44 C 15.873 27.402 12.825 38.82 12.825 38.82 C 12.825 38.82 18.099 44.652 26.844 45.606 L 26.844 41.895 L 26.82 41.895 C 22.236 42.453 18.63 38.16 18.63 38.16 C 18.63 38.16 20.67 30.924 26.847 28.83 M 7.368 39.3 C 7.368 39.3 13.86 48.891 26.868 49.899 L 26.868 53.397 C 12.459 52.23 0 40.041 0 40.041 C 0 40.041 7.05 19.635 26.844 17.781 L 26.844 21.492 C 12.324 23.292 7.368 39.3 7.368 39.3 Z};\end{scope}},
+  picdeepseek/.pic={\begin{scope}[shift={(-36pt,-36pt)}]\fill[branddeepseek] svg {M 71.244 58.047 C 70.482 58.419 70.152 57.708 69.708 57.348 C 69.555 57.228 69.426 57.078 69.297 56.937 C 68.181 55.746 66.879 54.966 65.178 55.059 C 62.691 55.197 60.567 54.417 58.689 52.515 C 58.29 54.861 56.964 56.259 54.948 57.159 C 53.892 57.624 52.824 58.092 52.083 59.109 C 51.567 59.829 51.426 60.636 51.168 61.431 C 51.003 61.911 50.838 62.4 50.289 62.481 C 49.689 62.574 49.455 62.073 49.221 61.653 C 48.282 59.937 47.919 58.047 47.955 56.133 C 48.036 51.825 49.854 48.393 53.469 45.954 C 53.88 45.672 53.985 45.393 53.856 44.985 C 53.61 44.145 53.316 43.326 53.058 42.486 C 52.893 41.949 52.647 41.832 52.074 42.066 C 50.126 42.8995 48.3568 44.1004 46.863 45.603 C 44.292 48.087 41.97 50.832 39.072 52.983 C 38.3995 53.4768 37.7101 53.9471 37.005 54.393 C 34.05 57.264 37.395 59.622 38.166 59.901 C 38.976 60.195 38.448 61.2 35.832 61.185 C 33.216 61.176 30.822 60.3 27.771 59.13 C 27.3178 58.9566 26.8512 58.8202 26.376 58.722 C 23.5247 59.2581 20.6088 59.3602 17.727 59.025 C 12.072 58.395 7.557 55.725 4.236 51.159 C 0.246 45.672 -0.693 39.438 0.456 32.94 C 1.665 26.088 5.16 20.415 10.536 15.981 C 16.107 11.382 22.527 9.129 29.85 9.561 C 34.296 9.816 39.246 10.413 44.832 15.141 C 46.242 14.439 47.718 14.157 50.172 13.947 C 52.059 13.773 53.877 14.04 55.287 14.334 C 57.492 14.799 57.339 16.842 56.541 17.217 C 50.076 20.229 51.495 19.002 50.205 19.995 C 53.49 23.88 58.509 30.789 60.057 40.194 C 60.207 41.232 60.402 42.696 60.381 43.536 C 60.369 44.049 60.486 44.25 61.071 44.307 C 62.6937 44.4774 64.2678 44.9614 65.706 45.732 C 69.897 48.021 71.586 51.78 71.985 56.283 C 72.045 56.973 71.973 57.684 71.244 58.047 M 34.74 17.496 C 28.476 22.422 25.437 24.045 24.18 23.976 C 23.01 23.904 23.22 22.56 23.478 21.687 C 23.748 20.823 24.099 20.226 24.591 19.467 C 24.933 18.966 25.167 18.219 24.252 17.658 C 22.233 16.41 18.726 18.078 18.561 18.162 C 14.478 20.565 11.061 23.742 8.658 28.08 C 6.333 32.259 4.983 36.744 4.761 41.526 C 4.701 42.681 5.043 43.092 6.192 43.302 C 7.7055 43.5905 9.256 43.629 10.782 43.416 C 17.175 42.483 22.62 39.624 27.183 35.094 C 29.787 32.514 31.758 29.433 33.789 26.424 C 35.949 23.226 38.271 20.178 41.229 17.679 C 42.273 16.806 43.107 16.14 43.905 15.648 C 41.499 15.378 37.485 15.321 34.74 17.493 Z M 37.743 36.816 C 37.7419 37.1185 37.89 37.4022 38.1388 37.5743 C 38.3877 37.7463 38.7053 37.7848 38.988 37.677 C 39.1164 37.6297 39.2323 37.5538 39.327 37.455 C 39.4951 37.2839 39.588 37.0528 39.585 36.813 C 39.585 36.303 39.177 35.892 38.661 35.892 C 38.4163 35.8896 38.1809 35.9859 38.0081 36.1592 C 37.8353 36.3326 37.7398 36.5683 37.743 36.813 M 47.073 32.025 C 46.473 31.782 45.873 31.572 45.3 31.545 C 44.4381 31.5162 43.5926 31.7853 42.906 32.307 C 42.084 32.997 41.496 33.381 41.253 34.581 C 41.1654 35.1671 41.1806 35.7641 41.298 36.345 C 41.508 37.326 41.277 37.956 40.584 38.526 C 40.02 38.994 39.306 39.123 38.517 39.123 C 38.2487 39.1431 37.9883 39.223 37.755 39.357 C 37.5593 39.4457 37.4104 39.6132 37.3452 39.818 C 37.28 40.0227 37.3047 40.2455 37.413 40.431 C 37.574 40.6674 37.768 40.8795 37.989 41.061 C 39.057 41.667 40.29 41.469 41.427 41.013 C 42.483 40.581 43.281 39.789 44.43 38.667 C 45.606 37.314 45.816 36.939 46.485 35.922 C 47.013 35.13 47.493 34.314 47.823 33.378 C 48.021 32.796 47.763 32.319 47.073 32.028};\end{scope}},
+  picqwen/.pic={\begin{scope}[shift={(-36pt,-36pt)}]\fill[brandqwen] svg {M 71.757 28.365 L 62.451 44.49 L 66.861 52.122 C 67.1681 52.6463 67.1681 53.2957 66.861 53.82 L 61.962 62.31 C 61.657 62.8334 61.0978 63.1564 60.492 63.159 L 41.871 63.159 L 37.461 70.794 C 37.1567 71.3186 36.5974 71.6427 35.991 71.646 L 26.196 71.646 C 25.5879 71.649 25.0257 71.3231 24.726 70.794 L 15.417 54.675 L 6.597 54.675 C 5.9889 54.678 5.4267 54.3521 5.127 53.823 L 0.231 45.339 C -0.0773 44.8139 -0.0773 44.1631 0.231 43.638 L 9.54 27.51 L 5.13 19.875 C 4.8229 19.3507 4.8229 18.7013 5.13 18.177 L 10.032 9.687 C 10.337 9.1636 10.8962 8.8406 11.502 8.838 L 30.117 8.838 L 34.527 1.203 C 34.8313 0.6784 35.3906 0.3543 35.997 0.351 L 45.795 0.351 C 46.4014 0.3543 46.9607 0.6784 47.265 1.203 L 56.577 17.328 L 65.397 17.328 C 66.0028 17.3306 66.562 17.6536 66.867 18.177 L 71.769 26.661 C 72.0813 27.1873 72.0767 27.8432 71.757 28.365 M 26.199 69.942 L 31.101 61.458 L 26.199 52.974 L 65.4 52.974 L 60.492 44.49 L 22.275 44.49 L 16.89 53.82 Z M 30.117 10.539 L 11.502 10.545 L 16.404 19.035 L 26.199 19.035 L 6.603 52.968 L 16.404 52.968 C 22.768 41.934 29.135 30.902 35.505 19.872 Z M 60.489 27.519 L 55.59 36 L 35.994 2.055 L 31.092 10.545 C 37.479 21.564 43.842 32.598 50.211 43.629 L 60.987 43.629 L 70.293 27.507 Z};\end{scope}},
+  picmistral/.pic={\begin{scope}[shift={(-36pt,-36pt)}]\fill[brandmistral] svg {M 51.429 61.713 L 51.429 51.429 L 41.142 51.429 L 41.142 41.142 L 30.858 41.142 L 30.858 51.429 L 20.571 51.429 L 20.571 61.71 L 10.29 61.71 L 10.29 20.568 L 0 20.568 L 0 10.284 L 30.858 10.284 L 30.858 20.568 L 20.571 20.568 L 20.571 30.855 L 30.858 30.855 L 30.858 20.568 L 41.145 20.568 L 41.145 30.855 L 51.429 30.855 L 51.429 20.568 L 41.145 20.568 L 41.145 10.284 L 72 10.284 L 72 20.568 L 61.71 20.568 L 61.71 61.713 Z};\end{scope}},
+}
+
+% ==== parameters (edit these) ============================================
+\def\cardw{2.5}       % card width (cm)
+\def\cardh{2.0}       % logo-card height (cm)
+\def\modelgap{0.5}    % vertical gap between model cards (cm)
+% labels
+\def\userslabel{Users}
+\def\enginelabel{vLLM engine}
+\def\gpuslabel{GPU cluster}
+\def\modelalabel{DeepSeek}
+\def\modelblabel{Qwen}
+\def\modelclabel{Mistral}
+\def\reqlabel{prompts /}
+\def\resplabel{completions}
+\def\kernellabel{PagedAttention}
+\def\weightslabel{weights}
+% =========================================================================
+
+\begin{tikzpicture}[
+    >={Stealth[length=2.4mm]},
+    card/.style={
+      draw=otgray!55, line width=0.7pt, rounded corners=4pt, align=center,
+      minimum width=\cardw cm, minimum height=\cardh cm,
+    },
+    cardlabel/.style={font=\sffamily\small, text=otgray!40!black},
+    flow/.style={draw=otgray!70, line width=0.9pt, ->},
+    elabel/.style={font=\sffamily\footnotesize, text=otgray},
+  ]
+
+  % --- users ---
+  \node[card, fill=otgray!10, minimum height=1.2cm] (users) at (0,0) {\sffamily\small \userslabel};
+
+  % --- serving engine on GPUs ---
+  \node[card, fill=otblue!12, right=2.2cm of users] (engine) {};
+  \pic[scale=0.3] at ([yshift=0.3cm]engine.center) {picvllm};
+  \node[cardlabel] at ([yshift=-0.35cm]engine.center) {\enginelabel};
+
+  \node[card, fill=otteal!12, below=0.9cm of engine] (gpus) {};
+  \pic[scale=0.3] at ([yshift=0.28cm]gpus.center) {picnvidia};
+  \node[cardlabel] at ([yshift=-0.4cm]gpus.center) {\gpuslabel};
+
+  % --- served model cards (top -> bottom: m1, m2, m3) ---
+  \node[card, fill=otorange!14, right=2.4cm of engine, yshift=\cardh cm+\modelgap cm] (m1) {};
+  \pic[scale=0.28] at ([yshift=0.28cm]m1.center) {picdeepseek};
+  \node[cardlabel] at ([yshift=-0.4cm]m1.center) {\modelalabel};
+
+  \node[card, fill=otorange!14, right=2.4cm of engine] (m2) {};
+  \pic[scale=0.28] at ([yshift=0.28cm]m2.center) {picqwen};
+  \node[cardlabel] at ([yshift=-0.4cm]m2.center) {\modelblabel};
+
+  \node[card, fill=otorange!14, right=2.4cm of engine, yshift=-\cardh cm-\modelgap cm] (m3) {};
+  \pic[scale=0.28] at ([yshift=0.28cm]m3.center) {picmistral};
+  \node[cardlabel] at ([yshift=-0.4cm]m3.center) {\modelclabel};
+
+  % --- flows ---
+  \draw[flow, <->] (users) -- (engine)
+    node[midway, above, elabel] {\reqlabel}
+    node[midway, below, elabel] {\resplabel};
+  \draw[flow] (engine.south) -- (gpus.north)
+    node[midway, right, elabel] {\kernellabel};
+  \draw[flow] (m1.west) -- (engine.10)
+    node[pos=0.3, above, sloped, elabel] {\weightslabel};
+  \draw[flow] (m2.west) -- (engine.east);
+  \draw[flow] (m3.west) -- (engine.-10);
+
+\end{tikzpicture}
+\end{document}

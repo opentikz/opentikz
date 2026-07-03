@@ -1651,6 +1651,148 @@
     "type": "icon"
   },
   {
+    "author": "Daniel Huang",
+    "composed_of": [
+      "claude",
+      "mcp",
+      "github",
+      "arxiv",
+      "google-scholar"
+    ],
+    "description": "LLM agent tool-use stack with brand logos: user to an LLM core to MCP servers fanning out to swappable tool cards.",
+    "domain": [
+      "ml",
+      "brands"
+    ],
+    "edit_contract": {
+      "invariants": [
+        "Structural colors only via the five palette names; brand marks keep their official brand\\* colors (exception documented in icons/brands/README.md).",
+        "Node names user/llm/mcp/t1..t3 are stable API — never rename them.",
+        "svg.path ignores TikZ unit-vector options (x=, y=): position/size logo pics only via shift/scale.",
+        "The file must stay standalone-compilable."
+      ],
+      "node_naming": "user, llm, mcp; tool cards t1..t3 top-to-bottom; logos are pics named pic<brand>",
+      "operations": [
+        {
+          "id": "relabel-cards",
+          "summary": "Change any card or edge text via the label \\def parameters only."
+        },
+        {
+          "id": "swap-tool-logo",
+          "summary": "Replace a tool card's logo: swap the \\pic call's pic<brand> name and inline the new brand's \\definecolor + pic definition from icons/brands/<brand>/."
+        },
+        {
+          "id": "add-tool-card",
+          "summary": "Duplicate the t3 block as t4 with yshift=-2*(\\cardh+\\toolgap), add a flow edge from mcp to t4.west, and a \\tooldlabel parameter."
+        },
+        {
+          "id": "resize-cards",
+          "summary": "Scale all cards via \\cardw/\\cardh; keep pic scale ~0.26-0.3 so logos stay inside cards."
+        },
+        {
+          "id": "recolor-structure",
+          "summary": "Change card fills/arrows via the five palette names (tints allowed); never touch the brand\\* colors."
+        }
+      ],
+      "parameters": [
+        {
+          "default": "2.4",
+          "meaning": "card width",
+          "name": "\\cardw",
+          "type": "length-cm"
+        },
+        {
+          "default": "1.9",
+          "meaning": "logo-card height",
+          "name": "\\cardh",
+          "type": "length-cm"
+        },
+        {
+          "default": "0.45",
+          "meaning": "vertical gap between tool cards",
+          "name": "\\toolgap",
+          "type": "length-cm"
+        },
+        {
+          "default": "User",
+          "meaning": "label of the user card",
+          "name": "\\userlabel",
+          "type": "text"
+        },
+        {
+          "default": "Claude",
+          "meaning": "label of the LLM-core card",
+          "name": "\\llmlabel",
+          "type": "text"
+        },
+        {
+          "default": "MCP servers",
+          "meaning": "label of the protocol card",
+          "name": "\\mcplabel",
+          "type": "text"
+        },
+        {
+          "default": "GitHub",
+          "meaning": "label of the top tool card (t1)",
+          "name": "\\toolalabel",
+          "type": "text"
+        },
+        {
+          "default": "arXiv",
+          "meaning": "label of the middle tool card (t2)",
+          "name": "\\toolblabel",
+          "type": "text"
+        },
+        {
+          "default": "Scholar",
+          "meaning": "label of the bottom tool card (t3)",
+          "name": "\\toolclabel",
+          "type": "text"
+        },
+        {
+          "default": "chat",
+          "meaning": "user-to-LLM edge label",
+          "name": "\\chatlabel",
+          "type": "text"
+        },
+        {
+          "default": "tool calls",
+          "meaning": "LLM-to-MCP edge label",
+          "name": "\\calllabel",
+          "type": "text"
+        }
+      ],
+      "styles": [
+        "card",
+        "cardlabel",
+        "flow",
+        "elabel"
+      ]
+    },
+    "id": "agent-mcp-stack",
+    "license": "CC0-1.0",
+    "name": "Agent Tool-Use Stack (MCP)",
+    "path": "templates/agent-mcp-stack",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz",
+      "svg.path",
+      "positioning",
+      "arrows.meta"
+    ],
+    "tags": [
+      "llm",
+      "agent",
+      "mcp",
+      "tools",
+      "tool use",
+      "claude",
+      "brands",
+      "logo"
+    ],
+    "type": "template"
+  },
+  {
     "author": "OpenTikZ contributors",
     "composed_of": [
       "dataset",
@@ -2199,6 +2341,161 @@
       "NSDI",
       "MLSys"
     ]
+  },
+  {
+    "author": "Daniel Huang",
+    "composed_of": [
+      "vllm",
+      "nvidia",
+      "deepseek",
+      "qwen",
+      "mistral"
+    ],
+    "description": "LLM inference serving stack with brand logos: users to a vLLM engine on a GPU cluster, serving swappable model cards.",
+    "domain": [
+      "systems",
+      "brands"
+    ],
+    "edit_contract": {
+      "invariants": [
+        "Structural colors only via the five palette names; brand marks keep their official brand\\* colors (exception documented in icons/brands/README.md).",
+        "Node names users/engine/gpus/m1..m3 are stable API — never rename them.",
+        "svg.path ignores TikZ unit-vector options (x=, y=): position/size logo pics only via shift/scale.",
+        "The file must stay standalone-compilable."
+      ],
+      "node_naming": "users, engine, gpus; model cards m1..m3 top-to-bottom; logos are pics named pic<brand>",
+      "operations": [
+        {
+          "id": "relabel-cards",
+          "summary": "Change any card or edge text via the label \\def parameters only."
+        },
+        {
+          "id": "swap-model-logo",
+          "summary": "Replace a model card's logo: swap the \\pic call's pic<brand> name and inline the new brand's \\definecolor + pic definition from icons/brands/<brand>/."
+        },
+        {
+          "id": "add-model-card",
+          "summary": "Duplicate the m3 block as m4 with yshift=-2*(\\cardh+\\modelgap), add a flow edge from m4.west to engine.south east side, and a \\modeldlabel parameter."
+        },
+        {
+          "id": "resize-cards",
+          "summary": "Scale all cards via \\cardw/\\cardh; keep pic scale ~0.28-0.3 so logos stay inside cards."
+        },
+        {
+          "id": "recolor-structure",
+          "summary": "Change card fills/arrows via the five palette names (tints allowed); never touch the brand\\* colors."
+        }
+      ],
+      "parameters": [
+        {
+          "default": "2.5",
+          "meaning": "card width",
+          "name": "\\cardw",
+          "type": "length-cm"
+        },
+        {
+          "default": "2.0",
+          "meaning": "logo-card height",
+          "name": "\\cardh",
+          "type": "length-cm"
+        },
+        {
+          "default": "0.5",
+          "meaning": "vertical gap between model cards",
+          "name": "\\modelgap",
+          "type": "length-cm"
+        },
+        {
+          "default": "Users",
+          "meaning": "label of the client card",
+          "name": "\\userslabel",
+          "type": "text"
+        },
+        {
+          "default": "vLLM engine",
+          "meaning": "label of the serving-engine card",
+          "name": "\\enginelabel",
+          "type": "text"
+        },
+        {
+          "default": "GPU cluster",
+          "meaning": "label of the hardware card",
+          "name": "\\gpuslabel",
+          "type": "text"
+        },
+        {
+          "default": "DeepSeek",
+          "meaning": "label of the top model card (m1)",
+          "name": "\\modelalabel",
+          "type": "text"
+        },
+        {
+          "default": "Qwen",
+          "meaning": "label of the middle model card (m2)",
+          "name": "\\modelblabel",
+          "type": "text"
+        },
+        {
+          "default": "Mistral",
+          "meaning": "label of the bottom model card (m3)",
+          "name": "\\modelclabel",
+          "type": "text"
+        },
+        {
+          "default": "prompts /",
+          "meaning": "upper request-edge label",
+          "name": "\\reqlabel",
+          "type": "text"
+        },
+        {
+          "default": "completions",
+          "meaning": "lower request-edge label",
+          "name": "\\resplabel",
+          "type": "text"
+        },
+        {
+          "default": "PagedAttention",
+          "meaning": "engine-to-GPU edge label",
+          "name": "\\kernellabel",
+          "type": "text"
+        },
+        {
+          "default": "weights",
+          "meaning": "model-to-engine edge label",
+          "name": "\\weightslabel",
+          "type": "text"
+        }
+      ],
+      "styles": [
+        "card",
+        "cardlabel",
+        "flow",
+        "elabel"
+      ]
+    },
+    "id": "llm-serving-stack",
+    "license": "CC0-1.0",
+    "name": "LLM Serving Stack",
+    "path": "templates/llm-serving-stack",
+    "preview": "preview.svg",
+    "requires": [
+      "tikz",
+      "svg.path",
+      "positioning",
+      "arrows.meta"
+    ],
+    "tags": [
+      "llm",
+      "serving",
+      "inference",
+      "vllm",
+      "gpu",
+      "deployment",
+      "models",
+      "brands",
+      "logo"
+    ],
+    "type": "template"
   },
   {
     "author": "OpenTikZ contributors",

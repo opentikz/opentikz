@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **2 brand-logo templates** with full `edit_contract`s: `llm-serving-stack`
+  (users → vLLM engine on a GPU cluster serving swappable model cards) and
+  `agent-mcp-stack` (user → LLM core → MCP servers fanning out to tool cards).
+  Both compose the new brand icons as inlined TikZ pics.
+
 - **41 brand icons** under `icons/brands/` (new `brands` domain), for figures
   that reference real tools and platforms: developer tooling (Docker, Git,
   GitHub, Kubernetes, Linux, Python, Reddit), the ML stack (PyTorch,
