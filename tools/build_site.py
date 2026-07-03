@@ -267,7 +267,7 @@ def item_page(item: dict, code: str, tex_name: str, css_href: str) -> str:
        Drop it into your project and <code>\\input</code> it, or copy the
        <code>tikzpicture</code> into your figure. Colours come from the shared
        palette defined in the preamble — edit those named colours, not raw hex.</p>
-    <p class="license-note">Graphic content is <strong>CC0 1.0</strong> (public domain) — reuse freely, no attribution required.</p>
+    {license_note(item)}
   </section>
 </main>
 """
@@ -276,13 +276,33 @@ def item_page(item: dict, code: str, tex_name: str, css_href: str) -> str:
     )
 
 
+def is_brand(item: dict) -> bool:
+    """Brand marks carry a trademark disclaimer instead of the blanket CC0 line."""
+    return item.get("type") == "icon" and "brands" in item.get("domain", [])
+
+
+def license_note(item: dict) -> str:
+    """Per-item license line; brand marks must not carry the blanket CC0 claim."""
+    if is_brand(item):
+        return (
+            f'<p class="license-note">The TikZ <strong>code</strong> is CC0 1.0; the '
+            f'brand mark remains a <strong>trademark of its owner</strong> — use it to '
+            f'identify the brand in figures, not to imply endorsement. '
+            f'<a href="{REPO_URL}/blob/main/icons/brands/README.md">Details</a> · '
+            f'Rights holder? <a href="{REPO_URL}/issues/new?template=trademark-removal.yml">'
+            f'request removal</a>.</p>'
+        )
+    return ('<p class="license-note">Graphic content is <strong>CC0 1.0</strong> '
+            '(public domain) — reuse freely, no attribution required.</p>')
+
+
 def footer() -> str:
     return """<footer class="site-footer">
   <div>
     <span class="fw">OpenTikZ</span> — conceptual TikZ for papers.
   </div>
   <div class="licenses">
-    Code <code>MIT</code> · Content <code>CC0 1.0</code>
+    Code <code>MIT</code> · Content <code>CC0 1.0</code> · Brand marks are property of their respective owners
   </div>
 </footer>
 """

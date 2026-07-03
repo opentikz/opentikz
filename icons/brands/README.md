@@ -16,6 +16,18 @@ the "no brand logos" non-goal in `CLAUDE.md` / `CONTRIBUTING.md`.
   imply endorsement by the trademark holder; make sure your use complies with
   the owner's brand guidelines.
 
+## Removal requests (rights holders)
+
+If you represent a trademark owner and want a mark removed from this library
+and the website, open a
+[removal request issue](https://github.com/opentikz/opentikz/issues/new?template=trademark-removal.yml)
+— we honor such requests promptly, no legal process needed.
+
+**Source discipline:** icons here derive only from the *current* simple-icons
+release. If upstream removes a mark (usually a rights-holder request — e.g.
+OpenAI, AWS), we do not resurrect it from older tags, and we remove our copy
+in the next release.
+
 ## Conventions (differ from other icons)
 
 - Each icon fills with its **official brand color**, defined once in the

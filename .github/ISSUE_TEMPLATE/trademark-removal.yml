@@ -1,0 +1,34 @@
+name: "™️ Trademark / brand-mark removal request"
+description: >-
+  For rights holders — request removal of a brand mark from icons/brands/.
+  We honor these requests promptly, no legal process needed.
+title: "[brand removal] <brand name>"
+labels: ["brand-removal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        OpenTikZ includes brand marks for **identification in figures only**
+        (see [`icons/brands/README.md`](../blob/main/icons/brands/README.md)).
+        If you represent a rights holder and want a mark removed from the
+        library and the website, file this request — we will remove it promptly.
+  - type: input
+    id: brand
+    attributes:
+      label: Brand / mark to remove
+      description: The brand name or its library path (icons/brands/<id>).
+      placeholder: e.g. Acme, or icons/brands/acme
+    validations:
+      required: true
+  - type: input
+    id: relationship
+    attributes:
+      label: Your relationship to the rights holder
+      placeholder: e.g. employee, legal counsel, authorized agent
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else we should know
+      description: Optional — scope (icon only vs. templates using it), deadlines, contact.

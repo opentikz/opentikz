@@ -22,6 +22,9 @@ OpenTikZ is dual-licensed, and the split matters:
   is the curated `icons/brands/` set, whose shape data comes from the CC0
   [simple-icons](https://simple-icons.org) project; the TikZ code is CC0, but
   the marks remain trademarks of their owners — see `icons/brands/README.md`.
+  Rights holders can request removal of a mark via the
+  [trademark-removal issue template](.github/ISSUE_TEMPLATE/trademark-removal.yml);
+  such requests are honored promptly.
 - **Code** — build tooling under `tools/` and the site generator — is **MIT**.
 
 Set `"license": "CC0-1.0"` in every content `.meta.json`.
