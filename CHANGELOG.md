@@ -28,6 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `icons/brands/README.md`). A maintainer-approved exception to the "no brand
   logos" non-goal, now documented in `CONTRIBUTING.md` / `CLAUDE.md`.
 
+### Removed
+
+- The `training-pipeline` template (superseded on the site gallery by the new
+  brand-logo templates).
+
 ## [0.1.0] — 2026-06-29
 
 First public release.

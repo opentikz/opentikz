@@ -119,7 +119,7 @@ the [website](https://opentikz.org)**; or browse [`examples/`](examples/),
 <tr>
 <td align="center" width="33%"><a href="templates/neural-net/"><img src="templates/neural-net/preview.svg" alt="Feed-forward neural network" width="240"></a><br><sub><b>Feed-forward</b> neural network</sub></td>
 <td align="center" width="33%"><a href="templates/encoder-decoder/"><img src="templates/encoder-decoder/preview.svg" alt="Encoder-decoder (bottleneck)" width="240"></a><br><sub><b>Encoder-decoder</b> · bottleneck</sub></td>
-<td align="center" width="33%"><a href="templates/training-pipeline/"><img src="templates/training-pipeline/preview.svg" alt="Training pipeline" width="240"></a><br><sub><b>Training pipeline</b> · loss/optimizer loop</sub></td>
+<td align="center" width="33%"><a href="templates/llm-serving-stack/"><img src="templates/llm-serving-stack/preview.svg" alt="LLM serving stack" width="240"></a><br><sub><b>LLM serving stack</b> · brand-logo cards</sub></td>
 </tr>
 </table>
 
