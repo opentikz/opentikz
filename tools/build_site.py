@@ -577,6 +577,12 @@ def build(root: Path) -> int:
     # Custom domain for GitHub Pages. site/ is rebuilt from scratch each run, so
     # the CNAME must be (re)written here rather than committed under site/.
     (site / "CNAME").write_text("opentikz.org\n", encoding="utf-8")
+    # Crawler directives: allow everything and point at the sitemap. Without a
+    # robots.txt the host serves GitHub's 404 page, which crawlers tolerate but
+    # which also hides the sitemap pointer that speeds up (re)indexing.
+    (site / "robots.txt").write_text(
+        "User-agent: *\nAllow: /\n\nSitemap: https://opentikz.org/sitemap.xml\n",
+        encoding="utf-8")
     # Favicons live at the site root (head() links them with absolute paths so
     # they resolve from every surface). Copied verbatim from assets/ — no TeX/raster
     # tooling needed at build time.
@@ -634,6 +640,19 @@ def build(root: Path) -> int:
         featured = [it for it in catalog if it["type"] == "example"]
     (site / "index.html").write_text(
         home_page(featured, by_id, counts, howto, "assets/style.css"), encoding="utf-8")
+
+    # sitemap.xml — every crawlable URL the site emits (home, browse, per-item).
+    # No <lastmod> on purpose: site/ is rebuilt every deploy, so a build-time
+    # date would churn on every push and mislead crawlers about real changes.
+    base = "https://opentikz.org"
+    urls = [f"{base}/", f"{base}/browse/"]
+    urls += [f"{base}/item/{it['id']}.html" for it in catalog]
+    body = "\n".join(f"  <url><loc>{u}</loc></url>" for u in urls)
+    (site / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{body}\n</urlset>\n",
+        encoding="utf-8")
 
     print(f"built site/ — {len(catalog)} items, {n_prev} previews, "
           f"{len(catalog)+2} pages (home + browse + items); "
