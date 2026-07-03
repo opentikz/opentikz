@@ -4,9 +4,11 @@
 \usepackage{tikz}
 \usetikzlibrary{svg.path}
 
-% --- brand color (vLLM's official brand color; brand marks keep their
-%     official color instead of the shared OpenTikZ palette by design) ---
-\definecolor{brandvllm}{HTML}{30A2FF}
+% --- brand colors (vLLM's official two-tone mark: yellow left stroke, blue
+%     right stroke — sampled from the vllm-project logo assets; simple-icons
+%     distributes the same shape single-color) ---
+\definecolor{brandvllmyellow}{HTML}{EBB431}
+\definecolor{brandvllmblue}{HTML}{63A1FC}
 
 % vLLM logo. Shape data derived from the CC0 simple-icons project
 % (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
@@ -15,9 +17,7 @@
 % The vLLM logo is a trademark of its owner; used here for identification.
 \begin{document}
 \begin{tikzpicture}
-  \fill[brandvllm] svg {%
-    M 70.8 72 L 44.637 58.23 L 29.487 0 L 51.717 0 Z M 29.49 0 L 29.49 56.574 L 1.2
-    56.574 Z%
-  };
+  \fill[brandvllmyellow] svg {M 29.49 0 L 29.49 56.574 L 1.2 56.574 Z};
+  \fill[brandvllmblue] svg {M 70.8 72 L 44.637 58.23 L 29.487 0 L 51.717 0 Z};
 \end{tikzpicture}
 \end{document}
