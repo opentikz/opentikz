@@ -1,0 +1,39 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in arxiv.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (arXiv's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandarxiv}{HTML}{B31B1B}
+
+% arXiv logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The arXiv logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandarxiv] svg {%
+    M 11.5269 72 C 10.3233 71.9996 9.2356 71.2826 8.7609 70.1766 C 8.3001 69.0705 8.6295
+    68.2941 9.6423 66.8427 L 30.3978 41.7636 L 27.3309 38.4462 C 26.2067 37.244 26.2106
+    35.375 27.3399 34.1775 L 31.0275 30.237 L 14.7102 10.9038 C 13.8693 10.0068 13.3488
+    8.4348 13.8189 7.308 C 14.2977 6.1448 15.4365 5.3903 16.6944 5.403 C 17.5002 5.4228
+    18.2564 5.7965 18.7617 6.4245 L 36.1107 24.8025 L 58.5813 0.7872 C 59.1131 0.2328
+    59.866 -0.0533 60.6318 0.0081 C 61.8028 0.0277 62.8447 0.7563 63.2649 1.8495 C
+    63.738 2.9805 63.2139 4.1001 62.3469 5.2716 L 41.1915 30.297 L 44.3811 33.687 C
+    45.4296 34.7907 45.4413 36.5188 44.4078 37.6365 L 13.9008 70.6083 C 13.9008 70.6083
+    12.7809 71.9688 11.5968 71.9973 Z M 11.5269 71.184 L 11.5767 71.184 C 12.2304
+    71.1684 13.0389 70.3695 13.2699 70.0923 L 13.2849 70.0743 L 13.3005 70.0578 L
+    43.8075 37.0863 C 44.5479 36.283 44.5384 35.0432 43.7859 34.2513 L 40.5861 30.8523 L
+    36.0915 36.1695 L 10.2933 67.3395 C 9.3075 68.7555 9.2373 69.1944 9.5157 69.8625 C
+    9.8631 70.664 10.6533 71.1828 11.5269 71.1828 Z M 54.5499 66.4737 C 53.8223 66.5146
+    53.1104 66.252 52.5837 65.7483 L 35.4951 47.2731 L 40.5783 41.7774 L 56.505 61.3188
+    C 57.4803 62.6193 57.942 63.2997 57.4791 64.4064 C 56.9823 65.6019 55.8431 66.4059
+    54.5502 66.4734 Z M 31.5828 29.6268 L 35.5386 25.3863 L 18.1794 6.9978 C 17.8268
+    6.5264 17.28 6.2397 16.6917 6.2178 C 15.7649 6.205 14.9247 6.7607 14.5737 7.6185 C
+    14.238 8.4231 14.6814 9.6777 15.3063 10.3434 L 15.3216 10.3599 L 15.3357 10.3764 Z%
+  };
+\end{tikzpicture}
+\end{document}

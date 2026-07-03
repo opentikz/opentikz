@@ -1,0 +1,24 @@
+{
+  "id": "ieee",
+  "name": "IEEE",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "ieee",
+    "logo",
+    "papers",
+    "publisher",
+    "standards"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "ieee.svg",
+  "description": "IEEE brand mark, official brand color."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "anthropic",
+  "name": "Anthropic",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "anthropic",
+    "brand",
+    "claude",
+    "company",
+    "llm",
+    "logo"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "anthropic.svg",
+  "description": "Anthropic brand mark, official brand color."
+}

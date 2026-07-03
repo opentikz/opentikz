@@ -1,0 +1,30 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in orcid.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (ORCID's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandorcid}{HTML}{A6CE39}
+
+% ORCID logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The ORCID logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandorcid] svg {%
+    M 36 72 C 16.116 72 0 55.884 0 36 C 0 16.116 16.116 0 36 0 C 55.884 0 72 16.116 72
+    36 C 72 55.884 55.884 72 36 72 Z M 22.107 58.866 C 23.682 58.866 24.948 57.573
+    24.948 56.025 C 24.948 54.477 23.682 53.184 22.107 53.184 C 20.54 53.1889 19.2709
+    54.458 19.266 56.025 C 19.266 57.6 20.532 58.866 22.107 58.866 Z M 19.941 49.752 L
+    24.273 49.752 L 24.273 19.629 L 19.941 19.629 L 19.941 49.752 Z M 30.627 49.752 L
+    42.327 49.752 C 53.463 49.752 58.359 41.793 58.359 34.677 C 58.359 26.943 52.311
+    19.602 42.384 19.602 L 30.627 19.602 L 30.627 49.752 Z M 34.959 45.843 L 34.959
+    23.511 L 41.85 23.511 C 51.666 23.511 53.916 30.963 53.916 34.677 C 53.916 40.725
+    50.064 45.843 41.625 45.843 L 34.959 45.843 Z%
+  };
+\end{tikzpicture}
+\end{document}

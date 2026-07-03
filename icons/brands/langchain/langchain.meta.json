@@ -1,0 +1,25 @@
+{
+  "id": "langchain",
+  "name": "LangChain",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "agents",
+    "ai",
+    "brand",
+    "framework",
+    "langchain",
+    "llm",
+    "logo"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "langchain.svg",
+  "description": "LangChain brand mark, official brand color."
+}

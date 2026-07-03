@@ -1,0 +1,25 @@
+{
+  "id": "google-gemini",
+  "name": "Google Gemini",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "brand",
+    "gemini",
+    "google-gemini",
+    "llm",
+    "logo",
+    "model"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "google-gemini.svg",
+  "description": "Google Gemini brand mark, official brand color."
+}

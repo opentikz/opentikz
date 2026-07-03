@@ -116,6 +116,57 @@
     ]
   },
   {
+    "author": "Daniel Huang",
+    "description": "Anthropic brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "anthropic",
+    "license": "CC0-1.0",
+    "name": "Anthropic",
+    "path": "icons/brands/anthropic",
+    "preview": "anthropic.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "anthropic",
+      "brand",
+      "claude",
+      "company",
+      "llm",
+      "logo"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "arXiv brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "arxiv",
+    "license": "CC0-1.0",
+    "name": "arXiv",
+    "path": "icons/brands/arxiv",
+    "preview": "arxiv.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "arxiv",
+      "brand",
+      "logo",
+      "papers",
+      "preprint",
+      "publishing"
+    ],
+    "type": "icon"
+  },
+  {
     "author": "OpenTikZ contributors",
     "description": "Attention block with query/key/value inputs and an output.",
     "domain": [
@@ -138,6 +189,32 @@
       "qkv",
       "query key value",
       "block"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Claude brand mark (Anthropic), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "claude",
+    "license": "CC0-1.0",
+    "name": "Claude",
+    "path": "icons/brands/claude",
+    "preview": "claude.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "anthropic",
+      "assistant",
+      "brand",
+      "claude",
+      "llm",
+      "logo"
     ],
     "type": "icon"
   },
@@ -290,6 +367,31 @@
     "type": "icon"
   },
   {
+    "author": "Daniel Huang",
+    "description": "DeepSeek brand mark (whale), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "deepseek",
+    "license": "CC0-1.0",
+    "name": "DeepSeek",
+    "path": "icons/brands/deepseek",
+    "preview": "deepseek.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "brand",
+      "deepseek",
+      "llm",
+      "logo",
+      "model"
+    ],
+    "type": "icon"
+  },
+  {
     "author": "OpenTikZ contributors",
     "description": "A hard disk drive: enclosure with a platter, spindle hub, and read/write arm.",
     "domain": [
@@ -310,6 +412,31 @@
       "drive",
       "persistence",
       "hardware"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Docker brand mark (whale with containers), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "docker",
+    "license": "CC0-1.0",
+    "name": "Docker",
+    "path": "icons/brands/docker",
+    "preview": "docker.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "container",
+      "deployment",
+      "devops",
+      "docker",
+      "logo"
     ],
     "type": "icon"
   },
@@ -338,6 +465,208 @@
     "type": "icon"
   },
   {
+    "author": "Daniel Huang",
+    "description": "Git brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "git",
+    "license": "CC0-1.0",
+    "name": "Git",
+    "path": "icons/brands/git",
+    "preview": "git.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "branch",
+      "brand",
+      "git",
+      "logo",
+      "vcs",
+      "version control"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "GitHub brand mark (Octocat silhouette), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "github",
+    "license": "CC0-1.0",
+    "name": "GitHub",
+    "path": "icons/brands/github",
+    "preview": "github.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "code hosting",
+      "github",
+      "logo",
+      "open source",
+      "repository"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "GitHub Copilot brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "github-copilot",
+    "license": "CC0-1.0",
+    "name": "GitHub Copilot",
+    "path": "icons/brands/github-copilot",
+    "preview": "github-copilot.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "brand",
+      "coding assistant",
+      "copilot",
+      "github",
+      "github-copilot",
+      "logo"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Google brand mark (G), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "google",
+    "license": "CC0-1.0",
+    "name": "Google",
+    "path": "icons/brands/google",
+    "preview": "google.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "brand",
+      "company",
+      "google",
+      "logo",
+      "search"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Google Cloud brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "google-cloud",
+    "license": "CC0-1.0",
+    "name": "Google Cloud",
+    "path": "icons/brands/google-cloud",
+    "preview": "google-cloud.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "cloud",
+      "gcp",
+      "google-cloud",
+      "infrastructure",
+      "logo"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Google Colab brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "google-colab",
+    "license": "CC0-1.0",
+    "name": "Google Colab",
+    "path": "icons/brands/google-colab",
+    "preview": "google-colab.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "colab",
+      "google-colab",
+      "gpu",
+      "logo",
+      "notebook"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Google Gemini brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "google-gemini",
+    "license": "CC0-1.0",
+    "name": "Google Gemini",
+    "path": "icons/brands/google-gemini",
+    "preview": "google-gemini.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "brand",
+      "gemini",
+      "google-gemini",
+      "llm",
+      "logo",
+      "model"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Google Scholar brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "google-scholar",
+    "license": "CC0-1.0",
+    "name": "Google Scholar",
+    "path": "icons/brands/google-scholar",
+    "preview": "google-scholar.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "citations",
+      "google-scholar",
+      "logo",
+      "papers",
+      "search"
+    ],
+    "type": "icon"
+  },
+  {
     "author": "OpenTikZ contributors",
     "description": "GPU / graphics-card icon with a fan and gold edge connector.",
     "domain": [
@@ -358,6 +687,209 @@
       "compute",
       "hardware",
       "cuda"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Hugging Face brand mark (smiling face), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "huggingface",
+    "license": "CC0-1.0",
+    "name": "Hugging Face",
+    "path": "icons/brands/huggingface",
+    "preview": "huggingface.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "hub",
+      "huggingface",
+      "logo",
+      "ml",
+      "models",
+      "nlp"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "IEEE brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "ieee",
+    "license": "CC0-1.0",
+    "name": "IEEE",
+    "path": "icons/brands/ieee",
+    "preview": "ieee.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "ieee",
+      "logo",
+      "papers",
+      "publisher",
+      "standards"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Jupyter brand mark (three moons), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "jupyter",
+    "license": "CC0-1.0",
+    "name": "Jupyter",
+    "path": "icons/brands/jupyter",
+    "preview": "jupyter.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "jupyter",
+      "logo",
+      "notebook",
+      "python",
+      "tooling"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Kaggle brand mark (k), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "kaggle",
+    "license": "CC0-1.0",
+    "name": "Kaggle",
+    "path": "icons/brands/kaggle",
+    "preview": "kaggle.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "competition",
+      "dataset",
+      "kaggle",
+      "logo",
+      "ml"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Keras brand mark (K), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "keras",
+    "license": "CC0-1.0",
+    "name": "Keras",
+    "path": "icons/brands/keras",
+    "preview": "keras.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "deep learning",
+      "framework",
+      "keras",
+      "logo",
+      "ml"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Kubernetes brand mark (helm wheel), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "kubernetes",
+    "license": "CC0-1.0",
+    "name": "Kubernetes",
+    "path": "icons/brands/kubernetes",
+    "preview": "kubernetes.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "container",
+      "devops",
+      "k8s",
+      "kubernetes",
+      "logo",
+      "orchestration"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "LangChain brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "langchain",
+    "license": "CC0-1.0",
+    "name": "LangChain",
+    "path": "icons/brands/langchain",
+    "preview": "langchain.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "agents",
+      "ai",
+      "brand",
+      "framework",
+      "langchain",
+      "llm",
+      "logo"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "LaTeX wordmark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "latex",
+    "license": "CC0-1.0",
+    "name": "LaTeX",
+    "path": "icons/brands/latex",
+    "preview": "latex.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "latex",
+      "logo",
+      "tex",
+      "typesetting",
+      "writing"
     ],
     "type": "icon"
   },
@@ -383,6 +915,32 @@
       "activation",
       "stack",
       "channels"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Linux brand mark (Tux the penguin), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "linux",
+    "license": "CC0-1.0",
+    "name": "Linux",
+    "path": "icons/brands/linux",
+    "preview": "linux.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "linux",
+      "logo",
+      "operating system",
+      "os",
+      "penguin",
+      "tux"
     ],
     "type": "icon"
   },
@@ -433,6 +991,85 @@
       "data",
       "encoding",
       "tensor"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Model Context Protocol (MCP) brand mark, official color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "mcp",
+    "license": "CC0-1.0",
+    "name": "Model Context Protocol",
+    "path": "icons/brands/mcp",
+    "preview": "mcp.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "agents",
+      "ai",
+      "brand",
+      "llm",
+      "logo",
+      "mcp",
+      "model context protocol",
+      "protocol"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Meta brand mark (infinity loop), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "meta",
+    "license": "CC0-1.0",
+    "name": "Meta",
+    "path": "icons/brands/meta",
+    "preview": "meta.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "brand",
+      "company",
+      "llama",
+      "logo",
+      "meta",
+      "social"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Mistral AI brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "mistral",
+    "license": "CC0-1.0",
+    "name": "Mistral AI",
+    "path": "icons/brands/mistral",
+    "preview": "mistral.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "brand",
+      "llm",
+      "logo",
+      "mistral",
+      "mistral ai",
+      "model"
     ],
     "type": "icon"
   },
@@ -534,6 +1171,234 @@
     "type": "icon"
   },
   {
+    "author": "Daniel Huang",
+    "description": "NumPy brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "numpy",
+    "license": "CC0-1.0",
+    "name": "NumPy",
+    "path": "icons/brands/numpy",
+    "preview": "numpy.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "array",
+      "brand",
+      "logo",
+      "numpy",
+      "python",
+      "scientific computing"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "NVIDIA brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "nvidia",
+    "license": "CC0-1.0",
+    "name": "NVIDIA",
+    "path": "icons/brands/nvidia",
+    "preview": "nvidia.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "company",
+      "cuda",
+      "gpu",
+      "hardware",
+      "logo",
+      "nvidia"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Ollama brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "ollama",
+    "license": "CC0-1.0",
+    "name": "Ollama",
+    "path": "icons/brands/ollama",
+    "preview": "ollama.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "brand",
+      "llm",
+      "local inference",
+      "logo",
+      "ollama",
+      "tooling"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "ORCID brand mark (iD), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "orcid",
+    "license": "CC0-1.0",
+    "name": "ORCID",
+    "path": "icons/brands/orcid",
+    "preview": "orcid.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "identity",
+      "logo",
+      "orcid",
+      "publishing",
+      "researcher id"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Overleaf brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "overleaf",
+    "license": "CC0-1.0",
+    "name": "Overleaf",
+    "path": "icons/brands/overleaf",
+    "preview": "overleaf.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "editor",
+      "latex",
+      "logo",
+      "overleaf",
+      "writing"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "pandas brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "pandas",
+    "license": "CC0-1.0",
+    "name": "pandas",
+    "path": "icons/brands/pandas",
+    "preview": "pandas.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "data analysis",
+      "dataframe",
+      "logo",
+      "pandas",
+      "python"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Perplexity brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "perplexity",
+    "license": "CC0-1.0",
+    "name": "Perplexity",
+    "path": "icons/brands/perplexity",
+    "preview": "perplexity.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "assistant",
+      "brand",
+      "llm",
+      "logo",
+      "perplexity",
+      "search"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Python brand mark (two snakes), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "python",
+    "license": "CC0-1.0",
+    "name": "Python",
+    "path": "icons/brands/python",
+    "preview": "python.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "language",
+      "logo",
+      "programming",
+      "python",
+      "snake"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "PyTorch brand mark (flame), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "pytorch",
+    "license": "CC0-1.0",
+    "name": "PyTorch",
+    "path": "icons/brands/pytorch",
+    "preview": "pytorch.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "deep learning",
+      "framework",
+      "logo",
+      "ml",
+      "pytorch"
+    ],
+    "type": "icon"
+  },
+  {
     "author": "OpenTikZ contributors",
     "description": "A FIFO message queue: buffered items with enqueue and dequeue arrows.",
     "domain": [
@@ -556,6 +1421,108 @@
       "kafka",
       "pipeline",
       "broker"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Qwen brand mark (Alibaba), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "qwen",
+    "license": "CC0-1.0",
+    "name": "Qwen",
+    "path": "icons/brands/qwen",
+    "preview": "qwen.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "alibaba",
+      "brand",
+      "llm",
+      "logo",
+      "model",
+      "qwen"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Reddit brand mark (Snoo), official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "reddit",
+    "license": "CC0-1.0",
+    "name": "Reddit",
+    "path": "icons/brands/reddit",
+    "preview": "reddit.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "community",
+      "forum",
+      "logo",
+      "reddit",
+      "social"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "scikit-learn brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "scikit-learn",
+    "license": "CC0-1.0",
+    "name": "scikit-learn",
+    "path": "icons/brands/scikit-learn",
+    "preview": "scikit-learn.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "logo",
+      "machine learning",
+      "ml",
+      "python",
+      "scikit-learn",
+      "sklearn"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Semantic Scholar brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "semantic-scholar",
+    "license": "CC0-1.0",
+    "name": "Semantic Scholar",
+    "path": "icons/brands/semantic-scholar",
+    "preview": "semantic-scholar.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "citations",
+      "logo",
+      "papers",
+      "search",
+      "semantic-scholar"
     ],
     "type": "icon"
   },
@@ -584,6 +1551,31 @@
     "type": "icon"
   },
   {
+    "author": "Daniel Huang",
+    "description": "TensorFlow brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "tensorflow",
+    "license": "CC0-1.0",
+    "name": "TensorFlow",
+    "path": "icons/brands/tensorflow",
+    "preview": "tensorflow.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "deep learning",
+      "framework",
+      "logo",
+      "ml",
+      "tensorflow"
+    ],
+    "type": "icon"
+  },
+  {
     "author": "OpenTikZ contributors",
     "description": "A user/client avatar: head and shoulders silhouette, for system actors and endpoints.",
     "domain": [
@@ -604,6 +1596,57 @@
       "actor",
       "human",
       "account"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "vLLM brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "vllm",
+    "license": "CC0-1.0",
+    "name": "vLLM",
+    "path": "icons/brands/vllm",
+    "preview": "vllm.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "ai",
+      "brand",
+      "inference",
+      "llm",
+      "logo",
+      "serving",
+      "vllm"
+    ],
+    "type": "icon"
+  },
+  {
+    "author": "Daniel Huang",
+    "description": "Weights & Biases brand mark, official brand color.",
+    "domain": [
+      "brands"
+    ],
+    "id": "wandb",
+    "license": "CC0-1.0",
+    "name": "Weights & Biases",
+    "path": "icons/brands/wandb",
+    "preview": "wandb.svg",
+    "requires": [
+      "tikz",
+      "svg.path"
+    ],
+    "tags": [
+      "brand",
+      "experiment tracking",
+      "logo",
+      "mlops",
+      "wandb",
+      "weights and biases"
     ],
     "type": "icon"
   },

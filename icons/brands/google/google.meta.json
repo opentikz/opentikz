@@ -1,0 +1,24 @@
+{
+  "id": "google",
+  "name": "Google",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "brand",
+    "company",
+    "google",
+    "logo",
+    "search"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "google.svg",
+  "description": "Google brand mark (G), official brand color."
+}

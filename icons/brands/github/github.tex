@@ -1,0 +1,34 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in github.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (GitHub's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandgithub}{HTML}{181717}
+
+% GitHub logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The GitHub logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandgithub] svg {%
+    M 36 71.109 C 16.11 71.109 0 54.99 0 35.109 C 0 19.2 10.314 5.709 24.615 0.954 C
+    26.415 0.615 27.075 1.728 27.075 2.685 C 27.075 3.54 27.045 5.805 27.03 8.805 C
+    17.016 6.633 14.904 13.635 14.904 13.635 C 13.266 17.79 10.899 18.9 10.899 18.9 C
+    7.638 21.132 11.151 21.087 11.151 21.087 C 14.766 20.835 16.665 17.379 16.665 17.379
+    C 19.875 11.874 25.092 13.464 27.15 14.385 C 27.474 16.713 28.401 18.3 29.43 19.2 C
+    21.435 20.1 13.032 23.196 13.032 36.99 C 13.032 40.92 14.427 44.13 16.737 46.65 C
+    16.332 47.559 15.117 51.219 17.052 56.178 C 17.052 56.178 20.067 57.144 26.952
+    52.488 C 29.832 53.289 32.892 53.685 35.952 53.703 C 39.012 53.685 42.072 53.289
+    44.952 52.488 C 51.792 57.144 54.807 56.178 54.807 56.178 C 56.742 51.219 55.527
+    47.559 55.167 46.65 C 57.462 44.13 58.857 40.92 58.857 36.99 C 58.857 23.16 50.442
+    20.115 42.432 19.23 C 43.692 18.15 44.862 15.942 44.862 12.57 C 44.862 7.752 44.817
+    3.882 44.817 2.712 C 44.817 1.767 45.447 0.642 47.292 1.002 C 61.695 5.724 72 19.224
+    72 35.109 C 72 54.99 55.881 71.109 36 71.109%
+  };
+\end{tikzpicture}
+\end{document}

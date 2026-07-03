@@ -1,0 +1,33 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in perplexity.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Perplexity's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandperplexity}{HTML}{1FB8CD}
+
+% Perplexity logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Perplexity logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandperplexity] svg {%
+    M 67.1931 50.7312 L 60.2613 50.7312 L 60.2613 71.7972 L 37.7331 52.7346 L 37.7331
+    71.5269 L 34.2669 71.5269 L 34.2669 52.9371 L 13.4712 72 L 13.4712 50.7312 L 4.8069
+    50.7312 L 4.8069 19.5384 L 13.4715 19.5384 L 13.4715 0 L 34.2675 19.0773 L 34.2675
+    0.4758 L 37.7337 0.4758 L 37.7337 18.6165 L 58.5291 0.0744 L 58.5291 19.5381 L
+    67.1937 19.5381 L 67.1937 50.7312 Z M 56.796 64.3242 L 56.796 50.7312 L 40.731
+    50.7312 L 56.796 64.3242 Z M 16.9374 64.1214 L 31.5447 50.7312 L 16.9374 50.7312 L
+    16.9374 64.1214 Z M 8.2728 23.004 L 8.2728 47.265 L 31.8156 47.265 L 13.4709 28.9209
+    L 13.4709 23.004 L 8.2728 23.004 Z M 16.9374 7.8828 L 16.9374 19.5384 L 16.9377
+    19.5384 L 16.9377 27.4848 L 34.2666 44.814 L 34.2666 23.7807 L 16.9374 7.8828 Z M
+    55.0632 7.8084 L 37.7334 23.2611 L 37.7334 44.8146 L 55.0632 27.4848 L 55.0632
+    7.8084 Z M 63.7278 23.004 L 58.5288 23.004 L 58.5288 28.9209 L 40.1844 47.265 L
+    63.7278 47.265 L 63.7278 23.004 Z%
+  };
+\end{tikzpicture}
+\end{document}

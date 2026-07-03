@@ -1,0 +1,25 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in anthropic.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Anthropic's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandanthropic}{HTML}{191919}
+
+% Anthropic logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Anthropic logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandanthropic] svg {%
+    M 51.9123 61.377 L 40.8969 61.377 L 60.9849 10.623 L 72 10.623 Z M 20.0877 61.377 L
+    0 10.623 L 11.2326 10.623 L 15.3405 21.2811 L 36.3561 21.2811 L 40.464 10.6227 L
+    51.6966 10.6227 L 31.6089 61.3773 Z M 18.9741 30.7074 L 25.8483 48.5442 L 32.7225
+    30.7074 Z%
+  };
+\end{tikzpicture}
+\end{document}

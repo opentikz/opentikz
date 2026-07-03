@@ -1,0 +1,26 @@
+{
+  "id": "mcp",
+  "name": "Model Context Protocol",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "agents",
+    "ai",
+    "brand",
+    "llm",
+    "logo",
+    "mcp",
+    "model context protocol",
+    "protocol"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "mcp.svg",
+  "description": "Model Context Protocol (MCP) brand mark, official color."
+}

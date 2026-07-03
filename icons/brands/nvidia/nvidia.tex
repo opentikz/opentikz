@@ -1,0 +1,37 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in nvidia.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (NVIDIA's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandnvidia}{HTML}{76B900}
+
+% NVIDIA logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The NVIDIA logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandnvidia] svg {%
+    M 26.844 45.606 L 26.844 49.896 C 27.2673 49.9274 27.6915 49.9454 28.116 49.95 C
+    39.882 50.322 47.595 39.828 47.595 39.828 C 47.595 39.828 39.273 28.275 30.345
+    28.275 C 29.151 28.275 27.984 28.461 26.871 28.83 L 26.871 41.868 C 31.455 41.313
+    32.382 39.297 35.112 34.713 L 41.232 39.855 C 41.232 39.855 36.756 45.711 29.232
+    45.711 C 28.4346 45.7288 27.6368 45.6937 26.844 45.606 M 26.844 59.811 L 26.844
+    53.397 L 28.116 53.478 C 44.466 54.033 55.146 40.068 55.146 40.068 C 55.146 40.068
+    42.906 25.176 30.156 25.176 C 29.046 25.176 27.957 25.281 26.871 25.467 L 26.871
+    21.492 C 27.771 21.387 28.701 21.306 29.601 21.306 C 41.472 21.306 50.061 27.375
+    58.38 34.53 C 59.757 33.417 65.4 30.741 66.57 29.574 C 58.671 22.95 40.254 17.622
+    29.811 17.622 C 28.806 17.622 27.852 17.676 26.898 17.781 L 26.898 12.189 L 72
+    12.189 L 72 59.811 Z M 26.844 28.833 L 26.844 25.44 C 15.873 27.402 12.825 38.82
+    12.825 38.82 C 12.825 38.82 18.099 44.652 26.844 45.606 L 26.844 41.895 L 26.82
+    41.895 C 22.236 42.453 18.63 38.16 18.63 38.16 C 18.63 38.16 20.67 30.924 26.847
+    28.83 M 7.368 39.3 C 7.368 39.3 13.86 48.891 26.868 49.899 L 26.868 53.397 C 12.459
+    52.23 0 40.041 0 40.041 C 0 40.041 7.05 19.635 26.844 17.781 L 26.844 21.492 C
+    12.324 23.292 7.368 39.3 7.368 39.3 Z%
+  };
+\end{tikzpicture}
+\end{document}

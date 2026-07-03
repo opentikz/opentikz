@@ -28,6 +28,8 @@ Nodes must have stable, descriptive names so the skill can target them:
   reference named colors (e.g. `otblue`, `otorange`).
 - Provide a light and a dark-friendly variant where feasible.
 - Default palette should be color-blind friendly.
+- Exception: `icons/brands/` marks use their official brand color, defined once
+  in the preamble as a named `\definecolor` (see `icons/brands/README.md`).
 
 ## Layout
 

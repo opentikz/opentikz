@@ -1,0 +1,35 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in git.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Git's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandgit}{HTML}{F03C2E}
+
+% Git logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Git logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandgit] svg {%
+    M 39.27 1.353 C 38.4033 0.4846 37.2269 -0.0033 36 -0.0033 C 34.7731 -0.0033 33.5967
+    0.4846 32.73 1.353 L 1.353 32.733 C 0.4856 33.5996 -0.0018 34.7754 -0.0018 36.0015 C
+    -0.0018 37.2276 0.4856 38.4034 1.353 39.27 L 22.926 60.84 L 31.125 52.641 C 30.1133
+    49.9166 31.3747 46.8731 34.017 45.663 L 34.017 25.683 C 31.6459 24.5969 30.3516
+    22.0058 30.9074 19.4577 C 31.4632 16.9096 33.719 15.0929 36.327 15.0929 C 38.935
+    15.0929 41.1908 16.9096 41.7466 19.4577 C 42.3024 22.0058 41.0081 24.5969 38.637
+    25.683 L 38.637 45.129 L 46.161 37.605 C 45.2524 35.1591 46.1702 32.4106 48.3662
+    31.0014 C 50.5621 29.5922 53.4431 29.9029 55.2881 31.7479 C 57.1331 33.5929 57.4438
+    36.4739 56.0346 38.6698 C 54.6254 40.8658 51.8769 41.7836 49.431 40.875 L 41.529
+    48.777 C 42.282 50.8105 41.7816 53.0964 40.2479 54.6294 C 38.7143 56.1624 36.4282
+    56.6618 34.395 55.908 L 26.19 64.11 L 32.73 70.647 C 33.5966 71.5144 34.7724 72.0018
+    35.9985 72.0018 C 37.2246 72.0018 38.4004 71.5144 39.267 70.647 L 70.644 39.267 C
+    71.5114 38.4004 71.9988 37.2246 71.9988 35.9985 C 71.9988 34.7724 71.5114 33.5966
+    70.644 32.73 Z%
+  };
+\end{tikzpicture}
+\end{document}

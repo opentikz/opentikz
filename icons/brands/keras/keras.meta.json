@@ -1,0 +1,24 @@
+{
+  "id": "keras",
+  "name": "Keras",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "deep learning",
+    "framework",
+    "keras",
+    "logo",
+    "ml"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "keras.svg",
+  "description": "Keras brand mark (K), official brand color."
+}

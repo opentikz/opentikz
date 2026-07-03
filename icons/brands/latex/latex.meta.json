@@ -1,0 +1,24 @@
+{
+  "id": "latex",
+  "name": "LaTeX",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "latex",
+    "logo",
+    "tex",
+    "typesetting",
+    "writing"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "latex.svg",
+  "description": "LaTeX wordmark, official brand color."
+}

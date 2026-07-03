@@ -1,0 +1,25 @@
+{
+  "id": "nvidia",
+  "name": "NVIDIA",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "company",
+    "cuda",
+    "gpu",
+    "hardware",
+    "logo",
+    "nvidia"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "nvidia.svg",
+  "description": "NVIDIA brand mark, official brand color."
+}

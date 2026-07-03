@@ -1,0 +1,34 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in google-colab.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Google Colab's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandgooglecolab}{HTML}{F9AB00}
+
+% Google Colab logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Google Colab logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandgooglecolab] svg {%
+    M 50.8242 57.0729 C 45.2704 57.0357 39.9552 54.8102 36.0318 50.8791 C 27.9632
+    42.7899 27.7994 29.748 35.6622 21.4587 L 42.8472 28.6437 C 38.9472 32.9669 39.1181
+    39.5877 43.2359 43.704 C 47.3537 47.8203 53.9745 47.9887 58.2963 44.0871 L 65.4873
+    51.2838 C 61.5312 55.0356 56.2763 57.1102 50.8242 57.0729 Z M 21.21 57.0435 C 15.757
+    57.0794 10.5019 55.0026 6.5466 51.2487 L 13.7199 44.0754 C 18.0411 47.9856 24.6701
+    47.8179 28.788 43.6941 L 33.9903 52.6152 L 33.6912 52.8558 C 30.0839 55.5472 25.7106
+    57.0145 21.21 57.0435 Z M 66.2379 50.5272 L 59.0703 43.3539 C 62.9978 39.0343 62.84
+    32.3915 58.7118 28.2633 C 54.5836 24.1351 47.9408 23.9773 43.6212 27.9048 L 36.4011
+    20.6844 C 44.7069 12.8433 57.7431 13.0315 65.8191 21.1091 C 73.8951 29.1867 74.0807
+    42.223 66.2379 50.5272 Z M 5.796 50.4978 C -1.9299 42.3585 -1.9326 29.5955 5.79
+    21.453 L 12.981 28.644 C 9.2058 32.8054 9.2006 39.1512 12.969 43.3188 Z M 28.788
+    28.2273 C 24.648 24.0825 18.0291 23.9943 13.7376 27.8871 L 6.5466 20.7021 C 13.9545
+    13.7037 25.3356 12.9762 33.5682 19.0656 L 33.9786 19.4001 Z%
+  };
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,24 @@
+{
+  "id": "wandb",
+  "name": "Weights & Biases",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "experiment tracking",
+    "logo",
+    "mlops",
+    "wandb",
+    "weights and biases"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "wandb.svg",
+  "description": "Weights & Biases brand mark, official brand color."
+}

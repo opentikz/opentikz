@@ -1,0 +1,33 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in semantic-scholar.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Semantic Scholar's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandsemanticscholar}{HTML}{1857B6}
+
+% Semantic Scholar logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Semantic Scholar logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandsemanticscholar] svg {%
+    M 72 46.173 C 69.456 44.565 67.692 43.683 65.562 42.438 C 53.106 34.911 41.112
+    26.553 31.821 15.495 L 27.357 10.044 L 13.653 31.848 C 16.716 29.406 24.345 22.554
+    27.462 21.051 L 37.53 28.629 C 44.538 33.561 64.368 44.307 72 46.173 Z M 24.138
+    26.397 C 25.176 25.566 26.214 24.786 27.045 24.165 C 29.328 35.169 27.408 47.004
+    21.387 57.282 C 31.509 57.438 41.58 57.543 51.702 57.699 C 53.9729 52.691 55.2933
+    47.3045 55.596 41.814 C 56.478 42.282 57.36 42.696 58.245 43.113 C 57.933 48.717
+    56.322 54.843 53.259 61.902 C 39.453 61.956 25.695 61.956 11.889 61.956 C 20.868
+    51.315 24.969 38.439 24.138 26.397 Z M 22.269 27.849 C 22.53 27.591 22.842 27.384
+    23.1 27.174 C 22.686 37.401 18.843 47.835 11.628 56.817 L 5.19 56.817 C 14.484
+    48.252 20.142 37.92 22.269 27.849 Z M 20.037 29.823 C 20.349 29.562 20.661 29.304
+    21.024 28.992 C 18.324 36.57 13.548 44.046 6.801 50.586 L 0 50.586 C 8.67 44.358
+    15.366 37.143 20.037 29.823 Z%
+  };
+\end{tikzpicture}
+\end{document}

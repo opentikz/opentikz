@@ -136,9 +136,18 @@ training, inference serving. See [`templates/`](templates/).</sub>
 <td align="center" width="20%"><a href="icons/ml/neuron/"><img src="icons/ml/neuron/neuron.svg" alt="Neuron" width="84"></a><br><sub>Neuron</sub></td>
 <td align="center" width="20%"><a href="icons/ml/attention/"><img src="icons/ml/attention/attention.svg" alt="Attention block" width="84"></a><br><sub>Attention</sub></td>
 </tr>
+<tr>
+<td align="center" width="20%"><a href="icons/brands/pytorch/"><img src="icons/brands/pytorch/pytorch.svg" alt="PyTorch" width="84"></a><br><sub>PyTorch</sub></td>
+<td align="center" width="20%"><a href="icons/brands/huggingface/"><img src="icons/brands/huggingface/huggingface.svg" alt="Hugging Face" width="84"></a><br><sub>Hugging Face</sub></td>
+<td align="center" width="20%"><a href="icons/brands/arxiv/"><img src="icons/brands/arxiv/arxiv.svg" alt="arXiv" width="84"></a><br><sub>arXiv</sub></td>
+<td align="center" width="20%"><a href="icons/brands/claude/"><img src="icons/brands/claude/claude.svg" alt="Claude" width="84"></a><br><sub>Claude</sub></td>
+<td align="center" width="20%"><a href="icons/brands/docker/"><img src="icons/brands/docker/docker.svg" alt="Docker" width="84"></a><br><sub>Docker</sub></td>
+</tr>
 </table>
 
-<sub>…and many more across <code>systems/</code> and <code>ml/</code>. Previews are
+<sub>…and many more across <code>systems/</code>, <code>ml/</code>, and
+<code>brands/</code> (41 tool/platform logos — trademark notes in
+<a href="icons/brands/README.md"><code>icons/brands/README.md</code></a>). Previews are
 transparent SVGs and read best on a light background; the live
 [website](https://opentikz.org) renders them on paper-white tiles.</sub>
 

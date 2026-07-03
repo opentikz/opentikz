@@ -1,0 +1,34 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in google-cloud.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Google Cloud's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandgooglecloud}{HTML}{4285F4}
+
+% Google Cloud logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Google Cloud logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandgooglecloud] svg {%
+    M 36.57 64.86 C 23.6789 65.1588 12.2469 56.6249 8.868 44.181 C 9.027 44.241 8.703
+    44.142 8.868 44.181 C -2.757 36.528 -2.898 19.851 8.127 11.358 L 8.145 11.379 L
+    8.124 11.289 C 11.6457 8.6305 15.9426 7.2013 20.355 7.221 L 35.874 7.221 L 35.964
+    7.131 L 51.54 7.131 C 71.601 6.972 79.668 32.946 63.045 44.181 C 61.6134 49.4597
+    58.6721 54.2058 54.582 57.837 L 54.453 57.708 L 54.471 57.858 C 49.5157 62.2288
+    43.1757 64.7087 36.57 64.86 Z M 35.496 52.422 C 39.228 52.542 43.05 51.318 45.954
+    48.972 C 49.5735 45.951 51.6278 41.4517 51.54 36.738 L 51.54 35.184 C 62.13 35.394
+    62.13 19.398 51.54 19.605 L 35.961 19.605 L 35.937 19.578 L 35.937 19.698 L 20.355
+    19.698 C 19.2511 19.698 18.1599 19.9332 17.154 20.388 L 17.157 20.388 C 14.0017
+    21.8167 12.1685 25.1569 12.6578 28.5858 C 13.147 32.0147 15.8413 34.709 19.2702
+    35.1982 C 22.6991 35.6875 26.0393 33.8543 27.468 30.699 L 36.507 39.735 C 33.5034
+    43.6503 29.173 46.3334 24.33 47.28 C 24.384 47.31 24.45 47.358 24.492 47.349 C
+    27.3257 50.4579 31.2975 52.2869 35.502 52.419 Z%
+  };
+\end{tikzpicture}
+\end{document}

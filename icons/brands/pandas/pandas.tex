@@ -1,0 +1,28 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in pandas.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (pandas's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandpandas}{HTML}{150458}
+
+% pandas logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The pandas logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandpandas] svg {%
+    M 50.766 72 L 58.635 72 L 58.635 17.688 L 50.766 17.688 Z M 38.388 33.18 L 46.257
+    33.18 L 46.257 25.47 L 38.388 25.47 Z M 38.388 54.291 L 46.257 54.291 L 46.257
+    37.953 L 38.388 37.953 Z M 38.388 20.7 L 46.257 20.7 L 46.257 4.362 L 38.388 4.362 Z
+    M 13.368 54.312 L 21.234 54.312 L 21.234 0 L 13.365 0 Z M 26.007 46.635 L 33.876
+    46.635 L 33.876 38.925 L 26.01 38.925 Z M 26.007 34.182 L 33.876 34.182 L 33.876
+    17.841 L 26.01 17.841 Z M 26.007 67.743 L 33.876 67.743 L 33.876 51.405 L 26.01
+    51.405 Z%
+  };
+\end{tikzpicture}
+\end{document}

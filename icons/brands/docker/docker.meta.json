@@ -1,0 +1,24 @@
+{
+  "id": "docker",
+  "name": "Docker",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "container",
+    "deployment",
+    "devops",
+    "docker",
+    "logo"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "docker.svg",
+  "description": "Docker brand mark (whale with containers), official brand color."
+}

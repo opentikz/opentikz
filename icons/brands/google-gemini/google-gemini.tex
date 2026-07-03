@@ -1,0 +1,29 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in google-gemini.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Google Gemini's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandgooglegemini}{HTML}{8E75B2}
+
+% Google Gemini logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Google Gemini logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandgooglegemini] svg {%
+    M 33.12 14.04 C 35.04 9.66 36 4.98 36 0 C 36 4.98 36.93 9.66 38.79 14.04 C 40.71
+    18.42 43.29 22.23 46.53 25.47 C 49.77 28.71 53.58 31.26 57.96 33.12 C 62.34 35.04
+    67.02 36 72 36 C 67.02 36 62.34 36.93 57.96 38.79 C 53.697 40.628 49.8192 43.254
+    46.53 46.53 C 43.254 49.8192 40.628 53.697 38.79 57.96 C 36.93 62.34 36 67.02 36 72
+    C 36 67.02 35.04 62.34 33.12 57.96 C 31.26 53.58 28.71 49.77 25.47 46.53 C 22.1808
+    43.254 18.303 40.628 14.04 38.79 C 9.66 36.93 4.98 36 0 36 C 4.98 36 9.66 35.04
+    14.04 33.12 C 18.42 31.26 22.23 28.71 25.47 25.47 C 28.71 22.23 31.26 18.42 33.12
+    14.04%
+  };
+\end{tikzpicture}
+\end{document}

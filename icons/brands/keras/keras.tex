@@ -1,0 +1,25 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in keras.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Keras's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandkeras}{HTML}{D00000}
+
+% Keras logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Keras logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandkeras] svg {%
+    M 72 72 L 0 72 L 0 0 L 72 0 L 72 72 Z M 25.35 56.52 L 25.95 56.01 L 25.95 37.29 L
+    45.33 56.64 L 51.21 56.64 L 51.81 55.44 L 36.39 40.14 L 52.8 16.32 L 52.2 15.42 L
+    46.38 15.42 L 32.43 36.06 L 25.95 29.82 L 25.95 16.02 L 25.38 15.42 L 21 15.42 L
+    20.4 16.02 L 20.4 56.01 L 20.91 56.52 L 25.35 56.52 Z%
+  };
+\end{tikzpicture}
+\end{document}

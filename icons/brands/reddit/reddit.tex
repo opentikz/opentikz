@@ -1,0 +1,41 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in reddit.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Reddit's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandreddit}{HTML}{FF4500}
+
+% Reddit logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Reddit logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandreddit] svg {%
+    M 36 72 C 16.119 72 0 55.881 0 36 C 0 26.058 4.029 17.058 10.545 10.545 L 3.687
+    3.687 C 2.325 2.325 3.291 0 5.214 0 L 36 0 C 55.881 0 72 16.119 72 36 C 72 55.881
+    55.881 72 36 72 Z M 49.164 62.403 C 52.476 62.403 55.161 59.718 55.161 56.406 C
+    55.161 53.091 52.476 50.406 49.164 50.406 C 46.326 50.406 43.947 52.377 43.323
+    55.023 L 43.323 55.017 C 39.882 54.531 37.227 51.567 37.227 47.994 L 37.227 47.973 C
+    42.555 47.772 47.427 46.272 51.285 43.884 C 52.704 44.973 54.477 45.624 56.406
+    45.624 C 61.047 45.624 64.812 41.862 64.812 37.218 C 64.812 33.867 62.847 30.975
+    60.009 29.625 C 59.745 19.857 49.098 11.997 36.018 11.997 C 22.935 11.997 12.303
+    19.848 12.024 29.607 C 9.162 30.948 7.182 33.852 7.182 37.221 C 7.182 41.865 10.947
+    45.627 15.591 45.627 C 17.526 45.627 19.308 44.973 20.727 43.872 C 24.552 46.242
+    29.37 47.745 34.647 47.967 L 34.647 47.997 C 34.647 52.986 38.436 57.099 43.287
+    57.618 C 43.851 60.351 46.266 62.403 49.164 62.403 Z M 24.909 37.275 C 22.557 37.275
+    20.532 34.935 20.391 31.884 C 20.25 28.836 22.311 27.597 24.669 27.597 C 27.027
+    27.597 28.782 28.704 28.923 31.752 C 29.064 34.803 27.264 37.275 24.909 37.275 Z M
+    47.127 37.275 C 44.769 37.275 42.972 34.803 43.113 31.752 C 43.254 28.701 45.015
+    27.597 47.367 27.597 C 49.722 27.597 51.786 28.836 51.645 31.884 C 51.507 34.935
+    49.482 37.275 47.127 37.275 Z M 36.018 25.236 C 33.096 25.236 30.297 25.092 27.708
+    24.831 C 27.267 24.786 26.985 24.327 27.159 23.916 C 28.608 20.454 32.025 18.024
+    36.018 18.024 C 40.008 18.024 43.428 20.454 44.877 23.916 C 45.048 24.327 44.766
+    24.786 44.325 24.831 C 41.736 25.092 38.94 25.236 36.018 25.236 Z%
+  };
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,25 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in google-scholar.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Google Scholar's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandgooglescholar}{HTML}{4285F4}
+
+% Google Scholar logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Google Scholar logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandgooglescholar] svg {%
+    M 15.726 30.693 L 0 43.5 L 36 72 L 72 43.5 L 56.274 30.693 C 52.644 38.253 44.934
+    43.5 36 43.5 C 27.069 43.5 19.356 38.256 15.726 30.693 Z M 36 42 C 24.402 42 15
+    32.598 15 21 C 15 9.402 24.402 0 36 0 C 47.598 0 57 9.402 57 21 C 57 32.598 47.598
+    42 36 42 Z%
+  };
+\end{tikzpicture}
+\end{document}

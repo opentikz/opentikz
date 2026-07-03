@@ -1,0 +1,36 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in qwen.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Qwen's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandqwen}{HTML}{6950EF}
+
+% Qwen logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Qwen logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandqwen] svg {%
+    M 71.757 28.365 L 62.451 44.49 L 66.861 52.122 C 67.1681 52.6463 67.1681 53.2957
+    66.861 53.82 L 61.962 62.31 C 61.657 62.8334 61.0978 63.1564 60.492 63.159 L 41.871
+    63.159 L 37.461 70.794 C 37.1567 71.3186 36.5974 71.6427 35.991 71.646 L 26.196
+    71.646 C 25.5879 71.649 25.0257 71.3231 24.726 70.794 L 15.417 54.675 L 6.597 54.675
+    C 5.9889 54.678 5.4267 54.3521 5.127 53.823 L 0.231 45.339 C -0.0773 44.8139 -0.0773
+    44.1631 0.231 43.638 L 9.54 27.51 L 5.13 19.875 C 4.8229 19.3507 4.8229 18.7013 5.13
+    18.177 L 10.032 9.687 C 10.337 9.1636 10.8962 8.8406 11.502 8.838 L 30.117 8.838 L
+    34.527 1.203 C 34.8313 0.6784 35.3906 0.3543 35.997 0.351 L 45.795 0.351 C 46.4014
+    0.3543 46.9607 0.6784 47.265 1.203 L 56.577 17.328 L 65.397 17.328 C 66.0028 17.3306
+    66.562 17.6536 66.867 18.177 L 71.769 26.661 C 72.0813 27.1873 72.0767 27.8432
+    71.757 28.365 M 26.199 69.942 L 31.101 61.458 L 26.199 52.974 L 65.4 52.974 L 60.492
+    44.49 L 22.275 44.49 L 16.89 53.82 Z M 30.117 10.539 L 11.502 10.545 L 16.404 19.035
+    L 26.199 19.035 L 6.603 52.968 L 16.404 52.968 C 22.768 41.934 29.135 30.902 35.505
+    19.872 Z M 60.489 27.519 L 55.59 36 L 35.994 2.055 L 31.092 10.545 C 37.479 21.564
+    43.842 32.598 50.211 43.629 L 60.987 43.629 L 70.293 27.507 Z%
+  };
+\end{tikzpicture}
+\end{document}

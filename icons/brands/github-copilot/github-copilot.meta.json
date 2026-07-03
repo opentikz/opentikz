@@ -1,0 +1,25 @@
+{
+  "id": "github-copilot",
+  "name": "GitHub Copilot",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "brand",
+    "coding assistant",
+    "copilot",
+    "github",
+    "github-copilot",
+    "logo"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "github-copilot.svg",
+  "description": "GitHub Copilot brand mark, official brand color."
+}
