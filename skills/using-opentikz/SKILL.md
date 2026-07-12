@@ -105,6 +105,19 @@ say the word to change any."*
   lets edits target the right parts. Give any new node a clear semantic name.
 - **Keep figures parametric** — drive counts/spacing/labels through the `\def`
   block at the top; don't hard-code what a parameter already controls.
+- **Separate icon from label — never overlay a `\pic` on a node's centred text.**
+  For any box that carries *both* a glyph and a label, make the box node empty
+  (`{}`), then place the icon with a standalone `\pic` in the box's **upper half**
+  and the label as a *separate* text node in the **lower half** (or icon-left /
+  text-right for a wide chip). Size the box tall enough for both bands. Dropping a
+  `\pic` on top of a node's own `{text}`, or faking the offset with `\hspace`,
+  collides every time — this is the single most common rework.
+- **Budget padding — size a box to its content *plus* margin, never flush to it.**
+  Set `minimum width`/`minimum height` to the widest/tallest content **plus a
+  per-side padding budget of ≥0.25 cm**. For a multi-column in-box layout (e.g.
+  two icon+label stacks), also give an explicit inter-column gap (≥0.3 cm) and keep
+  each column's widest line clear of the frame. If any text touches the border,
+  widen the box or push the columns inward — do **not** shrink the text.
 
 ## 4. Common cross-template operations
 
