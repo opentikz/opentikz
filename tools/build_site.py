@@ -277,8 +277,10 @@ def item_page(item: dict, code: str, tex_name: str, css_href: str) -> str:
 
 
 def is_brand(item: dict) -> bool:
-    """Brand marks carry a trademark disclaimer instead of the blanket CC0 line."""
-    return item.get("type") == "icon" and "brands" in item.get("domain", [])
+    """Items carrying a brand mark get a trademark disclaimer instead of the
+    blanket CC0 line. This covers brand icons AND templates that inline brand
+    marks — both live in the 'brands' domain, so key off that, not the type."""
+    return "brands" in item.get("domain", [])
 
 
 def license_note(item: dict) -> str:
