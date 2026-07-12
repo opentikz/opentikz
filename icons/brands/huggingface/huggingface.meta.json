@@ -1,0 +1,25 @@
+{
+  "id": "huggingface",
+  "name": "Hugging Face",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "hub",
+    "huggingface",
+    "logo",
+    "ml",
+    "models",
+    "nlp"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "huggingface.svg",
+  "description": "Hugging Face brand mark (smiling face), official brand color."
+}

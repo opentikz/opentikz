@@ -1,0 +1,33 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in numpy.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (NumPy's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandnumpy}{HTML}{013243}
+
+% NumPy logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The NumPy logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandnumpy] svg {%
+    M 30.945 57.372 L 18.9144 63.4449 L 5.7114 56.8554 L 18.0672 50.6505 Z M 36.4593
+    54.5889 L 49.0728 48.222 L 35.9862 41.6502 L 23.6112 47.8656 Z M 53.3052 63.3528 L
+    66.2631 56.8554 L 54.6741 51.0348 L 42.0348 57.4104 Z M 47.7282 66.1515 L 36.063 72
+    L 24.5226 66.2421 L 36.543 60.1797 Z M 38.6079 15.9186 L 38.6079 0 L 52.74 7.0521 L
+    52.7241 22.9776 Z M 52.719 28.5357 L 52.7034 44.2941 L 38.6079 37.2873 L 38.6079
+    21.5235 Z M 69.6849 31.4892 L 69.6849 15.5082 L 57.6315 9.4926 L 57.6228 25.401 Z M
+    69.6849 37.077 L 69.6849 52.7358 L 57.609 46.7328 L 57.6192 30.9429 Z M 33.6186
+    37.287 L 24.0999 42.0732 L 24.0999 21.3882 C 24.0999 21.3882 12.4587 46.1574 11.3802
+    48.3822 C 11.2413 48.6693 10.6689 48.9843 10.5228 49.0608 C 8.4354 50.1564 2.319
+    53.2545 2.319 53.2545 L 2.319 16.71 L 10.7802 12.1872 L 10.7802 31.2894 C 10.7802
+    31.2894 22.2978 9.1569 22.4142 8.9154 C 22.5309 8.6733 23.6877 6.3408 24.9228 5.5212
+    C 26.5683 4.4322 33.6204 0.1914 33.6204 0.1914 Z%
+  };
+\end{tikzpicture}
+\end{document}

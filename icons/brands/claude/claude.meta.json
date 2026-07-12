@@ -1,0 +1,25 @@
+{
+  "id": "claude",
+  "name": "Claude",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "anthropic",
+    "assistant",
+    "brand",
+    "claude",
+    "llm",
+    "logo"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "claude.svg",
+  "description": "Claude brand mark (Anthropic), official brand color."
+}

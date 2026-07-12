@@ -1,0 +1,24 @@
+{
+  "id": "tensorflow",
+  "name": "TensorFlow",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "deep learning",
+    "framework",
+    "logo",
+    "ml",
+    "tensorflow"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "tensorflow.svg",
+  "description": "TensorFlow brand mark, official brand color."
+}

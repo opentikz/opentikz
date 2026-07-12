@@ -1,0 +1,24 @@
+{
+  "id": "github",
+  "name": "GitHub",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "code hosting",
+    "github",
+    "logo",
+    "open source",
+    "repository"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "github.svg",
+  "description": "GitHub brand mark (Octocat silhouette), official brand color."
+}

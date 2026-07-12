@@ -1,0 +1,30 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in pytorch.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (PyTorch's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandpytorch}{HTML}{EE4C2C}
+
+% PyTorch logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The PyTorch logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandpytorch] svg {%
+    M 36.015 72 L 14.856 50.841 C 9.2406 45.2825 6.0811 37.7093 6.0811 29.808 C 6.0811
+    21.9067 9.2406 14.3335 14.856 8.775 C 20.4149 3.1604 27.988 0.0014 35.889 0.0014 C
+    43.79 0.0014 51.3631 3.1604 56.922 8.775 C 68.874 20.475 68.88 39.39 57.177 50.844 L
+    51.945 45.615 C 60.657 36.9 60.657 22.713 51.945 14.001 C 43.233 5.289 29.043 5.289
+    20.331 14.001 C 11.619 22.713 11.619 36.903 20.331 45.615 L 34.272 59.553 L 36.018
+    61.548 Z M 46.719 60.303 C 44.5204 60.303 42.738 58.5206 42.738 56.322 C 42.7372
+    55.2657 43.1563 54.2523 43.9029 53.5051 C 44.6496 52.7578 45.6627 52.338 46.719
+    52.338 C 47.7753 52.338 48.7884 52.7578 49.5351 53.5051 C 50.2817 54.2523 50.7008
+    55.2657 50.7 56.322 C 50.6983 58.5195 48.9165 60.3 46.719 60.3 Z%
+  };
+\end{tikzpicture}
+\end{document}

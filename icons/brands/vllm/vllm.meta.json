@@ -1,0 +1,25 @@
+{
+  "id": "vllm",
+  "name": "vLLM",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "brand",
+    "inference",
+    "llm",
+    "logo",
+    "serving",
+    "vllm"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "vllm.svg",
+  "description": "vLLM brand mark, official two-tone colors (yellow + blue)."
+}

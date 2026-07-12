@@ -1,0 +1,24 @@
+{
+  "id": "overleaf",
+  "name": "Overleaf",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "editor",
+    "latex",
+    "logo",
+    "overleaf",
+    "writing"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "overleaf.svg",
+  "description": "Overleaf brand mark, official brand color."
+}

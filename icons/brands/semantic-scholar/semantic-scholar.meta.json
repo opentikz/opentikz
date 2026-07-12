@@ -1,0 +1,24 @@
+{
+  "id": "semantic-scholar",
+  "name": "Semantic Scholar",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "citations",
+    "logo",
+    "papers",
+    "search",
+    "semantic-scholar"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "semantic-scholar.svg",
+  "description": "Semantic Scholar brand mark, official brand color."
+}

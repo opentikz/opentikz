@@ -1,0 +1,38 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in jupyter.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Jupyter's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandjupyter}{HTML}{F37626}
+
+% Jupyter logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Jupyter logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandjupyter] svg {%
+    M 21.471 5.397 C 21.471 2.4175 19.0767 0.0017 16.122 0 C 13.1662 0 10.77 2.4163
+    10.77 5.397 C 10.77 8.3777 13.1662 10.794 16.122 10.794 C 19.0767 10.7923 21.471
+    8.3765 21.471 5.397 Z M 61.746 67.719 C 61.7468 66.5831 61.2999 65.4934 60.5037
+    64.6899 C 59.7075 63.8864 58.6274 63.435 57.501 63.435 C 56.3741 63.4342 55.2932
+    63.8853 54.4963 64.6889 C 53.6995 65.4924 53.2522 66.5826 53.253 67.719 C 53.253
+    68.8549 53.7007 69.9443 54.4974 70.7472 C 55.2941 71.5501 56.3746 72.0008 57.501 72
+    C 59.8454 72 61.746 70.0833 61.746 67.719 Z M 14.976 61.992 C 14.9727 60.2459
+    13.5692 58.8317 11.838 58.83 C 10.1044 58.83 8.6986 60.2465 8.697 61.995 C 8.6986
+    63.7435 10.1044 65.16 11.838 65.16 C 13.5716 65.1583 14.976 63.7405 14.976 61.992 Z
+    M 36.984 57.441 C 48.291 57.441 58.164 53.301 63.288 47.169 C 61.3874 52.6593
+    57.8311 57.4251 53.109 60.81 C 48.405 64.1796 42.7643 65.9923 36.978 65.994 C
+    31.1927 65.9917 25.5531 64.179 20.85 60.81 C 16.1268 57.4256 12.5694 52.6597 10.668
+    47.169 C 15.807 53.289 25.68 57.441 36.984 57.441 Z M 36.987 17.556 C 25.683 17.556
+    15.807 21.699 10.683 27.831 C 12.5844 22.3403 16.1418 17.5744 20.865 14.19 C 25.5666
+    10.8195 31.2051 9.0047 36.99 9 C 42.7767 9.0025 48.4174 10.8163 53.121 14.187 C
+    57.8431 17.5719 61.3994 22.3377 63.3 27.828 C 58.164 21.696 48.291 17.553 36.984
+    17.553 Z%
+  };
+\end{tikzpicture}
+\end{document}

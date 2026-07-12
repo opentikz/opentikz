@@ -1,0 +1,25 @@
+{
+  "id": "perplexity",
+  "name": "Perplexity",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "assistant",
+    "brand",
+    "llm",
+    "logo",
+    "perplexity",
+    "search"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "perplexity.svg",
+  "description": "Perplexity brand mark, official brand color."
+}

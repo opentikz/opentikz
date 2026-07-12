@@ -1,0 +1,24 @@
+{
+  "id": "arxiv",
+  "name": "arXiv",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "arxiv",
+    "brand",
+    "logo",
+    "papers",
+    "preprint",
+    "publishing"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "arxiv.svg",
+  "description": "arXiv brand mark, official brand color."
+}

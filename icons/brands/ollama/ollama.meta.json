@@ -1,0 +1,25 @@
+{
+  "id": "ollama",
+  "name": "Ollama",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "brand",
+    "llm",
+    "local inference",
+    "logo",
+    "ollama",
+    "tooling"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "ollama.svg",
+  "description": "Ollama brand mark, official brand color."
+}

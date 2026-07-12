@@ -1,0 +1,24 @@
+{
+  "id": "google-cloud",
+  "name": "Google Cloud",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "cloud",
+    "gcp",
+    "google-cloud",
+    "infrastructure",
+    "logo"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "google-cloud.svg",
+  "description": "Google Cloud brand mark, official brand color."
+}

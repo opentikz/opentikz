@@ -18,7 +18,13 @@ OpenTikZ is dual-licensed, and the split matters:
   content you agree to release it under CC0 so researchers can reuse it with zero
   friction. **Do not** submit figures you cannot dedicate to the public domain,
   and **do not** reproduce copyrighted/trademarked material (company logos,
-  branded marks — a declared non-goal).
+  branded marks — a declared non-goal). The one maintainer-approved exception
+  is the curated `icons/brands/` set, whose shape data comes from the CC0
+  [simple-icons](https://simple-icons.org) project; the TikZ code is CC0, but
+  the marks remain trademarks of their owners — see `icons/brands/README.md`.
+  Rights holders can request removal of a mark via the
+  [trademark-removal issue template](.github/ISSUE_TEMPLATE/trademark-removal.yml);
+  such requests are honored promptly.
 - **Code** — build tooling under `tools/` and the site generator — is **MIT**.
 
 Set `"license": "CC0-1.0"` in every content `.meta.json`.
@@ -52,7 +58,8 @@ move it to `templates/`, rename `figure.*` → `template.*`, and add the contrac
 
 **In scope:** system/architecture/pipeline/flow diagrams for papers.
 **Out of scope** (see [`CLAUDE.md`](CLAUDE.md)): data plots (use pgfplots/matplotlib),
-PNG→TikZ tracing, brand/company logos, general illustration.
+PNG→TikZ tracing, brand/company logos (except the curated `icons/brands/` set —
+see its README), general illustration.
 
 Good first contributions: a new **icon** in `systems/` or `ml/`, or an **example**
 that reuses existing templates.

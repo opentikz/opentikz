@@ -1,0 +1,24 @@
+{
+  "id": "orcid",
+  "name": "ORCID",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "identity",
+    "logo",
+    "orcid",
+    "publishing",
+    "researcher id"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "orcid.svg",
+  "description": "ORCID brand mark (iD), official brand color."
+}

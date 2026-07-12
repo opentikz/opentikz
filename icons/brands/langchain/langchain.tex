@@ -1,0 +1,32 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in langchain.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (LangChain's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandlangchain}{HTML}{7FC8FF}
+
+% LangChain logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The LangChain logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandlangchain] svg {%
+    M 41.388 72 C 35.8686 72.0163 30.5693 69.8372 26.658 65.943 L 16.353 55.635 L 26.172
+    45.825 L 36.468 56.121 C 37.7583 57.4496 39.5315 58.1993 41.3835 58.1993 C 43.2355
+    58.1993 45.0087 57.4496 46.299 56.121 C 47.6288 54.8326 48.3795 53.0601 48.3795
+    51.2085 C 48.3795 49.3569 47.6288 47.5844 46.299 46.296 L 36 35.997 L 45.819 26.178
+    L 56.118 36.483 C 64.194 44.559 64.194 57.864 56.118 65.943 C 52.2085 69.84 46.908
+    72.0196 41.388 72 M 26.178 45.816 L 15.879 35.514 C 7.803 27.435 7.803 14.136 15.879
+    6.057 C 19.7885 2.16 25.089 -0.0196 30.609 0 C 36.1298 -0.0163 41.4304 2.1639 45.342
+    6.06 L 55.638 16.356 L 45.825 26.172 L 35.526 15.873 C 34.2357 14.5444 32.4625
+    13.7947 30.6105 13.7947 C 28.7585 13.7947 26.9853 14.5444 25.695 15.873 C 24.3642
+    17.1615 23.613 18.9347 23.613 20.787 C 23.613 22.6393 24.3642 24.4125 25.695 25.701
+    L 36 36 Z%
+  };
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,25 @@
+{
+  "id": "meta",
+  "name": "Meta",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "brand",
+    "company",
+    "llama",
+    "logo",
+    "meta",
+    "social"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "meta.svg",
+  "description": "Meta brand mark (infinity loop), official brand color."
+}

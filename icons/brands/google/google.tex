@@ -1,0 +1,27 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in google.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Google's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandgoogle}{HTML}{4285F4}
+
+% Google logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Google logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandgoogle] svg {%
+    M 37.44 39.24 L 37.44 29.4 L 60.96 29.4 C 60.24 23.88 58.401 19.839 55.599 17.001 C
+    52.158 13.56 46.8 9.801 37.44 9.801 C 22.959 9.801 11.64 21.48 11.64 35.961 C 11.64
+    50.442 22.959 62.121 37.44 62.121 C 45.24 62.121 50.961 59.04 55.161 55.08 L 62.082
+    62.001 C 56.241 67.68 48.399 72 37.44 72 C 17.601 72 0.921 55.839 0.921 36 C 0.921
+    16.161 17.601 0 37.44 0 C 48.159 0 56.241 3.519 62.559 10.08 C 69.039 16.56 71.079
+    25.719 71.079 33.081 C 71.079 35.361 70.92 37.482 70.56 39.24 L 37.44 39.24 Z%
+  };
+\end{tikzpicture}
+\end{document}

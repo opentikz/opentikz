@@ -1,0 +1,25 @@
+{
+  "id": "mistral",
+  "name": "Mistral AI",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "brand",
+    "llm",
+    "logo",
+    "mistral",
+    "mistral ai",
+    "model"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "mistral.svg",
+  "description": "Mistral AI brand mark, official brand color."
+}

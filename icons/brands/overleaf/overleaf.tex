@@ -1,0 +1,31 @@
+\documentclass[border=4pt]{standalone}
+
+% --- packages (mirror these in overleaf.meta.json "requires") ---
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+% --- brand color (Overleaf's official brand color; brand marks keep their
+%     official color instead of the shared OpenTikZ palette by design) ---
+\definecolor{brandoverleaf}{HTML}{47A141}
+
+% Overleaf logo. Shape data derived from the CC0 simple-icons project
+% (https://simple-icons.org), flattened to absolute M/L/C/Z commands with the
+% y-axis pre-flipped for TikZ and scaled to ~2.5cm (svg.path ignores TikZ
+% coordinate transforms, so the transform is baked into the coordinates).
+% The Overleaf logo is a trademark of its owner; used here for identification.
+\begin{document}
+\begin{tikzpicture}
+  \fill[brandoverleaf] svg {%
+    M 67.0545 69.7548 C 57.3327 73.5303 22.095 74.946 22.0356 53.9202 C 11.754 47.3382
+    4.9455 36.6162 4.9455 25.1262 C 4.9428 15.7928 10.1153 7.2275 18.3768 2.8848 C
+    26.6383 -1.458 36.6265 -0.8621 44.313 4.4322 C 51.9996 9.7264 56.117 18.8459 55.0047
+    28.1128 C 53.8924 37.3796 47.7337 45.2657 39.0126 48.5904 C 37.194 49.2921 33.2424
+    50.5347 30.0867 50.2674 C 25.5846 47.4042 20.0943 41.5209 17.502 35.6595 C 25.2702
+    44.9055 40.0158 42.9345 45.0831 31.9734 C 50.1507 21.012 42.0999 8.5023 30.0237
+    8.574 C 25.1811 8.5662 20.5797 10.6864 17.439 14.3724 C 12.984 19.6173 11.8356
+    25.3056 12.7545 30.8649 C 15.9255 50.349 39.0315 61.4331 56.2125 65.6931 C 50.6094
+    62.7261 40.5006 57.8529 33.4281 52.542 C 54.045 44.5854 57.3924 61.965 67.0545
+    69.7548 Z%
+  };
+\end{tikzpicture}
+\end{document}

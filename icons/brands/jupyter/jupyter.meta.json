@@ -1,0 +1,24 @@
+{
+  "id": "jupyter",
+  "name": "Jupyter",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "jupyter",
+    "logo",
+    "notebook",
+    "python",
+    "tooling"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "jupyter.svg",
+  "description": "Jupyter brand mark (three moons), official brand color."
+}

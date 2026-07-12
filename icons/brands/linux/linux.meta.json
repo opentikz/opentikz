@@ -1,0 +1,25 @@
+{
+  "id": "linux",
+  "name": "Linux",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "linux",
+    "logo",
+    "operating system",
+    "os",
+    "penguin",
+    "tux"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "linux.svg",
+  "description": "Linux brand mark (Tux the penguin), official brand color."
+}

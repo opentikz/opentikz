@@ -1,0 +1,24 @@
+{
+  "id": "deepseek",
+  "name": "DeepSeek",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "ai",
+    "brand",
+    "deepseek",
+    "llm",
+    "logo",
+    "model"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "deepseek.svg",
+  "description": "DeepSeek brand mark (whale), official brand color."
+}

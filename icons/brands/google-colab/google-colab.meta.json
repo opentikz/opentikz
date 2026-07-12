@@ -1,0 +1,24 @@
+{
+  "id": "google-colab",
+  "name": "Google Colab",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "colab",
+    "google-colab",
+    "gpu",
+    "logo",
+    "notebook"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "google-colab.svg",
+  "description": "Google Colab brand mark, official brand color."
+}

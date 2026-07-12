@@ -1,0 +1,24 @@
+{
+  "id": "pandas",
+  "name": "pandas",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "data analysis",
+    "dataframe",
+    "logo",
+    "pandas",
+    "python"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "pandas.svg",
+  "description": "pandas brand mark, official brand color."
+}

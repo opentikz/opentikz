@@ -1,0 +1,24 @@
+{
+  "id": "numpy",
+  "name": "NumPy",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "array",
+    "brand",
+    "logo",
+    "numpy",
+    "python",
+    "scientific computing"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "numpy.svg",
+  "description": "NumPy brand mark, official brand color."
+}

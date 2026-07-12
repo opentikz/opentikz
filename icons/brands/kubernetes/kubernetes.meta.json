@@ -1,0 +1,25 @@
+{
+  "id": "kubernetes",
+  "name": "Kubernetes",
+  "type": "icon",
+  "domain": [
+    "brands"
+  ],
+  "tags": [
+    "brand",
+    "container",
+    "devops",
+    "k8s",
+    "kubernetes",
+    "logo",
+    "orchestration"
+  ],
+  "author": "Daniel Huang",
+  "license": "CC0-1.0",
+  "requires": [
+    "tikz",
+    "svg.path"
+  ],
+  "preview": "kubernetes.svg",
+  "description": "Kubernetes brand mark (helm wheel), official brand color."
+}

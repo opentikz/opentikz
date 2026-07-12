@@ -25,7 +25,9 @@ pipeline/flow diagrams, but don't want to hand-write TikZ. We call them the
 
 - Data plots (line/bar/scatter/heatmap) — those belong to pgfplots/matplotlib
 - Pixel-perfect PNG→TikZ conversion (technically an under-determined problem)
-- Brand/company logos (trademark risk)
+- Brand/company logos (trademark risk) — with one curated exception:
+  `icons/brands/` carries maintainer-approved marks whose shape data comes from
+  the CC0 simple-icons project (see `icons/brands/README.md`)
 - General-purpose illustration
 
 ## The three-layer content model
@@ -146,7 +148,7 @@ opentikz/
 ## Current status
 
 Live. MVP Roadmap Steps 1–4 are complete: repo skeleton + CI, the cold-start
-content (31 catalog items — 20 icons, 8 templates, 3 examples), the skills layer (one
+content (73 catalog items — 61 icons, 9 templates, 3 examples), the skills layer (one
 repo-wide `using-opentikz` skill + per-template `edit_contract`s + `reference/`
 material), and the static website (built by `tools/build_site.py`, deployed to
 GitHub Pages). Remaining work centers on launch + community growth.
